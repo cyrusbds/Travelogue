@@ -1,0 +1,179 @@
+/* ─── COMPARISON TABLE ─── */
+.comparison {
+  background: var(--white);
+}
+
+.comparison-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.comparison-header .section-sub {
+  margin: 0 auto;
+}
+
+.comp-table-wrap {
+  overflow-x: auto;
+  border-radius: 24px;
+  border: 1.5px solid var(--sand);
+  -webkit-overflow-scrolling: touch;
+}
+
+.comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  min-width: 520px; /* prevents columns from collapsing too narrow */
+}
+
+.comp-table th {
+  padding: 20px 24px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.3px;
+  border-bottom: 2px solid var(--sand);
+}
+
+.comp-table th:first-child {
+  text-align: left;
+  width: 40%;
+}
+
+.comp-table td {
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--sand);
+  color: var(--text);
+}
+
+.comp-table td:first-child {
+  font-weight: 500;
+  color: var(--warm-dark);
+}
+
+.comp-table td:not(:first-child) {
+  text-align: center;
+}
+
+.comp-table tr:last-child td {
+  border-bottom: none;
+}
+
+.comp-table tr:hover td {
+  background: var(--sand-light);
+}
+
+.comp-thead-travelogue {
+  background: var(--warm-dark);
+  color: white !important;
+  position: relative;
+}
+
+.comp-thead-travelogue::after {
+  content: '⭐ Best Pick';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--terracotta);
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 50px;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+.comp-yes {
+  color: var(--green);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.comp-no {
+  color: #D4A0A0;
+  font-size: 1rem;
+}
+
+.comp-partial {
+  color: var(--terracotta);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.comp-category {
+  background: var(--sand-light);
+}
+
+.comp-category td {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-light);
+  padding: 10px 24px;
+}
+
+/* ── Tablet ── */
+@media (max-width: 1024px) {
+  .comparison-header { margin-bottom: 36px; }
+
+  .comp-table th,
+  .comp-table td { padding: 13px 16px; }
+
+  .comp-table th:first-child { width: 38%; }
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .comparison-header {
+    text-align: left;
+    margin-bottom: 28px;
+  }
+
+  .comparison-header .section-sub { margin: 0; }
+
+  /* Scroll hint so users know table is swipeable */
+  .comp-table-wrap {
+    border-radius: 16px;
+    position: relative;
+  }
+
+  .comp-table-wrap::after {
+    content: 'Scroll to see more →';
+    display: block;
+    text-align: center;
+    font-size: 0.68rem;
+    color: var(--text-light);
+    padding: 8px 0 4px;
+    border-top: 1px solid var(--sand);
+    letter-spacing: 0.3px;
+  }
+
+  .comp-table {
+    font-size: 0.8rem;
+    min-width: 460px;
+  }
+
+  .comp-table th {
+    padding: 14px 12px;
+    font-size: 0.74rem;
+  }
+
+  .comp-table th:first-child { width: 42%; }
+
+  .comp-table td {
+    padding: 11px 12px;
+    font-size: 0.8rem;
+  }
+
+  .comp-category td {
+    padding: 8px 12px;
+    font-size: 0.66rem;
+  }
+
+  .comp-yes  { font-size: 1rem; }
+  .comp-no   { font-size: 0.9rem; }
+  .comp-partial { font-size: 0.72rem; }
+}

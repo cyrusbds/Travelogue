@@ -1,0 +1,125 @@
+.tl-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 18px 5%;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(255,254,249,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(200,98,58,0.1);
+  font-family: 'DM Sans', sans-serif;
+  transition: box-shadow 0.3s;
+}
+.tl-nav.scrolled { box-shadow: 0 4px 24px rgba(44,26,14,0.08); }
+
+.tl-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--terracotta); letter-spacing: -0.5px; text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0; /* never let the logo compress */
+}
+.tl-logo-text { font-family: 'Playfair Display', serif; line-height: 1; }
+.tl-logo-text span { font-style: italic; color: var(--ocean); }
+
+.tl-nav-links {
+  display: flex; gap: 32px; list-style: none;
+  /* Sit closer to centre, away from logo and actions */
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.tl-nav-links a {
+  text-decoration: none; color: var(--text-light);
+  font-size: 0.9rem; font-weight: 500; transition: color 0.2s;
+  white-space: nowrap;
+}
+.tl-nav-links a:hover { color: var(--terracotta); }
+
+.tl-nav-actions {
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0; /* never let buttons compress */
+}
+
+.tl-nav-login {
+  color: var(--text-light); font-weight: 500;
+  padding: 10px 18px; border-radius: 50px;
+  border: 1.5px solid var(--sand); background: transparent;
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+  cursor: pointer; transition: all 0.2s;
+  white-space: nowrap;
+}
+.tl-nav-login:hover {
+  border-color: var(--terracotta-pale);
+  color: var(--terracotta); background: var(--sand-light);
+}
+.tl-nav-cta {
+  background: var(--terracotta); color: white;
+  padding: 10px 22px; border-radius: 50px; border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; transition: background 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+.tl-nav-cta:hover { background: var(--terracotta-light); transform: translateY(-1px); }
+
+.tl-nav-user { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.tl-nav-greeting { font-size: 0.9rem; font-weight: 500; color: var(--text-light); white-space: nowrap; }
+.tl-nav-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--terracotta); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  flex-shrink: 0;
+}
+
+.tl-hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer; padding: 4px;
+}
+.tl-hamburger span {
+  display: block; width: 22px; height: 1.5px;
+  background: var(--warm-dark); border-radius: 2px;
+  transition: transform 0.25s, opacity 0.2s; transform-origin: center;
+}
+.tl-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.tl-hamburger.open span:nth-child(2) { opacity: 0; }
+.tl-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.tl-drawer {
+  display: none; position: fixed;
+  top: 65px; left: 0; right: 0;
+  background: rgba(255,254,249,0.97);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(200,98,58,0.1);
+  padding: 1rem 5% 1.5rem; z-index: 99;
+  box-shadow: 0 8px 32px rgba(44,26,14,0.08);
+}
+.tl-drawer.open { display: block; }
+.tl-drawer a {
+  display: block; padding: 12px 0; font-size: 1rem;
+  color: var(--text); text-decoration: none;
+  border-bottom: 1px solid var(--sand);
+  font-family: 'DM Sans', sans-serif;
+}
+.tl-drawer-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 1rem; }
+.tl-drawer-actions button { width: 100%; text-align: center; padding: 13px; font-size: 0.95rem; }
+.tl-drawer-user {
+  padding: 12px 0; border-bottom: 1px solid var(--sand);
+  font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+  color: var(--text-light); display: flex; align-items: center; gap: 10px;
+}
+
+/* ── Tight desktop: reduce gaps before collapsing to hamburger ── */
+@media (max-width: 1100px) {
+  .tl-nav { padding: 16px 4%; }
+  .tl-nav-links { gap: 16px; padding: 0 12px; }
+  .tl-nav-links a { font-size: 0.82rem; }
+  .tl-nav-login { padding: 8px 12px; font-size: 0.82rem; }
+  .tl-nav-cta   { padding: 8px 14px; font-size: 0.82rem; }
+  /* Hide the "Hi, jacob" text — avatar alone is enough */
+  .tl-nav-greeting { display: none; }
+}
+
+/* ── Collapse to hamburger earlier to avoid crowding ── */
+@media (max-width: 960px) {
+  .tl-nav-links, .tl-nav-actions { display: none; }
+  .tl-hamburger { display: flex; }
+}

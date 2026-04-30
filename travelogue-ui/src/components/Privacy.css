@@ -1,0 +1,62 @@
+.security { background: var(--sand-light); }
+
+.security-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.security-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sec-badge {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 20px;
+  background: var(--white);
+  border-radius: 16px;
+  border: 1.5px solid var(--sand);
+  transition: all 0.2s;
+}
+.sec-badge:hover {
+  border-color: var(--terracotta-pale);
+  box-shadow: 0 4px 20px rgba(44, 26, 14, 0.07);
+  transform: translateY(-2px);
+}
+
+.sec-badge-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--terracotta-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.sec-badge-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--warm-dark);
+  margin-bottom: 4px;
+}
+
+.sec-badge-text {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .security-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}

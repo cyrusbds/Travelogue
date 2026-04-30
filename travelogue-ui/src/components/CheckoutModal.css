@@ -1,0 +1,28 @@
+.checkout-box {
+  background: var(--white); border-radius: 28px; width: 100%; max-width: 480px;
+  padding: 40px; position: relative;
+  box-shadow: 0 40px 100px rgba(44,26,14,0.25);
+  animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  max-height: 95vh; overflow-y: auto;
+}
+.co-header { margin-bottom: 24px; }
+.co-plan-badge {
+  display: inline-block; background: rgba(200,98,58,0.1); color: var(--terracotta);
+  font-size: 0.72rem; font-weight: 700; padding: 4px 12px; border-radius: 50px;
+  letter-spacing: 0.5px; margin-bottom: 10px;
+}
+.co-title { font-family: 'Playfair Display',serif; font-size: 1.5rem; color: var(--warm-dark); font-weight: 700; margin-bottom: 6px; }
+.co-sub { font-size: 0.85rem; color: var(--text-light); line-height: 1.6; }
+.co-summary { background: var(--sand-light); border-radius: 14px; padding: 16px 18px; margin-bottom: 22px; }
+.co-summary-row { display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--text); padding: 5px 0; }
+.co-summary-trial { color: var(--text-light); }
+.co-summary-divider { height: 1px; background: var(--sand); margin: 8px 0; }
+.co-summary-total { font-weight: 700; font-size: 0.95rem; color: var(--warm-dark); }
+.co-card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.card-number-wrap .field-input { padding-right: 80px; }
+.card-brands { position: absolute; right: 12px; display: flex; gap: 4px; align-items: center; }
+.co-secure-note {
+  display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--text-light);
+  background: var(--sand-light); padding: 8px 12px; border-radius: 8px; margin-top: -4px;
+}
+.co-cancel-note { text-align: center; font-size: 0.75rem; color: var(--text-light); margin-top: 6px; }

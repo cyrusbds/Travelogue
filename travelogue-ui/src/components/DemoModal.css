@@ -1,0 +1,217 @@
+.demo-box {
+  background: var(--white);
+  border-radius: 24px;
+  width: 90%;
+  max-width: 860px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.18);
+  animation: modalIn 0.28s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── Left panel ── */
+.demo-panel-left {
+  width: 300px;
+  flex-shrink: 0;
+  background: linear-gradient(145deg, var(--warm-dark) 0%, #3D2210 100%);
+  border-radius: 24px 0 0 24px;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  color: white;
+}
+
+.demo-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+}
+.demo-brand span { color: var(--terracotta-light); }
+
+.demo-tagline {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.5;
+  margin-bottom: 32px;
+}
+
+.demo-perks {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.demo-perk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.83rem;
+  color: rgba(255,255,255,0.8);
+}
+
+.demo-perk-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--terracotta-light);
+}
+
+.demo-quote {
+  margin-top: auto;
+  background: rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.demo-quote-text {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.6;
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+.demo-quote-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.demo-quote-av {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--terracotta);
+  color: white;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.demo-quote-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+}
+.demo-quote-role {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.5);
+}
+
+/* ── Right panel ── */
+.demo-panel-right {
+  flex: 1;
+  padding: 40px 36px;
+  overflow-y: auto;
+}
+
+.demo-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--warm-dark);
+  margin-bottom: 6px;
+}
+
+.demo-sub {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* Select styling */
+.select-wrap { position: relative; }
+.field-select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px !important;
+}
+
+/* Textarea */
+.field-textarea {
+  resize: vertical;
+  min-height: 80px;
+  padding: 10px 14px !important;
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.5;
+}
+
+.field-optional {
+  font-weight: 400;
+  color: var(--text-light);
+  font-size: 0.75rem;
+}
+
+/* ── Success state ── */
+.demo-success {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 64px 40px;
+  gap: 16px;
+}
+
+.demo-success-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--green-pale);
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.demo-success-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--warm-dark);
+}
+
+.demo-success-sub {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  line-height: 1.7;
+  max-width: 380px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .demo-box { flex-direction: column; max-width: 95%; }
+  .demo-panel-left {
+    width: 100%;
+    border-radius: 24px 24px 0 0;
+    padding: 28px 24px;
+  }
+  .demo-quote { display: none; }
+  .demo-panel-right { padding: 28px 24px; }
+}
