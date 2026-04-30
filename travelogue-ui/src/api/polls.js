@@ -1,7 +1,7 @@
 // api/polls.js
 // Follows the exact same pattern as trips.js — fetch + authHeader.
 
-const BASE = "http://localhost:5000/api/trips";
+const BASE = import.meta.env.VITE_API_URL + "/trips";
 
 const authHeader = () => ({
   "Content-Type": "application/json",
