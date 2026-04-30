@@ -1,4 +1,4 @@
-const BASE = "http://localhost:5000/api/invites";
+const BASE = import.meta.env.VITE_API_URL + "/invites";
 
 const authHeader = () => ({
   "Content-Type": "application/json",
