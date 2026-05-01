@@ -3756,41 +3756,12 @@ const NAV = [
 const ALL_TABS = NAV.flatMap((s) => s.items);
 
 /* ─── MAIN NOTEBOOK ───────────────────────────────────────── */
-export default function Notebook({ trip }) {
+export default function Notebook({ trip: initialTrip }) {
   const [active, setActive] = useState("itinerary");
+  const [trip, setTrip] = useState(initialTrip);
   const navigate = useNavigate();
   const { toasts, show: toast } = useToast();
   const { user } = useAuth();
-  const [trip, setTrip] = useState(initialTrip);
-
-  const tripName = trip?.name || "My Trip Notebook";
-  const tripDest = trip?.dest || "";
-  const startDate = formatDate(trip?.startDate);
-  const endDate = formatDate(trip?.endDate);
-  const datesLabel =
-    startDate && endDate ? `${startDate} – ${endDate}` : "Dates TBD";
-  const vibeIcon = getVibeIcon(trip?.vibe);
-
-  const renderPanel = () => {
-    switch (active) {
-      case "itinerary":
-        return <ItineraryPanel toast={toast} trip={trip} />;
-      case "calendar":
-        return <CalendarPanel toast={toast} trip={trip} />;
-      case "map":
-        return <TripMap trip={trip} toast={toast} />;
-      case "voting":
-        return <VotingPanel toast={toast} trip={trip} />;
-      case "packing":
-        return <PackingPanel toast={toast} trip={trip} />;
-      case "chat":
-        return <ChatPanel toast={toast} trip={trip} />;
-      case "share":
-        return <SharePanel toast={toast} trip={trip} user={user} />;
-      default:
-        return <ItineraryPanel toast={toast} trip={trip} />;
-    }
-  };
 
   useEffect(() => {
     setTrip(initialTrip);
@@ -3826,6 +3797,35 @@ export default function Notebook({ trip }) {
       socket.emit("leave:trip", trip._id);
     };
   }, [trip?._id]);
+
+  const tripName = trip?.name || "My Trip Notebook";
+  const tripDest = trip?.dest || "";
+  const startDate = formatDate(trip?.startDate);
+  const endDate = formatDate(trip?.endDate);
+  const datesLabel =
+    startDate && endDate ? `${startDate} – ${endDate}` : "Dates TBD";
+  const vibeIcon = getVibeIcon(trip?.vibe);
+
+  const renderPanel = () => {
+    switch (active) {
+      case "itinerary":
+        return <ItineraryPanel toast={toast} trip={trip} />;
+      case "calendar":
+        return <CalendarPanel toast={toast} trip={trip} />;
+      case "map":
+        return <TripMap trip={trip} toast={toast} />;
+      case "voting":
+        return <VotingPanel toast={toast} trip={trip} />;
+      case "packing":
+        return <PackingPanel toast={toast} trip={trip} />;
+      case "chat":
+        return <ChatPanel toast={toast} trip={trip} />;
+      case "share":
+        return <SharePanel toast={toast} trip={trip} user={user} />;
+      default:
+        return <ItineraryPanel toast={toast} trip={trip} />;
+    }
+  };
 
   return (
     <div className="nb-root">
