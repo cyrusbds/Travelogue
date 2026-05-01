@@ -69,7 +69,6 @@ const PAINS = [
 const SOLUTIONS = [
   "All planning in one shared notebook",
   "Decisions made with group voting",
-  "Budget split automatically, in real time",
   "Free to start. No credit card required.",
 ];
 
