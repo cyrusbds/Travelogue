@@ -142,27 +142,6 @@ const FEATURES = [
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-        <line x1="1" y1="10" x2="23" y2="10" />
-        <circle cx="17" cy="15" r="1" fill="currentColor" />
-      </svg>
-    ),
-    color: "ocean",
-    title: "Live Budget Splitter",
-    desc: "Track who paid what, split costs per member, and generate a clean final settlement summary.",
-  },
-  {
-    icon: (
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
         <line x1="8" y1="6" x2="21" y2="6" />
         <line x1="8" y1="12" x2="21" y2="12" />
         <line x1="8" y1="18" x2="21" y2="18" />

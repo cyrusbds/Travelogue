@@ -376,7 +376,6 @@ const Icon = {
 const navGroups = [
   { label: "Planning", items: ["itinerary", "calendar", "map"] },
   { label: "Group", items: ["voting", "packing", "notes"] },
-  { label: "Logistics", items: ["bookings", "share"] },
 ];
 
 const panels = {
@@ -409,18 +408,6 @@ const panels = {
     label: "Packing",
     title: "Shared Packing List",
     meta: "14/22 items checked · updated by group",
-  },
-  bookings: {
-    iconKey: "hotel",
-    label: "Bookings",
-    title: "Bookings & Accommodation",
-    meta: "4 confirmed · 1 pending",
-  },
-  notes: {
-    iconKey: "notes",
-    label: "Chat",
-    title: "Group Chat",
-    meta: "Morocco Squad · 5 members · 5 online",
   },
   share: {
     iconKey: "link",
@@ -544,135 +531,6 @@ const ItineraryPanel = () => {
         </div>
       ))}
     </div>
-  );
-};
-
-const BookingsPanel = () => {
-  const bookings = [
-    {
-      icon: Icon.plane(15),
-      bg: "rgba(200,98,58,0.15)",
-      name: "Emirates EK152 — Dubai to Marrakech",
-      ref: "REF: EK7K2M9",
-      info: "Mar 12 · 14:00 · 5 passengers",
-      status: "CONFIRMED",
-      sc: "#28C840",
-      sb: "rgba(40,200,64,0.12)",
-    },
-    {
-      icon: Icon.hotel(15),
-      bg: "rgba(58,124,165,0.15)",
-      name: "Riad Yasmine, Marrakech",
-      ref: "REF: RY-2026-0312",
-      info: "Mar 12–14 · 3 nights · breakfast incl.",
-      status: "CONFIRMED",
-      sc: "#28C840",
-      sb: "rgba(40,200,64,0.12)",
-    },
-    {
-      icon: Icon.car(15),
-      bg: "rgba(92,122,94,0.15)",
-      name: "Europcar 7-seat SUV",
-      ref: "REF: ECR-88712",
-      info: "Mar 12–22 · 10 days · full coverage",
-      status: "CONFIRMED",
-      sc: "#28C840",
-      sb: "rgba(40,200,64,0.12)",
-    },
-    {
-      icon: Icon.camel(15),
-      bg: "rgba(200,160,58,0.15)",
-      name: "Sahara Desert Camp — Merzouga",
-      ref: "REF: PENDING",
-      info: "Mar 17 · 1 night · camel trek + dinner",
-      status: "PENDING",
-      sc: "#C8A03A",
-      sb: "rgba(200,160,58,0.12)",
-    },
-  ];
-  return (
-    <>
-      {bookings.map((b, i) => (
-        <div
-          key={i}
-          style={{
-            display: "flex",
-            gap: 12,
-            alignItems: "flex-start",
-            padding: "12px 14px",
-            background: "rgba(255,255,255,0.03)",
-            borderRadius: 13,
-            border: "1px solid rgba(255,255,255,0.05)",
-            marginBottom: 9,
-            cursor: "pointer",
-          }}
-        >
-          <div
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: 11,
-              background: b.bg,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "rgba(255,255,255,0.7)",
-              flexShrink: 0,
-            }}
-          >
-            {b.icon}
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div
-              style={{
-                fontSize: 12,
-                fontWeight: 700,
-                color: "rgba(255,255,255,0.85)",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {b.name}
-            </div>
-            <div
-              style={{
-                fontSize: 10,
-                color: "rgba(255,255,255,0.3)",
-                fontFamily: "monospace",
-                letterSpacing: 0.5,
-                marginTop: 2,
-              }}
-            >
-              {b.ref}
-            </div>
-            <div
-              style={{
-                fontSize: 11,
-                color: "rgba(255,255,255,0.45)",
-                marginTop: 2,
-              }}
-            >
-              {b.info}
-            </div>
-          </div>
-          <div
-            style={{
-              fontSize: 10,
-              fontWeight: 700,
-              padding: "3px 10px",
-              borderRadius: 50,
-              background: b.sb,
-              color: b.sc,
-              border: `1px solid ${b.sc}40`,
-              flexShrink: 0,
-            }}
-          >
-            {b.status}
-          </div>
-        </div>
-      ))}
-    </>
   );
 };
 
@@ -1587,9 +1445,7 @@ const panelComponents = {
   map: MapPanel,
   voting: VotingPanel,
   packing: PackingPanel,
-  notes: NotesPanel,
   share: SharePanel,
-  bookings: BookingsPanel,
 };
 
 // ─── Main export ──────────────────────────────────────────────────────

@@ -40,12 +40,6 @@ const FEATURES = [
         whatsapp: "no",
       },
       {
-        label: "Budget splitter & settlement",
-        travelogue: "yes",
-        gdocs: "no",
-        whatsapp: "no",
-      },
-      {
         label: "Shared packing list",
         travelogue: "yes",
         gdocs: "partial:Manual",
