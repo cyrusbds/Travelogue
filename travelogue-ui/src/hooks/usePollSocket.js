@@ -2,7 +2,7 @@
 // Manages Socket.IO subscriptions for real-time poll updates.
 
 import { useEffect } from "react";
-import socket from "./api/socket";
+import socket from "../api/socket";
 
 /**
  * @param {object|null} socket  - Socket.IO client instance
