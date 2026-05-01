@@ -2462,7 +2462,6 @@ function VotingPanel({ toast, trip }) {
 
   const tripId = trip?._id;
 
-  // ── Initial load ────────────────────────────────────────────
   useEffect(() => {
     if (!tripId) {
       setIsLoading(false);
@@ -2476,20 +2475,28 @@ function VotingPanel({ toast, trip }) {
     });
   }, [tripId]);
 
-  // ── ✅ Live Socket.IO updates ───────────────────────────────
   usePollSocket(socket, tripId, {
     onVoteCast: (updatedPoll) => {
       setPolls((prev) =>
-        prev.map((p) => (p._id === updatedPoll._id ? updatedPoll : p)),
+        prev.map((p) => {
+          if (p._id !== updatedPoll._id) return p;
+          return {
+            ...updatedPoll,
+            hasVoted: p.hasVoted,
+            myVotes: p.myVotes,
+          };
+        }),
       );
       setVoteModalPoll((prev) =>
-        prev?._id === updatedPoll._id ? updatedPoll : prev,
+        prev?._id === updatedPoll._id
+          ? { ...updatedPoll, hasVoted: prev.hasVoted, myVotes: prev.myVotes }
+          : prev,
       );
     },
 
     onCreated: (newPoll) => {
       setPolls((prev) => {
-        if (prev.some((p) => p._id === newPoll._id)) return prev; // dedup
+        if (prev.some((p) => p._id === newPoll._id)) return prev;
         return [newPoll, ...prev];
       });
     },
@@ -2513,7 +2520,6 @@ function VotingPanel({ toast, trip }) {
     },
   });
 
-  // ── Create poll ─────────────────────────────────────────────
   async function handleCreate() {
     if (!form.q.trim() || !form.o1.trim() || !form.o2.trim()) {
       toast("Fill in question and at least 2 options");
@@ -2538,7 +2544,6 @@ function VotingPanel({ toast, trip }) {
     }
   }
 
-  // ── Cast vote ───────────────────────────────────────────────
   async function handleVote() {
     if (picked === null) {
       toast("Please pick an option");
@@ -2804,7 +2809,6 @@ function PackingPanel({ toast, trip }) {
     });
   }, [tripId]);
 
-  // ── Live packing list updates ─────────────────────────────
   useEffect(() => {
     if (!tripId) return;
 
@@ -2817,7 +2821,12 @@ function PackingPanel({ toast, trip }) {
       setItems((p) =>
         p.map((i) =>
           i._id === item._id
-            ? { ...i, done: item.done, checked: item.checked }
+            ? {
+                ...i,
+                completed: item.completed,
+                done: item.completed,
+                checked: item.completed,
+              }
             : i,
         ),
       );
@@ -2833,28 +2842,37 @@ function PackingPanel({ toast, trip }) {
     };
   }, [tripId]);
 
-  const done = items.filter((i) => i.done || i.checked).length;
+  const done = items.filter((i) => i.completed || i.done || i.checked).length;
   const total = items.length;
   const pct = total ? Math.round((done / total) * 100) : 0;
   const cats = [...new Set(items.map((i) => i.category || i.cat || "Other"))];
 
   function toggle(idx) {
     const item = items[idx];
-    const newDone = !(item.done || item.checked);
+    const newDone = !(item.completed || item.done || item.checked);
 
     setItems((p) =>
       p.map((it, i) =>
-        i === idx ? { ...it, done: newDone, checked: newDone } : it,
+        i === idx
+          ? { ...it, completed: newDone, done: newDone, checked: newDone }
+          : it,
       ),
     );
 
     if (tripId && item._id) {
       import("../api/chat").then(({ updateChecklistItem }) => {
-        updateChecklistItem(tripId, item._id, { checked: newDone }).catch(
+        updateChecklistItem(tripId, item._id, { completed: newDone }).catch(
           () => {
             setItems((p) =>
               p.map((it, i) =>
-                i === idx ? { ...it, done: !newDone, checked: !newDone } : it,
+                i === idx
+                  ? {
+                      ...it,
+                      completed: !newDone,
+                      done: !newDone,
+                      checked: !newDone,
+                    }
+                  : it,
               ),
             );
             toast("Failed to update item");
@@ -2987,7 +3005,7 @@ function PackingPanel({ toast, trip }) {
                 {items.map((it, i) => {
                   const itemCat = it.category || it.cat || "Other";
                   if (itemCat !== cat) return null;
-                  const isDone = it.done || it.checked;
+                  const isDone = it.completed || it.done || it.checked;
                   const assignedLabel =
                     (typeof it.assignedTo === "object"
                       ? it.assignedTo?.name
@@ -3734,7 +3752,7 @@ const NAV = [
   {
     section: "Group",
     items: [
-      { id: "voting", label: "Voting", icon: "vote", live: true }, // ← live dot added
+      { id: "voting", label: "Voting", icon: "vote", live: true },
       { id: "packing", label: "Packing", icon: "packing" },
       { id: "chat", label: "Group Chat", icon: "chat", live: true },
     ],
