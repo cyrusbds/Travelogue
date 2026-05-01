@@ -1083,6 +1083,202 @@ const PackingPanel = () => {
   );
 };
 
+const NotesPanel = () => {
+  const [input, setInput] = useState("");
+  const messages = [
+    {
+      av: "S",
+      bg: "#C8623A",
+      name: "Sara",
+      time: "09:14",
+      text: "Just checked — Riad Yasmine confirmed! 3 nights, breakfast included.",
+      me: true,
+    },
+    {
+      av: "M",
+      bg: "#3A7CA5",
+      name: "Mohammed",
+      time: "09:17",
+      text: "Amazing! Did they confirm early check-in too?",
+      me: false,
+    },
+    {
+      av: "S",
+      bg: "#C8623A",
+      name: "Sara",
+      time: "09:18",
+      text: "Yes! 11am if the room is free. Fingers crossed 🤞",
+      me: true,
+    },
+    {
+      av: "L",
+      bg: "#5C7A5E",
+      name: "Layla",
+      time: "09:22",
+      text: "Found a desert guide — Ahmed, super rated. Book him for Day 6?",
+      me: false,
+    },
+    {
+      av: "R",
+      bg: "#C8A03A",
+      name: "Reem",
+      time: "09:25",
+      text: "Yes please! The camel trek looked incredible.",
+      me: false,
+    },
+    {
+      av: "S",
+      bg: "#C8623A",
+      name: "Sara",
+      time: "09:26",
+      text: "Let's put it to a vote in the Voting tab!",
+      me: true,
+    },
+  ];
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: 320 }}>
+      <div
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: 8,
+          paddingBottom: 8,
+        }}
+      >
+        {messages.map((m, i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              flexDirection: m.me ? "row-reverse" : "row",
+              alignItems: "flex-end",
+              gap: 6,
+            }}
+          >
+            {!m.me && (
+              <div
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: "50%",
+                  background: m.bg,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 9,
+                  fontWeight: 700,
+                  color: "white",
+                  flexShrink: 0,
+                }}
+              >
+                {m.av}
+              </div>
+            )}
+            <div
+              style={{
+                maxWidth: "72%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: m.me ? "flex-end" : "flex-start",
+                gap: 2,
+              }}
+            >
+              {!m.me && (
+                <span
+                  style={{
+                    fontSize: 10,
+                    color: "rgba(255,255,255,0.35)",
+                    fontWeight: 600,
+                    paddingLeft: 2,
+                  }}
+                >
+                  {m.name}
+                </span>
+              )}
+              <div
+                style={{
+                  padding: "8px 12px",
+                  borderRadius: m.me
+                    ? "14px 14px 3px 14px"
+                    : "14px 14px 14px 3px",
+                  background: m.me ? "#C8623A" : "rgba(255,255,255,0.07)",
+                  color: m.me ? "white" : "rgba(255,255,255,0.8)",
+                  fontSize: 12,
+                  lineHeight: 1.5,
+                }}
+              >
+                {m.text}
+              </div>
+              <span style={{ fontSize: 9, color: "rgba(255,255,255,0.2)" }}>
+                {m.time}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          paddingTop: 10,
+          borderTop: "1px solid rgba(255,255,255,0.06)",
+          flexShrink: 0,
+        }}
+      >
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && setInput("")}
+          placeholder="Message the group…"
+          style={{
+            flex: 1,
+            background: "rgba(255,255,255,0.06)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            borderRadius: 50,
+            padding: "7px 14px",
+            fontSize: 12,
+            color: "rgba(255,255,255,0.8)",
+            fontFamily: "inherit",
+            outline: "none",
+          }}
+        />
+        <button
+          onClick={() => setInput("")}
+          style={{
+            width: 30,
+            height: 30,
+            borderRadius: "50%",
+            background: "#C8623A",
+            border: "none",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+          }}
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="white"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="22" y1="2" x2="11" y2="13" />
+            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const SharePanel = () => {
   const [copied, setCopied] = useState(false);
   const options = [
