@@ -1656,7 +1656,7 @@ function TripCard({ trip, onDelete, onToast }) {
 
 // ─── Main Dashboard ───────────────────────────────────────────────────
 export default function Dashboard() {
-  const { user, logout } = useAuth();
+  const { user, logout, pendingInvite, clearPendingInvite } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -1694,6 +1694,33 @@ export default function Dashboard() {
     }
   }, [loading]);
 
+  useEffect(() => {
+    if (pendingInvite) {
+      setInvites((prev) => {
+        if (prev.some((i) => i.id === pendingInvite.tripId)) return prev;
+        return [
+          {
+            id: pendingInvite.tripId,
+            name: pendingInvite.tripName,
+            dest: pendingInvite.tripDest,
+            dates: pendingInvite.tripDate
+              ? new Date(pendingInvite.tripDate).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })
+              : "Dates TBD",
+            inviter: "via invite link",
+            members: "",
+            joined: true,
+          },
+          ...prev,
+        ];
+      });
+      clearPendingInvite();
+    }
+  }, [pendingInvite]);
+
   // ── Close dropdown on outside click ──────────────────────────────
   useEffect(() => {
     const handler = (e) => {
@@ -1725,9 +1752,13 @@ export default function Dashboard() {
     navigate("/");
   }
 
-  function handleAccept(id, name) {
+  function handleAccept(id, name, joined) {
     setInvites((p) => p.filter((i) => i.id !== id));
-    showToast(`Joined ${name}!`);
+    if (joined) {
+      navigate(`/notebook/${id}`);
+    } else {
+      showToast(`Joined ${name}!`);
+    }
   }
 
   function handleDecline(id) {
@@ -2157,7 +2188,7 @@ export default function Dashboard() {
               <div className="db-invite-btns">
                 <button
                   className="db-btn-acc"
-                  onClick={() => handleAccept(inv.id, inv.name)}
+                  onClick={() => handleAccept(inv.id, inv.name, inv.joined)}
                 >
                   <span
                     style={{

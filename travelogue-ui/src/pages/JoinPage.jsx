@@ -1,9 +1,7 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { apiValidateInvite, apiJoinTrip } from "../api/invites";
 import { useAuth } from "../context/AuthContext";
-import { saveAuth, getStoredUser, logout as clearAuth } from "../api/auth";
-import { apiJoinTrip } from "../api/invites";
 
 export default function JoinPage() {
   const { token } = useParams();
@@ -11,15 +9,27 @@ export default function JoinPage() {
   const { user } = useAuth();
 
   const [tripInfo, setTripInfo] = useState(null);
-  const [status, setStatus] = useState("loading"); // loading | preview | joining | error
+  const [status, setStatus] = useState("loading");
   const [errorMsg, setErrorMsg] = useState("");
-  const [nickname, setNickname] = useState("");
 
   useEffect(() => {
     apiValidateInvite(token)
       .then((data) => {
         setTripInfo(data);
-        setStatus("preview");
+
+        // ── If not logged in, save token and redirect to auth ──────────────
+        if (!user) {
+          localStorage.setItem("pending_invite_token", token);
+          localStorage.setItem(
+            "pending_invite_trip",
+            JSON.stringify(data.trip),
+          );
+          setStatus("redirecting");
+          // Give user a moment to read the message before redirect
+          setTimeout(() => navigate("/?auth=signup"), 1800);
+        } else {
+          setStatus("preview");
+        }
       })
       .catch((err) => {
         setErrorMsg(err.message);
@@ -27,10 +37,19 @@ export default function JoinPage() {
       });
   }, [token]);
 
+  // ── If user is already logged in and visits the link, auto-join ──────────
+  useEffect(() => {
+    if (user && tripInfo && status === "preview") {
+      handleJoin();
+    }
+  }, [user, tripInfo]);
+
   async function handleJoin() {
     setStatus("joining");
     try {
-      const result = await apiJoinTrip(token, !user ? nickname : null);
+      const result = await apiJoinTrip(token, null);
+      localStorage.removeItem("pending_invite_token");
+      localStorage.removeItem("pending_invite_trip");
       navigate(`/notebook/${result.tripId}`);
     } catch (err) {
       setErrorMsg(err.message);
@@ -87,19 +106,6 @@ export default function JoinPage() {
       border: "1px solid rgba(40,200,64,0.2)",
       marginBottom: 24,
     },
-    input: {
-      width: "100%",
-      background: "rgba(255,255,255,0.04)",
-      border: "1px solid rgba(255,255,255,0.1)",
-      borderRadius: 10,
-      padding: "10px 14px",
-      color: "rgba(255,255,255,0.88)",
-      fontFamily: "'DM Sans', sans-serif",
-      fontSize: "0.85rem",
-      outline: "none",
-      marginBottom: 14,
-      boxSizing: "border-box",
-    },
     btn: {
       width: "100%",
       padding: "12px 0",
@@ -118,7 +124,19 @@ export default function JoinPage() {
       color: "rgba(255,255,255,0.25)",
       marginTop: 16,
     },
+    info: {
+      fontSize: "0.82rem",
+      color: "rgba(255,255,255,0.5)",
+      lineHeight: 1.6,
+      marginBottom: 20,
+    },
   };
+
+  const Logo = () => (
+    <div style={styles.logo}>
+      Travel<em style={{ fontStyle: "italic", color: "#3A7CA5" }}>ogue</em>
+    </div>
+  );
 
   if (status === "loading")
     return (
@@ -133,10 +151,7 @@ export default function JoinPage() {
     return (
       <div style={styles.root}>
         <div style={styles.card}>
-          <div style={styles.logo}>
-            Travel
-            <em style={{ fontStyle: "italic", color: "#3A7CA5" }}>ogue</em>
-          </div>
+          <Logo />
           <div style={{ fontSize: "2rem", marginBottom: 12 }}>🚫</div>
           <div style={styles.title}>Invalid Invite</div>
           <div style={styles.error}>{errorMsg}</div>
@@ -150,14 +165,72 @@ export default function JoinPage() {
       </div>
     );
 
-  const trip = tripInfo?.trip;
+  // ── Redirecting non-logged-in user to signup ──────────────────────────────
+  if (status === "redirecting") {
+    const trip = tripInfo?.trip;
+    return (
+      <div style={styles.root}>
+        <div style={styles.card}>
+          <Logo />
+          <div style={styles.emoji}>{trip?.emoji || "✈️"}</div>
+          <div style={styles.title}>{trip?.name}</div>
+          <div style={styles.meta}>
+            {trip?.dest && `${trip.dest} · `}
+            {trip?.startDate &&
+              new Date(trip.startDate).toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
+          </div>
+          <div style={styles.badge}>You're invited!</div>
+          <div style={styles.info}>
+            You need a{" "}
+            <strong style={{ color: "rgba(255,255,255,0.75)" }}>
+              free Travelogue account
+            </strong>{" "}
+            to join this trip.
+            <br />
+            <br />
+            Redirecting you to sign up — your invite will be waiting once you're
+            in. ✨
+          </div>
+          <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "#C8623A",
+                  animation: `blink 1.2s ease-in-out ${i * 0.2}s infinite`,
+                }}
+              />
+            ))}
+          </div>
+          <style>{`@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }`}</style>
+        </div>
+      </div>
+    );
+  }
 
+  // ── Logged-in user — auto-joining ─────────────────────────────────────────
+  if (status === "joining")
+    return (
+      <div style={styles.root}>
+        <div style={{ color: "rgba(255,255,255,0.35)", fontSize: 14 }}>
+          Joining trip…
+        </div>
+      </div>
+    );
+
+  // ── Preview ────────────────────────────────
+  const trip = tripInfo?.trip;
   return (
     <div style={styles.root}>
       <div style={styles.card}>
-        <div style={styles.logo}>
-          Travel<em style={{ fontStyle: "italic", color: "#3A7CA5" }}>ogue</em>
-        </div>
+        <Logo />
         <div style={styles.emoji}>{trip?.emoji || "✈️"}</div>
         <div style={styles.title}>{trip?.name}</div>
         <div style={styles.meta}>
@@ -171,47 +244,8 @@ export default function JoinPage() {
         </div>
         <div style={styles.badge}>You're invited to join this trip</div>
 
-        {/* Guest nickname input */}
-        {!user && tripInfo?.guestAccess && (
-          <input
-            style={styles.input}
-            placeholder="Enter your nickname…"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-          />
-        )}
-
-        {!user && !tripInfo?.guestAccess && (
-          <div
-            style={{
-              fontSize: "0.82rem",
-              color: "rgba(255,255,255,0.4)",
-              marginBottom: 16,
-            }}
-          >
-            You need an account to join this trip.{" "}
-            <span
-              style={{ color: "#C8623A", cursor: "pointer" }}
-              onClick={() => navigate("/")}
-            >
-              Sign up free →
-            </span>
-          </div>
-        )}
-
-        <button
-          style={{
-            ...styles.btn,
-            opacity: !user && !tripInfo?.guestAccess ? 0.4 : 1,
-          }}
-          disabled={!user && !tripInfo?.guestAccess}
-          onClick={handleJoin}
-        >
-          {status === "joining"
-            ? "Joining…"
-            : user
-              ? "Join Trip"
-              : "Join as Guest"}
+        <button style={styles.btn} onClick={handleJoin}>
+          Join Trip
         </button>
 
         {user && (
@@ -225,58 +259,4 @@ export default function JoinPage() {
       </div>
     </div>
   );
-  const AuthContext = createContext();
-
-  export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(getStoredUser());
-    const [pendingInvite, setPendingInvite] = useState(null);
-
-    // ── Called after login OR signup ─────────────────────────────────────────
-    const loginUser = async (token, userData) => {
-      saveAuth(token, userData);
-      setUser(userData);
-
-      // ── Check for a saved invite token ───────────────────────────────────
-      const inviteToken = localStorage.getItem("pending_invite_token");
-      const inviteTrip = localStorage.getItem("pending_invite_trip");
-
-      if (inviteToken) {
-        try {
-          const result = await apiJoinTrip(inviteToken, null);
-
-          const tripData = inviteTrip ? JSON.parse(inviteTrip) : null;
-
-          setPendingInvite({
-            tripId: result.tripId,
-            tripName: tripData?.name || "Trip",
-            tripDest: tripData?.dest || "",
-            tripDate: tripData?.startDate || null,
-          });
-        } catch (err) {
-          console.warn("Auto-join failed:", err.message);
-        } finally {
-          localStorage.removeItem("pending_invite_token");
-          localStorage.removeItem("pending_invite_trip");
-        }
-      }
-    };
-
-    const clearPendingInvite = () => setPendingInvite(null);
-
-    const logout = () => {
-      clearAuth();
-      setUser(null);
-      setPendingInvite(null);
-    };
-
-    return (
-      <AuthContext.Provider
-        value={{ user, loginUser, logout, pendingInvite, clearPendingInvite }}
-      >
-        {children}
-      </AuthContext.Provider>
-    );
-  };
-
-  export const useAuth = () => useContext(AuthContext);
 }
