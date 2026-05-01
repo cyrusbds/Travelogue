@@ -18,6 +18,10 @@ const FAQS = [
     a: "No. Travelogue currently requires an internet connection and does not support offline downloads or offline itinerary access yet.",
   },
   {
+    q: "How does the budget splitter work?",
+    a: "Any member can log an expense and specify who paid and how it should be split. Travelogue automatically calculates balances in real time and generates a final settlement summary at the end of the trip — showing exactly who owes who, and how much.",
+  },
+  {
     q: "Is Travelogue suitable for travel agencies?",
     a: "Absolutely. Our Institutional plan offers a fully white-labeled platform with custom branding and domain, dedicated account management, API access, and SLA-backed enterprise support. Contact us for a tailored demo and pricing.",
   },
