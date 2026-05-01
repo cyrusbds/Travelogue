@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import logo from ".assets/logo.png";
+import logo from ".assets/travellogo.png";
 
 const NAV_LINKS = [
   { label: "About",        href: "#about" },
