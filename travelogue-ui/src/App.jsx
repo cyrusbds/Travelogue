@@ -86,7 +86,7 @@ export default function App() {
       />
 
       <Route
-        path="/join/:token" element={<JoinTripPage />} />
+        path="/join/:token" element={<JoinPage />} />
 
       <Route
         path="/"
