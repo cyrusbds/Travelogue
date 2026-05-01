@@ -200,19 +200,6 @@ export default function HeroSection({ onOpenModal }) {
         .av4{background:#C8A03A;}
         .av-text { font-size: 0.75rem; color: var(--text-light); margin-left: 10px; }
 
-        /* Budget card */
-        .budget-card {
-          width: 200px; top: 20px; right: 0; z-index: 2;
-          background: linear-gradient(135deg, var(--ocean), var(--ocean-light));
-          color: white;
-        }
-        .budget-card .card-label { font-size: 0.7rem; opacity: 0.8; font-weight: 500; margin-bottom: 4px; }
-        .budget-total { font-size: 1.4rem; font-weight: 700; }
-        .budget-sub   { font-size: 0.72rem; opacity: 0.75; margin-bottom: 12px; }
-        .budget-bar-track { background: rgba(255,255,255,0.25); border-radius: 50px; height: 6px; margin-bottom: 4px; }
-        .budget-bar-fill  { height: 100%; border-radius: 50px; background: white; }
-        .budget-label-sm  { font-size: 0.68rem; opacity: 0.75; }
-
         /* Map card */
         .map-card { width: 220px; bottom: 30px; left: 0; z-index: 2; padding: 16px; }
         .map-preview {
@@ -365,17 +352,6 @@ export default function HeroSection({ onOpenModal }) {
                   <div className="av av4">R</div>
                   <span className="av-text">+1 editing now</span>
                 </div>
-              </div>
-
-              {/* Budget card */}
-              <div className="trip-card budget-card float2">
-                <div className="card-label">GROUP BUDGET</div>
-                <div className="budget-total">2,450 AED</div>
-                <div className="budget-sub">of 4,000 AED total</div>
-                <div className="budget-bar-track">
-                  <div className="budget-bar-fill" style={{ width: "61%" }} />
-                </div>
-                <div className="budget-label-sm">61% used · 4 members</div>
               </div>
 
               {/* Map card */}

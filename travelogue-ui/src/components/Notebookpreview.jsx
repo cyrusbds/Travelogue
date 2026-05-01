@@ -375,7 +375,7 @@ const Icon = {
 // ─── Nav config ───────────────────────────────────────────────────────
 const navGroups = [
   { label: "Planning", items: ["itinerary", "calendar", "map"] },
-  { label: "Group", items: ["voting", "budget", "packing", "notes"] },
+  { label: "Group", items: ["voting", "packing", "notes"] },
   { label: "Logistics", items: ["bookings", "share"] },
 ];
 
@@ -403,12 +403,6 @@ const panels = {
     label: "Voting",
     title: "Group Voting",
     meta: "Anonymous · Results lock into itinerary",
-  },
-  budget: {
-    iconKey: "wallet",
-    label: "Budget",
-    title: "Budget Splitter",
-    meta: "Live tracking · Auto settlement",
   },
   packing: {
     iconKey: "check",
@@ -550,167 +544,6 @@ const ItineraryPanel = () => {
         </div>
       ))}
     </div>
-  );
-};
-
-const BudgetPanel = () => {
-  const stats = [
-    { num: "2,545", label: "Total Spent" },
-    { num: "509", label: "Per Person" },
-    { num: "1,455", label: "Remaining" },
-  ];
-  const expenses = [
-    {
-      icon: Icon.plane(14),
-      bg: "rgba(200,98,58,0.15)",
-      name: "Emirates EK152 — Dubai to Marrakech",
-      who: "Sara paid",
-      amount: "1,250 AED",
-    },
-    {
-      icon: Icon.hotel(14),
-      bg: "rgba(58,124,165,0.15)",
-      name: "Riad Yasmine – 3 nights",
-      who: "Mohammed paid",
-      amount: "680 AED",
-    },
-    {
-      icon: Icon.car(14),
-      bg: "rgba(92,122,94,0.15)",
-      name: "Europcar SUV rental",
-      who: "Layla paid",
-      amount: "420 AED",
-    },
-    {
-      icon: Icon.food(14),
-      bg: "rgba(200,160,58,0.15)",
-      name: "Nomad Restaurant dinner",
-      who: "Split equally",
-      amount: "195 AED",
-    },
-  ];
-  return (
-    <>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          gap: 10,
-          marginBottom: 18,
-        }}
-      >
-        {stats.map((s, i) => (
-          <div
-            key={i}
-            style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.07)",
-              borderRadius: 12,
-              padding: "12px 10px",
-              textAlign: "center",
-            }}
-          >
-            <div
-              style={{
-                fontSize: 17,
-                fontWeight: 700,
-                color: "white",
-                lineHeight: 1,
-              }}
-            >
-              {s.num}
-            </div>
-            <div
-              style={{
-                fontSize: 9,
-                color: "rgba(255,255,255,0.35)",
-                marginTop: 3,
-              }}
-            >
-              {s.label} (AED)
-            </div>
-          </div>
-        ))}
-      </div>
-      {expenses.map((e, i) => (
-        <div
-          key={i}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            padding: "9px 12px",
-            background: "rgba(255,255,255,0.03)",
-            borderRadius: 11,
-            border: "1px solid rgba(255,255,255,0.05)",
-            marginBottom: 7,
-          }}
-        >
-          <div
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 9,
-              background: e.bg,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "rgba(255,255,255,0.7)",
-              flexShrink: 0,
-            }}
-          >
-            {e.icon}
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div
-              style={{
-                fontSize: 12,
-                color: "rgba(255,255,255,0.8)",
-                fontWeight: 600,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {e.name}
-            </div>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>
-              {e.who}
-            </div>
-          </div>
-          <div
-            style={{
-              fontSize: 13,
-              fontWeight: 700,
-              color: "white",
-              flexShrink: 0,
-            }}
-          >
-            {e.amount}
-          </div>
-        </div>
-      ))}
-      <div
-        style={{
-          background: "rgba(92,122,94,0.15)",
-          border: "1px solid rgba(92,122,94,0.3)",
-          borderRadius: 12,
-          padding: "12px 14px",
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          marginTop: 4,
-        }}
-      >
-        <span style={{ color: "#7A9E7C", display: "flex" }}>
-          {Icon.settlement(14)}
-        </span>
-        <span style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>
-          Settlement ready —{" "}
-          <strong style={{ color: "#7A9E7C" }}>Reem owes Sara 124 AED</strong>
-        </span>
-      </div>
-    </>
   );
 };
 
@@ -1753,7 +1586,6 @@ const panelComponents = {
   calendar: CalendarPanel,
   map: MapPanel,
   voting: VotingPanel,
-  budget: BudgetPanel,
   packing: PackingPanel,
   notes: NotesPanel,
   share: SharePanel,

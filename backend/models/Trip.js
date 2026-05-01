@@ -113,7 +113,6 @@ const tripSchema = new mongoose.Schema(
     // ── Notebook data ──
     activities: [activitySchema],
     pins: [pinSchema],
-    expenses: [expenseSchema],
     votes: [voteSchema],
     messages: [messageSchema],
     packItems: [packItemSchema],

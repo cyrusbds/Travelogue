@@ -88,40 +88,6 @@ export async function apiDeletePin(tripId, pinId) {
   return data;
 }
 
-// ── Budget & Expenses ────────────────────────────────────────────────────────
-
-export async function apiSetBudget(tripId, budget) {
-  const res = await fetch(`${BASE}/${tripId}/budget`, {
-    method: "PATCH",
-    headers: authHeader(),
-    body: JSON.stringify({ budget }),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message);
-  return data;
-}
-
-export async function apiAddExpense(tripId, expense) {
-  const res = await fetch(`${BASE}/${tripId}/expenses`, {
-    method: "POST",
-    headers: authHeader(),
-    body: JSON.stringify(expense),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message);
-  return data;
-}
-
-export async function apiDeleteExpense(tripId, expId) {
-  const res = await fetch(`${BASE}/${tripId}/expenses/${expId}`, {
-    method: "DELETE",
-    headers: authHeader(),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message);
-  return data;
-}
-
 // ── Votes ────────────────────────────────────────────────────────────────────
 
 export async function apiAddVote(tripId, voteData) {

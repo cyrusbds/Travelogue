@@ -351,21 +351,6 @@ const Icon = {
       <path d="M6 20v-6" />
     </svg>
   ),
-  budget: (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="12" y1="1" x2="12" y2="23" />
-      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-    </svg>
-  ),
   packing: (
     <svg
       width="18"
@@ -3766,37 +3751,6 @@ export default function Notebook({ trip: initialTrip }) {
   useEffect(() => {
     setTrip(initialTrip);
   }, [initialTrip]);
-
-  useEffect(() => {
-    if (!trip?._id) return;
-
-    socket.emit("join:trip", trip._id);
-
-    socket.on("trip:member_joined", ({ tripId, user: joiner }) => {
-      if (tripId?.toString() !== trip._id?.toString()) return;
-
-      setTrip((prev) => {
-        const alreadyIn = prev.members?.some(
-          (m) => (m._id || m)?.toString() === joiner.id,
-        );
-        if (alreadyIn) return prev;
-        return {
-          ...prev,
-          members: [
-            ...(prev.members || []),
-            { _id: joiner.id, name: joiner.name },
-          ],
-        };
-      });
-
-      toast(`${joiner.name} joined the trip!`);
-    });
-
-    return () => {
-      socket.off("trip:member_joined");
-      socket.emit("leave:trip", trip._id);
-    };
-  }, [trip?._id]);
 
   const tripName = trip?.name || "My Trip Notebook";
   const tripDest = trip?.dest || "";

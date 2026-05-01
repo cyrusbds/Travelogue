@@ -19,11 +19,6 @@ router.delete("/:id/activities/:actId", protect, ctrl.deleteActivity);
 router.post("/:id/pins", protect, ctrl.addPin);
 router.delete("/:id/pins/:pinId", protect, ctrl.deletePin);
 
-// ── Budget & Expenses ────────────────────────────────────────────────────────
-router.patch("/:id/budget", protect, ctrl.setBudget);
-router.post("/:id/expenses", protect, ctrl.addExpense);
-router.delete("/:id/expenses/:expId", protect, ctrl.deleteExpense);
-
 // ── Legacy Votes (embedded in Trip doc — kept for backward compat) ────────────
 router.post("/:id/votes", protect, ctrl.addVote);
 router.post("/:id/votes/:voteId/cast", protect, ctrl.castVote);

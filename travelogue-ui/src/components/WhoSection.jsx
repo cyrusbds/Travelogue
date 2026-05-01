@@ -85,7 +85,7 @@ const USE_CASES = [
     ),
     title: "Corporate & Team Travel",
     description:
-      "Organize team offsites, conference travel, or client trips without the back-and-forth emails. Centralize bookings, agendas, and expenses in one place.",
+      "Organize team offsites, conference travel, or client trips without the back-and-forth emails. Centralize bookings, and agendas.",
     tags: ["Team offsites", "Conferences", "Incentive trips"],
   },
   {

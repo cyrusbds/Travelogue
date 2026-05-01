@@ -286,46 +286,6 @@
   margin-left: 10px;
 }
 
-.budget-card {
-  width: 200px;
-  top: 20px;
-  right: 0;
-  z-index: 2;
-  background: linear-gradient(135deg, var(--ocean), var(--ocean-light));
-  color: white;
-  padding: 20px;
-}
-.card-label {
-  font-size: 0.7rem;
-  opacity: 0.8;
-  font-weight: 500;
-  margin-bottom: 4px;
-}
-.budget-total {
-  font-size: 1.4rem;
-  font-weight: 700;
-}
-.budget-sub {
-  font-size: 0.72rem;
-  opacity: 0.75;
-  margin-bottom: 12px;
-}
-.budget-bar-track {
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 50px;
-  height: 6px;
-  margin-bottom: 4px;
-}
-.budget-bar-fill {
-  height: 100%;
-  border-radius: 50px;
-  background: white;
-}
-.budget-label {
-  font-size: 0.68rem;
-  opacity: 0.75;
-}
-
 .map-card {
   width: 220px;
   bottom: 30px;

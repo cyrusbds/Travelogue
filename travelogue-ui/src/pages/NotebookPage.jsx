@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { apiGetTrip } from "../api/trips"; // ← single trip fetch
+import { apiGetTrip } from "../api/trips";
 import Notebook from "../components/Notebook";
+import socket from "../api/socket";
 
 export default function NotebookPage() {
   const { id } = useParams();
@@ -10,9 +11,8 @@ export default function NotebookPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    apiGetTrip(id) // ← fetch just this trip
+    apiGetTrip(id)
       .then((data) => {
-        // apiGetTrip returns the trip object directly
         const found = data.trip ?? data;
         if (!found) navigate("/dashboard");
         else setTrip(found);
@@ -20,6 +20,38 @@ export default function NotebookPage() {
       .catch(() => navigate("/dashboard"))
       .finally(() => setLoading(false));
   }, [id]);
+
+  // ── Real-time member join ──────────────────────────────────
+  useEffect(() => {
+    if (!id) return;
+
+    socket.emit("join:trip", id);
+
+    socket.on("trip:member_joined", ({ tripId, user: joiner }) => {
+      if (tripId?.toString() !== id?.toString()) return;
+
+      setTrip((prev) => {
+        if (!prev) return prev;
+        const alreadyIn = prev.members?.some(
+          (m) => (m._id || m)?.toString() === joiner.id,
+        );
+        if (alreadyIn) return prev;
+        return {
+          ...prev,
+          members: [
+            ...(prev.members || []),
+            { _id: joiner.id, name: joiner.name },
+          ],
+        };
+      });
+    });
+
+    return () => {
+      socket.off("trip:member_joined");
+      socket.emit("leave:trip", id);
+    };
+  }, [id]);
+  // ─────────────────────────────────────────────────────────
 
   if (loading)
     return (

@@ -14,7 +14,7 @@ const LEGAL = {
         <p className="legal-p">
           When you create an account, we collect your name, email address, and a
           hashed password. When you create or join a trip, we store your group's
-          itinerary, notes, expenses, votes, and any photos you upload.
+          itinerary, notes, votes, and any photos you upload.
         </p>
         <div className="legal-h2">2. How We Use Your Information</div>
         <ul className="legal-ul">

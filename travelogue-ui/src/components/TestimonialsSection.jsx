@@ -8,7 +8,7 @@ const TESTIMONIALS = [
     featured: false,
   },
   {
-    text: "As the person who always ends up planning everything, Travelogue was a lifesaver. I shared the link, and suddenly everyone was actually contributing. The budget splitter alone is worth it.",
+    text: "As the person who always ends up planning everything, Travelogue was a lifesaver. I shared the link, and suddenly everyone was actually contributing.",
     name: "Khalid Mansour",
     role: "Riyadh, Saudi Arabia · Southeast Asia",
     av: "K",

@@ -1025,75 +1025,6 @@
   margin-top: 8px;
   border: 1px solid rgba(200, 98, 58, 0.3);
 }
-
-/* Budget */
-.budget-overview {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-.budget-stat {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 14px;
-  padding: 14px 16px;
-  text-align: center;
-}
-.budget-stat-num {
-  font-family: "Playfair Display", serif;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: white;
-  line-height: 1;
-}
-.budget-stat-label {
-  font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.35);
-  margin-top: 4px;
-}
-.expense-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-.expense-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-.expense-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.9rem;
-  flex-shrink: 0;
-}
-.expense-details {
-  flex: 1;
-}
-.expense-name {
-  font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 600;
-}
-.expense-who {
-  font-size: 0.68rem;
-  color: rgba(255, 255, 255, 0.35);
-}
-.expense-amount {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: white;
-}
 .settlement-banner {
   background: linear-gradient(
     135deg,
@@ -1749,9 +1680,6 @@
   }
   .share-panel-inner {
     grid-template-columns: 1fr;
-  }
-  .budget-overview {
-    grid-template-columns: 1fr 1fr;
   }
   .moodboard-grid {
     grid-template-columns: repeat(2, 1fr);
