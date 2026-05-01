@@ -151,7 +151,7 @@ const FEATURES = [
       </svg>
     ),
     color: "terra",
-    title: "Notes & Shared Packing List",
+    title: "Shared Packing List",
     desc: "A shared checklist your group can tick off together — so nobody forgets sunscreen again.",
   },
 ];
