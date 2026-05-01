@@ -1,24 +1,69 @@
 import { useState } from "react";
 
-const FREE_FEATURES    = ["Up to 6 members","1 active trip","Itinerary, map & calendar","QR code & link sharing"];
-const FREE_MISSING     = ["Group voting"];
-const PREMIUM_FEATURES = ["Unlimited members","Unlimited active trips","All planning features","Anonymous group voting","Priority support"];
-const INST_FEATURES    = ["Everything in Premium","White-labeled platform","Custom domain & branding","Dedicated account manager","API & webhook access","SLA & enterprise support"];
+const FREE_FEATURES = [
+  "Up to 6 members",
+  "1 active trip",
+  "Itinerary, map & calendar",
+  "QR code & link sharing",
+];
+const FREE_MISSING = ["Group voting"];
+const PREMIUM_FEATURES = [
+  "Unlimited members",
+  "Unlimited active trips",
+  "All planning features",
+  "Anonymous group voting",
+  "Priority support",
+];
+const INST_FEATURES = [
+  "Everything in Premium",
+  "White-labeled platform",
+  "Custom domain & branding",
+  "Dedicated account manager",
+  "API & webhook access",
+  "SLA & enterprise support",
+];
 
 const CheckIcon = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="20 6 9 17 4 12"/>
+  <svg
+    width="11"
+    height="11"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="3"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="20 6 9 17 4 12" />
   </svg>
 );
 const XIcon = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  <svg
+    width="11"
+    height="11"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="3"
+    strokeLinecap="round"
+  >
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
   </svg>
 );
 const ShieldIcon = () => (
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-    <polyline points="9 12 11 14 15 10"/>
+  <svg
+    width="26"
+    height="26"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    <polyline points="9 12 11 14 15 10" />
   </svg>
 );
 
@@ -136,36 +181,59 @@ export default function PricingSection({ onOpenModal, onOpenDemo }) {
 
           {/* Billing toggle */}
           <div className="billing-toggle-wrap">
-            <span className={`billing-lbl${!annual ? " active" : ""}`}>Monthly</span>
+            <span className={`billing-lbl${!annual ? " active" : ""}`}>
+              Monthly
+            </span>
             <button
               className={`billing-btn${annual ? " on" : ""}`}
-              onClick={() => setAnnual(v => !v)}
+              onClick={() => setAnnual((v) => !v)}
               aria-label="Toggle billing period"
             >
               <div className="billing-knob" />
             </button>
-            <span className={`billing-lbl${annual ? " active" : ""}`}>Annual</span>
-            <div className={`save-pill${annual ? " active" : ""}`}>Save 30%</div>
+            <span className={`billing-lbl${annual ? " active" : ""}`}>
+              Annual
+            </span>
+            <div className={`save-pill${annual ? " active" : ""}`}>
+              Save 30%
+            </div>
           </div>
         </div>
 
         <div className="pricing-grid reveal">
-
           {/* ── Free ── */}
           <div className="pricing-card">
             <div className="pricing-tier">Free</div>
-            <div className="pricing-price">0 <span style={{ fontSize:"1rem", fontWeight:400 }}>AED</span></div>
+            <div className="pricing-price">
+              0 <span style={{ fontSize: "1rem", fontWeight: 400 }}>AED</span>
+            </div>
             <div className="pricing-period">Forever free — no credit card</div>
-            <p className="pricing-desc">For small friend groups wanting to try collaborative travel planning.</p>
+            <p className="pricing-desc">
+              For small friend groups wanting to try collaborative travel
+              planning.
+            </p>
             <ul className="pricing-features">
-              {FREE_FEATURES.map(f => (
-                <li key={f}><div className="check-circle"><CheckIcon /></div>{f}</li>
+              {FREE_FEATURES.map((f) => (
+                <li key={f}>
+                  <div className="check-circle">
+                    <CheckIcon />
+                  </div>
+                  {f}
+                </li>
               ))}
-              {FREE_MISSING.map(f => (
-                <li key={f} className="feat-dim"><div className="check-x"><XIcon /></div>{f}</li>
+              {FREE_MISSING.map((f) => (
+                <li key={f} className="feat-dim">
+                  <div className="check-x">
+                    <XIcon />
+                  </div>
+                  {f}
+                </li>
               ))}
             </ul>
-            <button className="pricing-cta" onClick={() => onOpenModal?.("signup")}>
+            <button
+              className="pricing-cta"
+              onClick={() => onOpenModal?.("signup")}
+            >
               Get Started Free
             </button>
             <p className="pricing-card-note">No credit card required</p>
@@ -176,59 +244,99 @@ export default function PricingSection({ onOpenModal, onOpenDemo }) {
             <div className="featured-badge">Most Popular</div>
             <div className="pricing-tier">Premium</div>
             <div className="pricing-price">
-              {annual ? "10.49" : "14.99"} <span style={{ fontSize:"1rem", fontWeight:400 }}>AED</span>
+              {annual ? "10.49" : "14.99"}{" "}
+              <span style={{ fontSize: "1rem", fontWeight: 400 }}>AED</span>
             </div>
             <div className="pricing-period">
-              {annual ? "per month, billed 125.88 AED annually" : "per month · cancel any time"}
+              {annual
+                ? "per month, billed 125.88 AED annually"
+                : "per month · cancel any time"}
             </div>
-            <p className="pricing-desc">The full Travelogue experience — no limits on members, trips, or features.</p>
+            <p className="pricing-desc">
+              The full Travelogue experience — no limits on members, trips, or
+              features.
+            </p>
             <ul className="pricing-features">
               {PREMIUM_FEATURES.map((f, i) => (
                 <li key={f}>
-                  <div className="check-circle"><CheckIcon /></div>
-                  {i < 2
-                    ? <><strong>{f.split(" ")[0]}</strong> {f.split(" ").slice(1).join(" ")}</>
-                    : f}
+                  <div className="check-circle">
+                    <CheckIcon />
+                  </div>
+                  {i < 2 ? (
+                    <>
+                      <strong>{f.split(" ")[0]}</strong>{" "}
+                      {f.split(" ").slice(1).join(" ")}
+                    </>
+                  ) : (
+                    f
+                  )}
                 </li>
               ))}
             </ul>
             {/* Opens CheckoutModal, passes current annual state */}
-            <button className="pricing-cta featured-cta" onClick={() => onOpenModal?.("checkout", annual)}>
+            <button
+              className="pricing-cta featured-cta"
+              onClick={() => onOpenModal?.("checkout", annual)}
+            >
               Start Free 14-Day Trial
             </button>
-            <p className="pricing-card-note" style={{ color:"rgba(255,255,255,0.45)" }}>No card charged until trial ends</p>
+            <p
+              className="pricing-card-note"
+              style={{ color: "rgba(255,255,255,0.45)" }}
+            >
+              No card charged until trial ends
+            </p>
           </div>
 
           {/* ── Institutional ── */}
           <div className="pricing-card">
             <div className="pricing-tier">Institutional</div>
-            <div className="pricing-price" style={{ fontSize:"1.8rem", lineHeight:1.2 }}>Custom</div>
+            <div
+              className="pricing-price"
+              style={{ fontSize: "1.8rem", lineHeight: 1.2 }}
+            >
+              Custom
+            </div>
             <div className="pricing-period">Tailored to your organisation</div>
-            <p className="pricing-desc">For agencies, universities &amp; businesses needing a white-labeled group planning platform.</p>
+            <p className="pricing-desc">
+              For agencies, universities &amp; businesses needing a
+              white-labeled group planning platform.
+            </p>
             <ul className="pricing-features">
-              {INST_FEATURES.map(f => (
-                <li key={f}><div className="check-circle"><CheckIcon /></div>{f}</li>
+              {INST_FEATURES.map((f) => (
+                <li key={f}>
+                  <div className="check-circle">
+                    <CheckIcon />
+                  </div>
+                  {f}
+                </li>
               ))}
             </ul>
             <button className="pricing-cta" onClick={() => onOpenDemo?.()}>
               Book a Demo
             </button>
-            <p className="pricing-card-note">Usually responds within 1 business day</p>
+            <p className="pricing-card-note">
+              Usually responds within 1 business day
+            </p>
           </div>
-
         </div>
 
         {/* Guarantee */}
         <div className="pricing-guarantee reveal">
-          <div className="guarantee-icon"><ShieldIcon /></div>
+          <div className="guarantee-icon">
+            <ShieldIcon />
+          </div>
           <div className="guarantee-text">
-            <strong>14-day money-back guarantee on Premium.</strong>{" "}
-            If you're not happy for any reason, email us within 14 days of your first charge and we'll refund you fully — no questions asked.
+            <strong>14-day money-back guarantee on Premium.</strong> If you're
+            not happy for any reason, email us within 14 days of your first
+            charge and we'll refund you fully — no questions asked.
           </div>
         </div>
 
         <p className="pricing-note">
-          Need help choosing? <a href="#faq">Read the FAQ</a> or <a href="mailto:hello@travelogue.app">email us</a> — we respond within a few hours.
+          Need help choosing? <a href="#faq">Read the FAQ</a> or{" "}
+          <a href="mailto:hello@travelogue.app">email us</a> — we respond within
+          a few hours.
         </p>
       </section>
     </>

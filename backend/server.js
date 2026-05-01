@@ -1,18 +1,12 @@
-// server.js — UPDATED version
-// Changes from original:
-//   1. Import and register registerPollEvents alongside registerChatEvents
-//   2. Attach `io` to every request via middleware (needed by poll controller)
-// Everything else is identical to the original.
-
 require("dotenv").config();
 
-const express  = require("express");
+const express = require("express");
 const mongoose = require("mongoose");
-const cors     = require("cors");
-const http     = require("http");
+const cors = require("cors");
+const http = require("http");
 const { Server } = require("socket.io");
 
-const app    = express();
+const app = express();
 const server = http.createServer(app);
 
 // ── Socket.IO setup ──────────────────────────────────────────────────────────
@@ -23,18 +17,19 @@ const io = new Server(server, {
   },
 });
 
-const { registerChatEvents } = require('./socketHandlers/chatSocket');
-const { registerPollEvents } = require('./socketHandlers/pollSocket'); // ← NEW
+const { registerChatEvents } = require("./socketHandlers/chatSocket");
+const { registerPollEvents } = require("./socketHandlers/pollSocket");
+const { registerMapEvents } = require("./socketHandlers/mapSocket");
 
 io.on("connection", (socket) => {
   console.log("Socket connected:", socket.id);
   registerChatEvents(io, socket);
-  registerPollEvents(io, socket); // ← NEW
+  registerPollEvents(io, socket);
+  registerMapEvents(io, socket);
 });
 
 // ── Attach io to every request so controllers can emit events ────────────────
-// This is the standard pattern; it avoids passing io through every call chain.
-app.use((req, _res, next) => {  // ← NEW
+app.use((req, _res, next) => {
   req.io = io;
   next();
 });
@@ -52,17 +47,18 @@ app.use("/api/trips/:tripId/itinerary", itineraryRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/invites", inviteRoutes);
 
-
 app.get("/", (req, res) => res.json({ message: "Travelogue API running" }));
 
-mongoose.connection.on("error", (err) => console.error("MongoDB runtime error:", err));
+mongoose.connection.on("error", (err) =>
+  console.error("MongoDB runtime error:", err),
+);
 
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("MongoDB connected");
     server.listen(process.env.PORT || 5000, () =>
-      console.log(`Server running on port ${process.env.PORT || 5000}`)
+      console.log(`Server running on port ${process.env.PORT || 5000}`),
     );
   })
   .catch((err) => {

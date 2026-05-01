@@ -3,11 +3,11 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const NAV_LINKS = [
-  { label: "About",        href: "#about" },
-  { label: "Features",     href: "#features" },
-  { label: "Notebook",     href: "#notebook" },
+  { label: "About", href: "#about" },
+  { label: "Features", href: "#features" },
+  { label: "Notebook", href: "#notebook" },
   { label: "How It Works", href: "#how" },
-  { label: "Pricing",      href: "#pricing" },
+  { label: "Pricing", href: "#pricing" },
 ];
 
 export default function Navbar({ onOpenModal }) {
@@ -134,13 +134,26 @@ export default function Navbar({ onOpenModal }) {
 
       <nav className={`tl-nav${scrolled ? " scrolled" : ""}`}>
         <a href="/" className="tl-logo">
-          <img src="/travellogo.png" alt="" style={{ height: 42, width: 42, borderRadius: 10, objectFit: "cover" }} />
-          <span className="tl-logo-text">Travel<span>ogue</span></span>
+          <img
+            src="/travellogo.png"
+            alt=""
+            style={{
+              height: 42,
+              width: 42,
+              borderRadius: 10,
+              objectFit: "cover",
+            }}
+          />
+          <span className="tl-logo-text">
+            Travel<span>ogue</span>
+          </span>
         </a>
 
         <ul className="tl-nav-links">
-          {NAV_LINKS.map(l => (
-            <li key={l.label}><a href={l.href}>{l.label}</a></li>
+          {NAV_LINKS.map((l) => (
+            <li key={l.label}>
+              <a href={l.href}>{l.label}</a>
+            </li>
           ))}
         </ul>
 
@@ -153,7 +166,10 @@ export default function Navbar({ onOpenModal }) {
               <span className="tl-nav-greeting">
                 Hi, {user.name?.split(" ")[0]}
               </span>
-              <button className="tl-nav-login" onClick={() => navigate("/dashboard")}>
+              <button
+                className="tl-nav-login"
+                onClick={() => navigate("/dashboard")}
+              >
                 My Trips
               </button>
               <button className="tl-nav-login" onClick={handleLogout}>
@@ -162,24 +178,38 @@ export default function Navbar({ onOpenModal }) {
             </div>
           ) : (
             <>
-              <button className="tl-nav-login" onClick={() => onOpenModal?.("login")}>Log In</button>
-              <button className="tl-nav-cta"   onClick={() => onOpenModal?.("signup")}>Sign Up Free</button>
+              <button
+                className="tl-nav-login"
+                onClick={() => onOpenModal?.("login")}
+              >
+                Log In
+              </button>
+              <button
+                className="tl-nav-cta"
+                onClick={() => onOpenModal?.("signup")}
+              >
+                Sign Up Free
+              </button>
             </>
           )}
         </div>
 
         <button
           className={`tl-hamburger${menuOpen ? " open" : ""}`}
-          onClick={() => setMenuOpen(v => !v)}
+          onClick={() => setMenuOpen((v) => !v)}
           aria-label="Toggle menu"
         >
-          <span /><span /><span />
+          <span />
+          <span />
+          <span />
         </button>
       </nav>
 
       <div className={`tl-drawer${menuOpen ? " open" : ""}`}>
-        {NAV_LINKS.map(l => (
-          <a key={l.label} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
+        {NAV_LINKS.map((l) => (
+          <a key={l.label} href={l.href} onClick={() => setMenuOpen(false)}>
+            {l.label}
+          </a>
         ))}
 
         <div className="tl-drawer-actions">
@@ -191,7 +221,13 @@ export default function Navbar({ onOpenModal }) {
                 </div>
                 <span>Hi, {user.name?.split(" ")[0]} 👋</span>
               </div>
-              <button className="tl-nav-login" onClick={() => { setMenuOpen(false); navigate("/dashboard"); }}>
+              <button
+                className="tl-nav-login"
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate("/dashboard");
+                }}
+              >
                 My Trips
               </button>
               <button className="tl-nav-login" onClick={handleLogout}>
@@ -200,10 +236,22 @@ export default function Navbar({ onOpenModal }) {
             </>
           ) : (
             <>
-              <button className="tl-nav-login" onClick={() => { setMenuOpen(false); onOpenModal?.("login"); }}>
+              <button
+                className="tl-nav-login"
+                onClick={() => {
+                  setMenuOpen(false);
+                  onOpenModal?.("login");
+                }}
+              >
                 Log In
               </button>
-              <button className="tl-nav-cta" onClick={() => { setMenuOpen(false); onOpenModal?.("signup"); }}>
+              <button
+                className="tl-nav-cta"
+                onClick={() => {
+                  setMenuOpen(false);
+                  onOpenModal?.("signup");
+                }}
+              >
                 Sign Up Free
               </button>
             </>

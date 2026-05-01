@@ -1,18 +1,18 @@
 // Message.js - MongoDB schema for group chat messages
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema(
   {
     tripId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Trip',
+      ref: "Trip",
       required: true,
       index: true, // Index for fast trip-based queries
     },
     sender: {
       userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
         default: null, // null for guest users
       },
       name: { type: String, required: true, trim: true },
@@ -27,20 +27,20 @@ const messageSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['text', 'system'], // system = join/leave messages
-      default: 'text',
+      enum: ["text", "system"], // system = join/leave messages
+      default: "text",
     },
     readBy: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Compound index: fetch all messages for a trip sorted by time
 messageSchema.index({ tripId: 1, createdAt: 1 });
 
-module.exports = mongoose.model('Message', messageSchema);
+module.exports = mongoose.model("Message", messageSchema);

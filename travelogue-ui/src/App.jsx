@@ -49,10 +49,10 @@ function PrivateRoute({ children }) {
 }
 
 export default function App() {
-  const [modal, setModal] = useState(null); // "login" | "signup" | null
-  const [checkout, setCheckout] = useState(false); // CheckoutModal open
-  const [annual, setAnnual] = useState(false); // passed from PricingSection toggle
-  const [demo, setDemo] = useState(false); // DemoModal open
+  const [modal, setModal] = useState(null);
+  const [checkout, setCheckout] = useState(false);
+  const [annual, setAnnual] = useState(false);
+  const [demo, setDemo] = useState(false);
   const { user } = useAuth();
   useScrollReveal();
 
@@ -85,8 +85,7 @@ export default function App() {
         }
       />
 
-      <Route
-        path="/join/:token" element={<JoinPage />} />
+      <Route path="/join/:token" element={<JoinPage />} />
 
       <Route
         path="/"

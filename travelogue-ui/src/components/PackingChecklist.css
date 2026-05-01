@@ -1,4 +1,4 @@
-/* PackingChecklist.css — Travelogue-consistent packing checklist */
+/* PackingChecklist.css */
 
 /* ── Container ──────────────────────────────────────────────────────────────── */
 .packing-checklist {
@@ -141,7 +141,9 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
+  transition:
+    background 0.2s,
+    transform 0.15s;
   white-space: nowrap;
 }
 .checklist-add-btn:hover:not(:disabled) {
@@ -208,7 +210,9 @@
   max-height: 380px;
   padding: 8px 0;
 }
-.checklist-list::-webkit-scrollbar { width: 4px; }
+.checklist-list::-webkit-scrollbar {
+  width: 4px;
+}
 .checklist-list::-webkit-scrollbar-thumb {
   background: var(--border-color, #e8eaf0);
   border-radius: 4px;
@@ -233,7 +237,11 @@
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 /* ── Item Row ───────────────────────────────────────────────────────────────── */
 .checklist-item {
@@ -246,11 +254,21 @@
   animation: fadeIn 0.2s ease;
 }
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateX(-4px); }
-  to { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
-.checklist-item:last-child { border-bottom: none; }
-.checklist-item:hover { background: var(--surface-bg, #f8f9fc); }
+.checklist-item:last-child {
+  border-bottom: none;
+}
+.checklist-item:hover {
+  background: var(--surface-bg, #f8f9fc);
+}
 
 .checklist-item.completed .checklist-text {
   text-decoration: line-through;
@@ -341,7 +359,9 @@
   opacity: 0;
   transition: opacity 0.15s;
 }
-.checklist-item:hover .checklist-actions { opacity: 1; }
+.checklist-item:hover .checklist-actions {
+  opacity: 1;
+}
 
 .checklist-edit-btn,
 .checklist-delete-btn {
@@ -354,13 +374,21 @@
   transition: background 0.15s;
   line-height: 1;
 }
-.checklist-edit-btn:hover { background: #e0e7ff; }
-.checklist-delete-btn:hover { background: #fee2e2; }
+.checklist-edit-btn:hover {
+  background: #e0e7ff;
+}
+.checklist-delete-btn:hover {
+  background: #fee2e2;
+}
 
 /* ── Responsive ─────────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
-  .checklist-add-form { flex-direction: column; }
+  .checklist-add-form {
+    flex-direction: column;
+  }
   .checklist-add-input,
   .checklist-category-select,
-  .checklist-add-btn { width: 100%; }
+  .checklist-add-btn {
+    width: 100%;
+  }
 }

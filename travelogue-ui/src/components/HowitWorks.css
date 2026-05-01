@@ -1,4 +1,6 @@
-.how { background: var(--white); }
+.how {
+  background: var(--white);
+}
 
 .how-header {
   text-align: center;
@@ -13,7 +15,7 @@
 }
 
 .steps::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 50px;
   left: 16%;
@@ -42,14 +44,14 @@
   border-radius: 50%;
   background: var(--terracotta);
   color: white;
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 1.4rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px;
-  box-shadow: 0 4px 20px rgba(200,98,58,0.3);
+  box-shadow: 0 4px 20px rgba(200, 98, 58, 0.3);
 }
 
 .step h3 {
@@ -66,6 +68,10 @@
 }
 
 @media (max-width: 768px) {
-  .steps { grid-template-columns: 1fr; }
-  .steps::before { display: none; }
+  .steps {
+    grid-template-columns: 1fr;
+  }
+  .steps::before {
+    display: none;
+  }
 }

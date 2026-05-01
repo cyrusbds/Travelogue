@@ -70,7 +70,7 @@
 }
 
 .comp-thead-travelogue::after {
-  content: '⭐ Best Pick';
+  content: "⭐ Best Pick";
   position: absolute;
   top: -10px;
   left: 50%;
@@ -92,7 +92,7 @@
 }
 
 .comp-no {
-  color: #D4A0A0;
+  color: #d4a0a0;
   font-size: 1rem;
 }
 
@@ -117,12 +117,18 @@
 
 /* ── Tablet ── */
 @media (max-width: 1024px) {
-  .comparison-header { margin-bottom: 36px; }
+  .comparison-header {
+    margin-bottom: 36px;
+  }
 
   .comp-table th,
-  .comp-table td { padding: 13px 16px; }
+  .comp-table td {
+    padding: 13px 16px;
+  }
 
-  .comp-table th:first-child { width: 38%; }
+  .comp-table th:first-child {
+    width: 38%;
+  }
 }
 
 /* ── Mobile ── */
@@ -132,7 +138,9 @@
     margin-bottom: 28px;
   }
 
-  .comparison-header .section-sub { margin: 0; }
+  .comparison-header .section-sub {
+    margin: 0;
+  }
 
   /* Scroll hint so users know table is swipeable */
   .comp-table-wrap {
@@ -141,7 +149,7 @@
   }
 
   .comp-table-wrap::after {
-    content: 'Scroll to see more →';
+    content: "Scroll to see more →";
     display: block;
     text-align: center;
     font-size: 0.68rem;
@@ -161,7 +169,9 @@
     font-size: 0.74rem;
   }
 
-  .comp-table th:first-child { width: 42%; }
+  .comp-table th:first-child {
+    width: 42%;
+  }
 
   .comp-table td {
     padding: 11px 12px;
@@ -173,7 +183,13 @@
     font-size: 0.66rem;
   }
 
-  .comp-yes  { font-size: 1rem; }
-  .comp-no   { font-size: 0.9rem; }
-  .comp-partial { font-size: 0.72rem; }
+  .comp-yes {
+    font-size: 1rem;
+  }
+  .comp-no {
+    font-size: 0.9rem;
+  }
+  .comp-partial {
+    font-size: 0.72rem;
+  }
 }

@@ -4,7 +4,7 @@ import { saveAuth, getStoredUser, logout as clearAuth } from "../api/auth";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(getStoredUser()); // load from localStorage on start
+  const [user, setUser] = useState(getStoredUser());
 
   const loginUser = (token, userData) => {
     saveAuth(token, userData);

@@ -1,20 +1,20 @@
 /* ─── Root / Tokens ─────────────────────────────────────────────────── */
 :root {
-  --sand: #F5EDD8;
-  --sand-light: #FBF6EC;
-  --terracotta: #C8623A;
-  --terracotta-light: #E07A52;
-  --terracotta-pale: #F5D4C4;
-  --ocean: #3A7CA5;
-  --ocean-light: #5A9EC5;
-  --ocean-pale: #C4DCF0;
-  --green: #5C7A5E;
-  --green-light: #7A9E7C;
-  --green-pale: #D4E8D4;
-  --warm-dark: #2C1A0E;
-  --text: #3A2A1C;
-  --text-light: #7A6558;
-  --white: #FFFEF9;
+  --sand: #f5edd8;
+  --sand-light: #fbf6ec;
+  --terracotta: #c8623a;
+  --terracotta-light: #e07a52;
+  --terracotta-pale: #f5d4c4;
+  --ocean: #3a7ca5;
+  --ocean-light: #5a9ec5;
+  --ocean-pale: #c4dcf0;
+  --green: #5c7a5e;
+  --green-light: #7a9e7c;
+  --green-pale: #d4e8d4;
+  --warm-dark: #2c1a0e;
+  --text: #3a2a1c;
+  --text-light: #7a6558;
+  --white: #fffef9;
   --shadow: 0 8px 32px rgba(44, 26, 14, 0.1);
   --shadow-lg: 0 16px 48px rgba(44, 26, 14, 0.14);
 }
@@ -23,7 +23,7 @@
 .admin-panel {
   min-height: 100vh;
   background: var(--sand-light);
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   color: var(--text);
 }
 
@@ -43,7 +43,7 @@
 }
 
 .admin-logo {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 1.4rem;
   font-weight: 700;
   color: var(--terracotta);
@@ -54,7 +54,7 @@
 }
 
 .admin-badge {
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -78,7 +78,7 @@
   border: 1.5px solid var(--sand);
   background: transparent;
   color: var(--text-light);
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
@@ -128,7 +128,11 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--terracotta), var(--terracotta-light));
+  background: linear-gradient(
+    135deg,
+    var(--terracotta),
+    var(--terracotta-light)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -153,8 +157,14 @@
 }
 
 @keyframes ddIn {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dropdown-header {
@@ -178,10 +188,16 @@
   transition: background 0.15s;
 }
 
-.dropdown-item:hover { background: var(--sand-light); }
+.dropdown-item:hover {
+  background: var(--sand-light);
+}
 
-.dropdown-item.danger { color: #C44; }
-.dropdown-item.danger:hover { background: #FFF0F0; }
+.dropdown-item.danger {
+  color: #c44;
+}
+.dropdown-item.danger:hover {
+  background: #fff0f0;
+}
 
 .dropdown-divider {
   height: 1px;
@@ -216,7 +232,7 @@
 }
 
 .header h1 {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: clamp(2rem, 4vw, 2.8rem);
   color: var(--warm-dark);
   line-height: 1.15;
@@ -276,7 +292,7 @@
 }
 
 .stat-value {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 1.8rem;
   font-weight: 700;
   color: var(--terracotta);
@@ -298,7 +314,7 @@
   padding: 10px 16px;
   border-radius: 50px;
   border: 1.5px solid var(--sand);
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   font-size: 0.88rem;
   color: var(--text);
   background: white;
@@ -317,7 +333,7 @@
   border: 1.5px solid var(--sand);
   background: white;
   color: var(--text-light);
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
@@ -451,7 +467,7 @@
 .error {
   text-align: center;
   padding: 40px;
-  color: #C44;
+  color: #c44;
   font-size: 0.9rem;
 }
 
@@ -480,8 +496,12 @@
 
 /* ─── Spinner animation ─────────────────────────────────────────────── */
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .spin {
@@ -526,5 +546,7 @@
     align-items: stretch;
   }
 
-  .input { min-width: unset; }
+  .input {
+    min-width: unset;
+  }
 }

@@ -1,22 +1,20 @@
 /**
- * TripMap.jsx — Vanilla Leaflet with click-to-pin
- * ------------------------------------------------
+ * TripMap.jsx — Vanilla Leaflet with click-to-pin + live collaboration
+ * ---------------------------------------------------------------------
  * - Click anywhere on the map to drop a pin
  * - Reverse geocodes the clicked location automatically
  * - Popup form appears to confirm name, day, category
  * - Saves to MongoDB via apiAddPin
  * - "Pin Location" button still works for manual entry
- *
- * Place at: travelogue-ui/src/components/TripMap.jsx
- * Requires: npm install leaflet (no react-leaflet)
+ * - Socket.io live sync: pins update in real time for all collaborators
  */
 
+import socket from "../socket";
 import { useState, useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { apiAddPin, apiDeletePin } from "../api/trips";
 
-// ── Fix Leaflet default marker icons broken by Vite ──────────────────────────
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
@@ -28,7 +26,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-// ── Category colours matching Notebook.css ───────────────────────────────────
 const CAT_COLOR = {
   explore: "#3A7CA5",
   food: "#C8A03A",
@@ -88,7 +85,6 @@ async function reverseGeocode(lat, lng) {
     const res = await fetch(url, { headers: { "Accept-Language": "en" } });
     const data = await res.json();
     if (data?.display_name) {
-      // Return a short readable name: first 2 parts of display_name
       const parts = data.display_name.split(",");
       const short = parts.slice(0, 2).join(",").trim();
       return { name: short, full: data.display_name };
@@ -244,30 +240,162 @@ const MI = {
       <path d="M5 3l14 9-7 1-4 7z" />
     </svg>
   ),
+  live: (
+    <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor">
+      <circle cx="4" cy="4" r="4" />
+    </svg>
+  ),
 };
 
 const DAY_OPTIONS = Array.from({ length: 10 }, (_, i) => `Day ${i + 1}`);
+
+function FormFields({
+  form,
+  setForm,
+  showNameGeocoder,
+  geocoding,
+  geoResult,
+  handleNameChange,
+}) {
+  return (
+    <>
+      <div className="nb-form-group">
+        <label className="nb-form-label">Place Name</label>
+        <div style={{ position: "relative" }}>
+          <input
+            className="nb-form-input"
+            placeholder="e.g. Aït Benhaddou, Morocco"
+            value={form.name}
+            onChange={(e) =>
+              showNameGeocoder
+                ? handleNameChange(e.target.value)
+                : setForm((f) => ({ ...f, name: e.target.value }))
+            }
+            autoFocus
+            style={{ paddingRight: showNameGeocoder ? 36 : undefined }}
+          />
+          {showNameGeocoder && (
+            <span
+              style={{
+                position: "absolute",
+                right: 12,
+                top: "50%",
+                transform: "translateY(-50%)",
+                color: geocoding
+                  ? "var(--muted)"
+                  : geoResult
+                    ? "var(--green-light)"
+                    : "transparent",
+                display: "flex",
+              }}
+            >
+              {geocoding ? (
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  style={{
+                    animation: "tm-spin 0.9s linear infinite",
+                    transformOrigin: "center",
+                  }}
+                >
+                  <path d="M12 2a10 10 0 1 0 10 10" />
+                </svg>
+              ) : geoResult ? (
+                MI.check
+              ) : null}
+            </span>
+          )}
+        </div>
+        {showNameGeocoder && geoResult && !geocoding && (
+          <div
+            style={{
+              marginTop: 6,
+              padding: "8px 12px",
+              background: "rgba(92,122,94,0.1)",
+              border: "1px solid rgba(92,122,94,0.25)",
+              borderRadius: 8,
+              fontSize: "0.72rem",
+              color: "var(--green-light)",
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 6,
+            }}
+          >
+            {MI.check} Coordinates found — will pin on map
+          </div>
+        )}
+      </div>
+
+      <div className="nb-form-group">
+        <label className="nb-form-label">Description (optional)</label>
+        <textarea
+          className="nb-form-textarea"
+          placeholder="Why is this place on the trip?"
+          value={form.desc}
+          onChange={(e) => setForm((f) => ({ ...f, desc: e.target.value }))}
+          style={{ minHeight: 70 }}
+        />
+      </div>
+
+      <div className="nb-form-row-2">
+        <div className="nb-form-group">
+          <label className="nb-form-label">Trip Day</label>
+          <select
+            className="nb-form-select"
+            value={form.day}
+            onChange={(e) => setForm((f) => ({ ...f, day: e.target.value }))}
+          >
+            {DAY_OPTIONS.map((d) => (
+              <option key={d}>{d}</option>
+            ))}
+          </select>
+        </div>
+        <div className="nb-form-group">
+          <label className="nb-form-label">Category</label>
+          <select
+            className="nb-form-select"
+            value={form.category}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, category: e.target.value }))
+            }
+          >
+            <option value="explore">Explore</option>
+            <option value="food">Food</option>
+            <option value="stay">Stay</option>
+            <option value="transport">Transport</option>
+          </select>
+        </div>
+      </div>
+    </>
+  );
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════════════════════ */
 export default function TripMap({ trip, toast }) {
-  const mapRef = useRef(null); // DOM node
-  const leafletRef = useRef(null); // L.Map instance
-  const markersRef = useRef({}); // pinId → L.Marker
-  const routeRef = useRef(null); // L.Polyline
-  const tempMarkerRef = useRef(null); // temporary click marker
+  const mapRef = useRef(null);
+  const leafletRef = useRef(null);
+  const markersRef = useRef({});
+  const routeRef = useRef(null);
+  const tempMarkerRef = useRef(null);
 
   const [pins, setPins] = useState(trip?.pins || []);
   const [activePin, setActivePin] = useState(null);
   const [showRoute, setShowRoute] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(null);
+  const [liveCount, setLiveCount] = useState(1);
 
   // ── Click-to-pin modal state ─────────────────────────────────────────────
-  const [clickModal, setClickModal] = useState(false); // click-on-map modal
-  const [manualModal, setManualModal] = useState(false); // "Pin Location" button modal
-  const [pendingCoords, setPendingCoords] = useState(null); // {lat, lng} from map click
+  const [clickModal, setClickModal] = useState(false);
+  const [manualModal, setManualModal] = useState(false);
+  const [pendingCoords, setPendingCoords] = useState(null);
   const [reverseLoading, setReverseLoading] = useState(false);
 
   // Shared form state used by both modals
@@ -289,6 +417,36 @@ export default function TripMap({ trip, toast }) {
     if (trip?.pins) setPins(trip.pins);
   }, [trip?.pins]);
 
+  // ── Socket.io: join room + live pin sync ──────────────────────────────────
+  useEffect(() => {
+    if (!tripId) return;
+
+    socket.emit("join-trip-map", tripId);
+
+    socket.on("pin-added", (updatedPins) => {
+      setPins(Array.isArray(updatedPins) ? updatedPins : []);
+    });
+
+    socket.on("pin-deleted", (updatedPins) => {
+      setPins(Array.isArray(updatedPins) ? updatedPins : []);
+      setActivePin((prev) =>
+        updatedPins.find((p) => p._id === prev) ? prev : null,
+      );
+    });
+
+    // Presence: how many people are viewing this map
+    socket.on("map-viewer-count", (count) => {
+      setLiveCount(count);
+    });
+
+    return () => {
+      socket.emit("leave-trip-map", tripId);
+      socket.off("pin-added");
+      socket.off("pin-deleted");
+      socket.off("map-viewer-count");
+    };
+  }, [tripId]);
+
   // ── Init Leaflet map ──────────────────────────────────────────────────────
   useEffect(() => {
     if (!mapRef.current || leafletRef.current) return;
@@ -302,7 +460,8 @@ export default function TripMap({ trip, toast }) {
     L.tileLayer(
       "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
       {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
+        attribution:
+          '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
         maxZoom: 20,
       },
     ).addTo(map);
@@ -311,7 +470,6 @@ export default function TripMap({ trip, toast }) {
     map.on("click", async (e) => {
       const { lat, lng } = e.latlng;
 
-      // Drop a temporary marker immediately so user gets feedback
       if (tempMarkerRef.current) {
         tempMarkerRef.current.remove();
         tempMarkerRef.current = null;
@@ -321,12 +479,10 @@ export default function TripMap({ trip, toast }) {
       );
       tempMarkerRef.current = tempMarker;
 
-      // Reset form with coordinates
       setForm({ name: "", desc: "", day: "Day 1", category: "explore" });
       setPendingCoords({ lat, lng });
       setClickModal(true);
 
-      // Reverse geocode in background — pre-fill name
       setReverseLoading(true);
       const result = await reverseGeocode(lat, lng);
       if (result) {
@@ -344,7 +500,7 @@ export default function TripMap({ trip, toast }) {
       routeRef.current = null;
       tempMarkerRef.current = null;
     };
-  }, []); // eslint-disable-line
+  }, []);
 
   // ── Sync markers ─────────────────────────────────────────────────────────
   useEffect(() => {
@@ -377,8 +533,7 @@ export default function TripMap({ trip, toast }) {
         }).addTo(map);
 
         marker.bindPopup(
-          `
-          <div style="font-family:'DM Sans',sans-serif;background:#1E1410;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 14px;min-width:170px;">
+          `<div style="font-family:'DM Sans',sans-serif;background:#1E1410;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 14px;min-width:170px;">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:${pin.desc ? "6px" : "0"}">
               <div style="width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0"></div>
               <strong style="font-size:0.88rem;color:rgba(255,255,255,0.88)">${pin.name}</strong>
@@ -389,8 +544,7 @@ export default function TripMap({ trip, toast }) {
               ${pin.day ? `<span style="font-size:0.62rem;padding:2px 9px;border-radius:50px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);font-weight:600">${pin.day}</span>` : ""}
               ${pin.lat ? `<span style="font-size:0.6rem;padding:2px 9px;border-radius:50px;background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.2);font-family:monospace">${pin.lat.toFixed(3)}, ${pin.lng.toFixed(3)}</span>` : ""}
             </div>
-          </div>
-        `,
+          </div>`,
           { className: "tm-popup" },
         );
 
@@ -454,7 +608,6 @@ export default function TripMap({ trip, toast }) {
         lng: lng ?? null,
       });
 
-      // Controller returns the full populated trip
       const newPins = updated.pins ?? updated;
       setPins(Array.isArray(newPins) ? newPins : pins);
 
@@ -495,7 +648,6 @@ export default function TripMap({ trip, toast }) {
     }
   }
 
-  // ── Manual modal: geocode debounce ────────────────────────────────────────
   function handleNameChange(val) {
     setForm((f) => ({ ...f, name: val }));
     setGeoResult(null);
@@ -507,126 +659,6 @@ export default function TripMap({ trip, toast }) {
       if (result) setGeoResult(result);
       setGeocoding(false);
     }, 800);
-  }
-
-  // ── Shared form fields JSX ────────────────────────────────────────────────
-  function FormFields({ showNameGeocoder = false }) {
-    return (
-      <>
-        <div className="nb-form-group">
-          <label className="nb-form-label">Place Name</label>
-          <div style={{ position: "relative" }}>
-            <input
-              className="nb-form-input"
-              placeholder="e.g. Aït Benhaddou, Morocco"
-              value={form.name}
-              onChange={(e) =>
-                showNameGeocoder
-                  ? handleNameChange(e.target.value)
-                  : setForm((f) => ({ ...f, name: e.target.value }))
-              }
-              autoFocus
-              style={{ paddingRight: showNameGeocoder ? 36 : undefined }}
-            />
-            {showNameGeocoder && (
-              <span
-                style={{
-                  position: "absolute",
-                  right: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  color: geocoding
-                    ? "var(--muted)"
-                    : geoResult
-                      ? "var(--green-light)"
-                      : "transparent",
-                  display: "flex",
-                }}
-              >
-                {geocoding ? (
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    style={{
-                      animation: "tm-spin 0.9s linear infinite",
-                      transformOrigin: "center",
-                    }}
-                  >
-                    <path d="M12 2a10 10 0 1 0 10 10" />
-                  </svg>
-                ) : geoResult ? (
-                  MI.check
-                ) : null}
-              </span>
-            )}
-          </div>
-          {showNameGeocoder && geoResult && !geocoding && (
-            <div
-              style={{
-                marginTop: 6,
-                padding: "8px 12px",
-                background: "rgba(92,122,94,0.1)",
-                border: "1px solid rgba(92,122,94,0.25)",
-                borderRadius: 8,
-                fontSize: "0.72rem",
-                color: "var(--green-light)",
-                display: "flex",
-                alignItems: "flex-start",
-                gap: 6,
-              }}
-            >
-              {MI.check} Coordinates found — will pin on map
-            </div>
-          )}
-        </div>
-
-        <div className="nb-form-group">
-          <label className="nb-form-label">Description (optional)</label>
-          <textarea
-            className="nb-form-textarea"
-            placeholder="Why is this place on the trip?"
-            value={form.desc}
-            onChange={(e) => setForm((f) => ({ ...f, desc: e.target.value }))}
-            style={{ minHeight: 70 }}
-          />
-        </div>
-
-        <div className="nb-form-row-2">
-          <div className="nb-form-group">
-            <label className="nb-form-label">Trip Day</label>
-            <select
-              className="nb-form-select"
-              value={form.day}
-              onChange={(e) => setForm((f) => ({ ...f, day: e.target.value }))}
-            >
-              {DAY_OPTIONS.map((d) => (
-                <option key={d}>{d}</option>
-              ))}
-            </select>
-          </div>
-          <div className="nb-form-group">
-            <label className="nb-form-label">Category</label>
-            <select
-              className="nb-form-select"
-              value={form.category}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, category: e.target.value }))
-              }
-            >
-              <option value="explore">Explore</option>
-              <option value="food">Food</option>
-              <option value="stay">Stay</option>
-              <option value="transport">Transport</option>
-            </select>
-          </div>
-        </div>
-      </>
-    );
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -641,6 +673,27 @@ export default function TripMap({ trip, toast }) {
               style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
             >
               {MI.map} Interactive Map
+              {/* Live indicator */}
+              {liveCount > 1 && (
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 5,
+                    fontSize: "0.62rem",
+                    fontWeight: 600,
+                    color: "#5C7A5E",
+                    background: "rgba(92,122,94,0.12)",
+                    border: "1px solid rgba(92,122,94,0.25)",
+                    padding: "2px 8px",
+                    borderRadius: 50,
+                    animation: "tm-pulse 2s ease-in-out infinite",
+                  }}
+                >
+                  <span style={{ color: "#6fcf82" }}>{MI.live}</span>
+                  {liveCount} live
+                </span>
+              )}
             </div>
             <div
               className="nb-panel-subtitle"
@@ -939,6 +992,7 @@ export default function TripMap({ trip, toast }) {
         <div
           className="nb-modal-overlay"
           onClick={(e) => e.target === e.currentTarget && setClickModal(false)}
+          onKeyDown={(e) => e.stopPropagation()}
         >
           <div className="nb-modal-box">
             <button
@@ -973,7 +1027,6 @@ export default function TripMap({ trip, toast }) {
               )}
             </div>
 
-            {/* Reverse geocode loading indicator */}
             {reverseLoading && (
               <div
                 style={{
@@ -1004,7 +1057,14 @@ export default function TripMap({ trip, toast }) {
               </div>
             )}
 
-            <FormFields showNameGeocoder={false} />
+            <FormFields
+              form={form}
+              setForm={setForm}
+              showNameGeocoder={false}
+              geocoding={geocoding}
+              geoResult={geoResult}
+              handleNameChange={handleNameChange}
+            />
 
             <div className="nb-modal-footer">
               <button
@@ -1032,6 +1092,7 @@ export default function TripMap({ trip, toast }) {
         <div
           className="nb-modal-overlay"
           onClick={(e) => e.target === e.currentTarget && setManualModal(false)}
+          onKeyDown={(e) => e.stopPropagation()}
         >
           <div className="nb-modal-box">
             <button
@@ -1045,7 +1106,14 @@ export default function TripMap({ trip, toast }) {
               Type a place name — coordinates found automatically.
             </div>
 
-            <FormFields showNameGeocoder={true} />
+            <FormFields
+              form={form}
+              setForm={setForm}
+              showNameGeocoder={true}
+              geocoding={geocoding}
+              geoResult={geoResult}
+              handleNameChange={handleNameChange}
+            />
 
             <div className="nb-modal-footer">
               <button
@@ -1075,6 +1143,7 @@ export default function TripMap({ trip, toast }) {
 
       <style>{`
         @keyframes tm-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes tm-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
         .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: transparent !important; box-shadow: none !important; padding: 0 !important; }
         .leaflet-popup-content { margin: 0 !important; }
         .leaflet-control-attribution { font-size: 0.55rem !important; background: rgba(0,0,0,0.5) !important; color: rgba(255,255,255,0.3) !important; }

@@ -23,8 +23,6 @@ router.put("/reorder", reorderItineraryItems);
 
 // PUT    /api/trips/:tripId/itinerary/:itemId
 // DELETE /api/trips/:tripId/itinerary/:itemId
-router.route("/:itemId")
-  .put(updateItineraryItem)
-  .delete(deleteItineraryItem);
+router.route("/:itemId").put(updateItineraryItem).delete(deleteItineraryItem);
 
 module.exports = router;

@@ -5,12 +5,30 @@ import "./AdminPanel.css";
 // ─── SVG Icons ───────────────────────────────────────────
 const Icons = {
   Shield: () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
     </svg>
   ),
   Users: () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
       <circle cx="9" cy="7" r="4" />
       <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -18,7 +36,16 @@ const Icons = {
     </svg>
   ),
   Luggage: () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <rect x="6" y="7" width="12" height="14" rx="2" />
       <path d="M9 7V5a3 3 0 0 1 6 0v2" />
       <line x1="12" y1="12" x2="12" y2="16" />
@@ -26,7 +53,16 @@ const Icons = {
     </svg>
   ),
   Sprout: () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M7 20h10" />
       <path d="M10 20c5.5-2.5.8-6.4 3-10" />
       <path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z" />
@@ -34,21 +70,48 @@ const Icons = {
     </svg>
   ),
   Refresh: () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <polyline points="23 4 23 10 17 10" />
       <polyline points="1 20 1 14 7 14" />
       <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
     </svg>
   ),
   LogOut: () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
       <polyline points="16 17 21 12 16 7" />
       <line x1="21" y1="12" x2="9" y2="12" />
     </svg>
   ),
   Clipboard: () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <rect x="9" y="2" width="6" height="4" rx="1" />
       <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2" />
       <line x1="9" y1="12" x2="15" y2="12" />
@@ -56,13 +119,31 @@ const Icons = {
     </svg>
   ),
   ArrowLeft: () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <line x1="19" y1="12" x2="5" y2="12" />
       <polyline points="12 19 5 12 12 5" />
     </svg>
   ),
   CheckCircle: () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
       <polyline points="22 4 12 14.01 9 11.01" />
     </svg>
@@ -73,7 +154,7 @@ const Icons = {
 const avatar = (name = "", bg) => {
   const initials = name
     .split(" ")
-    .map(w => w[0])
+    .map((w) => w[0])
     .join("")
     .slice(0, 2)
     .toUpperCase();
@@ -82,8 +163,14 @@ const avatar = (name = "", bg) => {
 };
 
 const AVATAR_COLORS = [
-  "#C8623A", "#3A7CA5", "#5C7A5E", "#C8A03A",
-  "#9B59B6", "#E07A52", "#5A9EC5", "#7A9E7C",
+  "#C8623A",
+  "#3A7CA5",
+  "#5C7A5E",
+  "#C8A03A",
+  "#9B59B6",
+  "#E07A52",
+  "#5A9EC5",
+  "#7A9E7C",
 ];
 
 const roleMeta = {
@@ -93,8 +180,10 @@ const roleMeta = {
 
 const statusMeta = (createdAt) => {
   const days = Math.floor((Date.now() - new Date(createdAt)) / 86400000);
-  if (days <= 7) return { label: "New", bg: "rgba(92,122,94,0.12)", color: "#5C7A5E" };
-  if (days <= 30) return { label: "Recent", bg: "rgba(58,124,165,0.12)", color: "#3A7CA5" };
+  if (days <= 7)
+    return { label: "New", bg: "rgba(92,122,94,0.12)", color: "#5C7A5E" };
+  if (days <= 30)
+    return { label: "Recent", bg: "rgba(58,124,165,0.12)", color: "#3A7CA5" };
   return { label: "Active", bg: "rgba(200,98,58,0.12)", color: "#C8623A" };
 };
 
@@ -166,17 +255,16 @@ function UserRow({ user, index, onToast, onRoleChange }) {
 
       <div className="joined">{joined}</div>
 
-      <button
-        className="btn"
-        onClick={() => onToast(`Copied ${user.email}`)}
-      >
+      <button className="btn" onClick={() => onToast(`Copied ${user.email}`)}>
         <Icons.Clipboard />
         Copy email
       </button>
 
       <button
         className="btn"
-        onClick={() => onRoleChange(user._id, user.role === "admin" ? "user" : "admin")}
+        onClick={() =>
+          onRoleChange(user._id, user.role === "admin" ? "user" : "admin")
+        }
       >
         <Icons.Shield />
         {user.role === "admin" ? "Demote" : "Make Admin"}
@@ -201,8 +289,8 @@ export default function AdminPanel({ onClose }) {
 
   useEffect(() => {
     apiGetUsers()
-      .then(data => setUsers(data.users))
-      .catch(err => setError(err.message))
+      .then((data) => setUsers(data.users))
+      .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
 
@@ -233,7 +321,7 @@ export default function AdminPanel({ onClose }) {
     showToast(`Role updated`);
   };
 
-  const filtered = users.filter(u => {
+  const filtered = users.filter((u) => {
     const matchSearch =
       u.name.toLowerCase().includes(search.toLowerCase()) ||
       u.email.toLowerCase().includes(search.toLowerCase());
@@ -243,21 +331,21 @@ export default function AdminPanel({ onClose }) {
     return matchSearch && matchRole;
   });
 
-  const totalAdmins = users.filter(u => u.role === "admin").length;
-  const totalUsers = users.filter(u => u.role === "user").length;
+  const totalAdmins = users.filter((u) => u.role === "admin").length;
+  const totalUsers = users.filter((u) => u.role === "user").length;
 
-  const newThisWeek = users.filter(u => {
+  const newThisWeek = users.filter((u) => {
     const days = Math.floor((Date.now() - new Date(u.createdAt)) / 86400000);
     return days <= 7;
   }).length;
 
   return (
     <div className="admin-panel">
-
       {/* NAV */}
       <nav className="admin-nav">
         <div className="admin-logo">
-          Travel<span style={{ color: "#3A7CA5", fontStyle: "italic" }}>ogue</span>
+          Travel
+          <span style={{ color: "#3A7CA5", fontStyle: "italic" }}>ogue</span>
           <span className="admin-badge">ADMIN</span>
         </div>
 
@@ -270,7 +358,7 @@ export default function AdminPanel({ onClose }) {
           )}
 
           <div className="user-dd" ref={ddRef}>
-            <div onClick={() => setDdOpen(o => !o)} className="user-trigger">
+            <div onClick={() => setDdOpen((o) => !o)} className="user-trigger">
               <div className="user-meta">
                 <div>{currentUser?.name || "Admin"}</div>
                 <div className="small">Admin</div>
@@ -288,7 +376,10 @@ export default function AdminPanel({ onClose }) {
                   <div className="small">{currentUser?.email}</div>
                 </div>
 
-                <div className="dropdown-item" onClick={() => showToast("Refreshing users…")}>
+                <div
+                  className="dropdown-item"
+                  onClick={() => showToast("Refreshing users…")}
+                >
                   <Icons.Refresh />
                   Refresh data
                 </div>
@@ -307,7 +398,6 @@ export default function AdminPanel({ onClose }) {
 
       {/* BODY */}
       <div className="admin-body">
-
         {/* HEADER */}
         <div className="header">
           <div className="pill">
@@ -320,16 +410,37 @@ export default function AdminPanel({ onClose }) {
           </h1>
 
           <p>
-            {users.length} users · {totalAdmins} admins · {newThisWeek} new this week
+            {users.length} users · {totalAdmins} admins · {newThisWeek} new this
+            week
           </p>
         </div>
 
         {/* STATS */}
         <div className="stats">
-          <StatCard icon={<Icons.Users />} label="Total Users" value={users.length} sub="All accounts" />
-          <StatCard icon={<Icons.Shield />} label="Admins" value={totalAdmins} sub="Admin users" />
-          <StatCard icon={<Icons.Luggage />} label="Users" value={totalUsers} sub="Regular users" />
-          <StatCard icon={<Icons.Sprout />} label="New" value={newThisWeek} sub="Last 7 days" />
+          <StatCard
+            icon={<Icons.Users />}
+            label="Total Users"
+            value={users.length}
+            sub="All accounts"
+          />
+          <StatCard
+            icon={<Icons.Shield />}
+            label="Admins"
+            value={totalAdmins}
+            sub="Admin users"
+          />
+          <StatCard
+            icon={<Icons.Luggage />}
+            label="Users"
+            value={totalUsers}
+            sub="Regular users"
+          />
+          <StatCard
+            icon={<Icons.Sprout />}
+            label="New"
+            value={newThisWeek}
+            sub="Last 7 days"
+          />
         </div>
 
         {/* SEARCH */}
@@ -338,10 +449,10 @@ export default function AdminPanel({ onClose }) {
             className="input"
             placeholder="Search users..."
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={(e) => setSearch(e.target.value)}
           />
 
-          {["all", "user", "admin"].map(r => (
+          {["all", "user", "admin"].map((r) => (
             <button
               key={r}
               className={`filter-btn ${roleFilter === r ? "active" : ""}`}
@@ -377,7 +488,6 @@ export default function AdminPanel({ onClose }) {
               />
             ))}
         </div>
-
       </div>
 
       <Toast msg={toast} />

@@ -9,7 +9,7 @@ async function assertMember(tripId, userId) {
   if (!trip) throw Object.assign(new Error("Trip not found"), { status: 404 });
 
   const members = (trip.members || []).map((m) =>
-    typeof m === "object" ? m._id?.toString() : m?.toString()
+    typeof m === "object" ? m._id?.toString() : m?.toString(),
   );
   const owner = trip.owner?.toString();
   const uid = userId?.toString();
@@ -22,7 +22,9 @@ async function assertMember(tripId, userId) {
 
 function handleError(res, err) {
   console.error("[Itinerary]", err.message);
-  res.status(err.status || 500).json({ message: err.message || "Server error" });
+  res
+    .status(err.status || 500)
+    .json({ message: err.message || "Server error" });
 }
 
 /* ── CREATE ──────────────────────────────────────────────── */
@@ -32,16 +34,27 @@ exports.createItineraryItem = async (req, res) => {
     await assertMember(tripId, req.user._id);
 
     const {
-      title, description, date, startTime, endTime,
-      location, category, notes, image, color,
+      title,
+      description,
+      date,
+      startTime,
+      endTime,
+      location,
+      category,
+      notes,
+      image,
+      color,
     } = req.body;
 
-    if (!title?.trim()) return res.status(400).json({ message: "Title is required" });
+    if (!title?.trim())
+      return res.status(400).json({ message: "Title is required" });
     if (!date) return res.status(400).json({ message: "Date is required" });
 
     // Place new item at end of that day's list
-    const lastItem = await ItineraryItem.findOne({ tripId, date: new Date(date) })
-      .sort({ orderIndex: -1 });
+    const lastItem = await ItineraryItem.findOne({
+      tripId,
+      date: new Date(date),
+    }).sort({ orderIndex: -1 });
     const orderIndex = lastItem ? lastItem.orderIndex + 1 : 0;
 
     const item = await ItineraryItem.create({
@@ -100,12 +113,21 @@ exports.updateItineraryItem = async (req, res) => {
     if (!item) return res.status(404).json({ message: "Item not found" });
 
     const allowed = [
-      "title", "description", "date", "startTime", "endTime",
-      "location", "category", "notes", "image", "color",
+      "title",
+      "description",
+      "date",
+      "startTime",
+      "endTime",
+      "location",
+      "category",
+      "notes",
+      "image",
+      "color",
     ];
     allowed.forEach((field) => {
       if (req.body[field] !== undefined) {
-        item[field] = field === "date" ? new Date(req.body[field]) : req.body[field];
+        item[field] =
+          field === "date" ? new Date(req.body[field]) : req.body[field];
       }
     });
 

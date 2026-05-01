@@ -16,8 +16,17 @@ import {
 import "./VotingPanel.css";
 
 const PlusIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+  >
+    <line x1="12" y1="5" x2="12" y2="19" />
+    <line x1="5" y1="12" x2="19" y2="12" />
   </svg>
 );
 
@@ -28,11 +37,11 @@ const PlusIcon = () => (
  *   currentUser — { userId, name }
  */
 export default function VotingPanel({ socket, tripId, currentUser }) {
-  const [polls,      setPolls]      = useState([]);
-  const [loading,    setLoading]    = useState(true);
+  const [polls, setPolls] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
-  const [creating,   setCreating]   = useState(false);
-  const [toast,      setToast]      = useState("");
+  const [creating, setCreating] = useState(false);
+  const [toast, setToast] = useState("");
   const toastRef = React.useRef(null);
 
   // ── Toast helper ───────────────────────────────────────────────────────────
@@ -47,32 +56,32 @@ export default function VotingPanel({ socket, tripId, currentUser }) {
     if (!tripId) return;
     setLoading(true);
     apiGetPolls(tripId)
-      .then(data => setPolls(data.polls || []))
-      .catch(err  => console.error("Failed to load polls:", err))
+      .then((data) => setPolls(data.polls || []))
+      .catch((err) => console.error("Failed to load polls:", err))
       .finally(() => setLoading(false));
   }, [tripId]);
 
   // ── Merge an updated poll into state (upsert by _id) ──────────────────────
   const upsertPoll = useCallback((updated) => {
-    setPolls(prev => {
-      const exists = prev.find(p => p._id === updated._id);
-      if (exists) return prev.map(p => p._id === updated._id ? updated : p);
+    setPolls((prev) => {
+      const exists = prev.find((p) => p._id === updated._id);
+      if (exists) return prev.map((p) => (p._id === updated._id ? updated : p));
       return [updated, ...prev]; // new poll from another member
     });
   }, []);
 
   // ── Socket subscriptions ──────────────────────────────────────────────────
   usePollSocket(socket, tripId, {
-    onCreated:  upsertPoll,
+    onCreated: upsertPoll,
     onVoteCast: upsertPoll,
-    onUpdated:  upsertPoll,
+    onUpdated: upsertPoll,
     onClosed: (pollId) => {
-      setPolls(prev => prev.map(p =>
-        p._id === pollId ? { ...p, status: "closed" } : p
-      ));
+      setPolls((prev) =>
+        prev.map((p) => (p._id === pollId ? { ...p, status: "closed" } : p)),
+      );
     },
     onDeleted: (pollId) => {
-      setPolls(prev => prev.filter(p => p._id !== pollId));
+      setPolls((prev) => prev.filter((p) => p._id !== pollId));
     },
   });
 
@@ -102,13 +111,13 @@ export default function VotingPanel({ socket, tripId, currentUser }) {
 
   async function handleDelete(pollId) {
     await apiDeletePoll(tripId, pollId);
-    setPolls(prev => prev.filter(p => p._id !== pollId));
+    setPolls((prev) => prev.filter((p) => p._id !== pollId));
     showToast("Poll deleted.");
   }
 
   // ── Render ────────────────────────────────────────────────────────────────
-  const activePolls   = polls.filter(p => p.status === "active");
-  const inactivePolls = polls.filter(p => p.status !== "active");
+  const activePolls = polls.filter((p) => p.status === "active");
+  const inactivePolls = polls.filter((p) => p.status !== "active");
 
   return (
     <div className="vp-root">
@@ -138,8 +147,13 @@ export default function VotingPanel({ socket, tripId, currentUser }) {
           <div className="vp-empty">
             <div className="vp-empty-icon">🗳️</div>
             <div className="vp-empty-title">No polls yet</div>
-            <div className="vp-empty-sub">Create a poll to let the group vote on decisions</div>
-            <button className="vp-empty-btn" onClick={() => setShowCreate(true)}>
+            <div className="vp-empty-sub">
+              Create a poll to let the group vote on decisions
+            </div>
+            <button
+              className="vp-empty-btn"
+              onClick={() => setShowCreate(true)}
+            >
               <PlusIcon /> Create First Poll
             </button>
           </div>
@@ -148,7 +162,7 @@ export default function VotingPanel({ socket, tripId, currentUser }) {
         {!loading && activePolls.length > 0 && (
           <section className="vp-section">
             <div className="vp-section-label">Active</div>
-            {activePolls.map(poll => (
+            {activePolls.map((poll) => (
               <PollCard
                 key={poll._id}
                 poll={poll}
@@ -165,7 +179,7 @@ export default function VotingPanel({ socket, tripId, currentUser }) {
         {!loading && inactivePolls.length > 0 && (
           <section className="vp-section">
             <div className="vp-section-label">Closed / Expired</div>
-            {inactivePolls.map(poll => (
+            {inactivePolls.map((poll) => (
               <PollCard
                 key={poll._id}
                 poll={poll}

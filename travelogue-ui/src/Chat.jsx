@@ -9,11 +9,11 @@ export default function Chat({ sessionId, memberId }) {
   const bottomRef = useRef(null);
 
   useEffect(() => {
-    getMessages(sessionId).then(d => setMessages(d.messages));
+    getMessages(sessionId).then((d) => setMessages(d.messages));
 
     wsRef.current = connectWS(sessionId, memberId, (event) => {
       if (event.type === "chat_message") {
-        setMessages(prev => [...prev, event]);
+        setMessages((prev) => [...prev, event]);
       }
     });
 
@@ -26,24 +26,28 @@ export default function Chat({ sessionId, memberId }) {
 
   const sendMessage = () => {
     if (!inputText.trim()) return;
-    wsRef.current?.send(JSON.stringify({ type: "chat_message", text: inputText }));
+    wsRef.current?.send(
+      JSON.stringify({ type: "chat_message", text: inputText }),
+    );
     setInputText("");
   };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-
       {/* Message list */}
       <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
         {messages.map((msg) => (
           <div key={msg.id} style={{ marginBottom: "12px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <span style={{
-                width: 10, height: 10,
-                borderRadius: "50%",
-                backgroundColor: msg.color,
-                display: "inline-block"
-              }} />
+              <span
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  backgroundColor: msg.color,
+                  display: "inline-block",
+                }}
+              />
               <strong style={{ fontSize: "13px" }}>{msg.display_name}</strong>
               <span style={{ fontSize: "11px", color: "#999" }}>
                 {new Date(msg.created_at).toLocaleTimeString()}
@@ -58,11 +62,14 @@ export default function Chat({ sessionId, memberId }) {
       </div>
 
       {/* Input bar */}
-      <div style={{
-        display: "flex", gap: "8px",
-        padding: "12px 16px",
-        borderTop: "1px solid #eee"
-      }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "8px",
+          padding: "12px 16px",
+          borderTop: "1px solid #eee",
+        }}
+      >
         <input
           type="text"
           value={inputText}
@@ -70,10 +77,11 @@ export default function Chat({ sessionId, memberId }) {
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           placeholder="Type a message..."
           style={{
-            flex: 1, padding: "10px 14px",
+            flex: 1,
+            padding: "10px 14px",
             borderRadius: "8px",
             border: "1px solid #ddd",
-            fontSize: "15px"
+            fontSize: "15px",
           }}
         />
         <button
@@ -85,13 +93,12 @@ export default function Chat({ sessionId, memberId }) {
             color: "#fff",
             border: "none",
             cursor: "pointer",
-            fontSize: "15px"
+            fontSize: "15px",
           }}
         >
           Send
         </button>
       </div>
-
     </div>
   );
 }

@@ -5,27 +5,63 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./PollCard.css";
 
-// ── Icons (inline SVG — no external dep) ─────────────────────────────────────
+// ── Icons (inline SVG) ─────────────────────────────────────
 const CheckIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="20 6 9 17 4 12"/>
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="3"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="20 6 9 17 4 12" />
   </svg>
 );
 const LockIcon = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="11" width="18" height="11" rx="2"/>
-    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+  <svg
+    width="11"
+    height="11"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="3" y="11" width="18" height="11" rx="2" />
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
   </svg>
 );
 const TrashIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="3 6 5 6 21 6"/>
-    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+  <svg
+    width="13"
+    height="13"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="3 6 5 6 21 6" />
+    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
   </svg>
 );
 const CloseIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+  >
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
   </svg>
 );
 
@@ -36,7 +72,10 @@ function useCountdown(expiresAt) {
   useEffect(() => {
     if (!expiresAt) return;
     const tick = () => {
-      const diff = Math.max(0, Math.floor((new Date(expiresAt) - Date.now()) / 1000));
+      const diff = Math.max(
+        0,
+        Math.floor((new Date(expiresAt) - Date.now()) / 1000),
+      );
       setRemaining(diff);
     };
     tick();
@@ -54,8 +93,8 @@ function formatCountdown(secs) {
   const m = Math.floor((secs % 3600) / 60);
   const s = secs % 60;
   if (h > 24) return `${Math.floor(h / 24)}d ${h % 24}h`;
-  if (h > 0)  return `${h}h ${m}m`;
-  if (m > 0)  return `${m}m ${s}s`;
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m ${s}s`;
   return `${s}s`;
 }
 
@@ -69,18 +108,25 @@ function formatCountdown(secs) {
  *   onDelete    — async () => void
  *   isCreator   — bool (poll.creatorId === currentUser.userId)
  */
-export default function PollCard({ poll, currentUser, onVote, onClose, onDelete }) {
-  const [selected,   setSelected]   = useState(poll.myVotes || []);
-  const [voting,     setVoting]     = useState(false);
+export default function PollCard({
+  poll,
+  currentUser,
+  onVote,
+  onClose,
+  onDelete,
+}) {
+  const [selected, setSelected] = useState(poll.myVotes || []);
+  const [voting, setVoting] = useState(false);
   const [delConfirm, setDelConfirm] = useState(false);
 
   const countdown = useCountdown(poll.expiresAt);
-  const isExpired = (countdown !== null && countdown <= 0) || poll.status === "expired";
-  const isClosed  = poll.status === "closed";
+  const isExpired =
+    (countdown !== null && countdown <= 0) || poll.status === "expired";
+  const isClosed = poll.status === "closed";
   const isInactive = isExpired || isClosed;
 
-  const isCreator  = poll.creatorId === currentUser?.userId;
-  const hasVoted   = poll.hasVoted;
+  const isCreator = poll.creatorId === currentUser?.userId;
+  const hasVoted = poll.hasVoted;
   const totalVotes = poll.totalVotes || 0;
 
   // Show results if: voted, inactive, or no options left to pick
@@ -95,8 +141,8 @@ export default function PollCard({ poll, currentUser, onVote, onClose, onDelete 
   function toggleOption(idx) {
     if (isInactive || voting) return;
     if (poll.multipleSelection) {
-      setSelected(prev =>
-        prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
+      setSelected((prev) =>
+        prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx],
       );
     } else {
       setSelected([idx]);
@@ -114,24 +160,29 @@ export default function PollCard({ poll, currentUser, onVote, onClose, onDelete 
   }
 
   // ── Winning option(s): highest vote count ─────────────────────────────────
-  const maxVotes = Math.max(...poll.options.map(o => o.voteCount || 0));
-  const isWinner = (opt) => showResults && maxVotes > 0 && (opt.voteCount || 0) === maxVotes;
+  const maxVotes = Math.max(...poll.options.map((o) => o.voteCount || 0));
+  const isWinner = (opt) =>
+    showResults && maxVotes > 0 && (opt.voteCount || 0) === maxVotes;
 
   // ── Status badge ──────────────────────────────────────────────────────────
   const statusBadge = isClosed
     ? { label: "Closed", cls: "pc-badge--closed" }
     : isExpired
-    ? { label: "Expired", cls: "pc-badge--expired" }
-    : { label: "Live", cls: "pc-badge--live" };
+      ? { label: "Expired", cls: "pc-badge--expired" }
+      : { label: "Live", cls: "pc-badge--live" };
 
   return (
     <div className={`pc-card ${isInactive ? "pc-card--inactive" : ""}`}>
       {/* Header */}
       <div className="pc-header">
         <div className="pc-header-left">
-          <span className={`pc-badge ${statusBadge.cls}`}>{statusBadge.label}</span>
+          <span className={`pc-badge ${statusBadge.cls}`}>
+            {statusBadge.label}
+          </span>
           {poll.anonymous && (
-            <span className="pc-badge pc-badge--anon"><LockIcon /> Anonymous</span>
+            <span className="pc-badge pc-badge--anon">
+              <LockIcon /> Anonymous
+            </span>
           )}
           {poll.multipleSelection && (
             <span className="pc-badge pc-badge--multi">Multi-choice</span>
@@ -141,11 +192,19 @@ export default function PollCard({ poll, currentUser, onVote, onClose, onDelete 
         {isCreator && !delConfirm && (
           <div className="pc-actions">
             {!isInactive && (
-              <button className="pc-action-btn" onClick={onClose} title="Close poll">
+              <button
+                className="pc-action-btn"
+                onClick={onClose}
+                title="Close poll"
+              >
                 <CloseIcon />
               </button>
             )}
-            <button className="pc-action-btn pc-action-btn--del" onClick={() => setDelConfirm(true)} title="Delete poll">
+            <button
+              className="pc-action-btn pc-action-btn--del"
+              onClick={() => setDelConfirm(true)}
+              title="Delete poll"
+            >
               <TrashIcon />
             </button>
           </div>
@@ -153,8 +212,12 @@ export default function PollCard({ poll, currentUser, onVote, onClose, onDelete 
         {delConfirm && (
           <div className="pc-del-confirm">
             <span>Delete this poll?</span>
-            <button className="pc-del-yes" onClick={onDelete}>Yes</button>
-            <button className="pc-del-no"  onClick={() => setDelConfirm(false)}>No</button>
+            <button className="pc-del-yes" onClick={onDelete}>
+              Yes
+            </button>
+            <button className="pc-del-no" onClick={() => setDelConfirm(false)}>
+              No
+            </button>
           </div>
         )}
       </div>
@@ -165,7 +228,9 @@ export default function PollCard({ poll, currentUser, onVote, onClose, onDelete 
 
       {/* Countdown */}
       {poll.expiresAt && !isInactive && countdown !== null && (
-        <div className={`pc-countdown ${countdown < 60 ? "pc-countdown--urgent" : ""}`}>
+        <div
+          className={`pc-countdown ${countdown < 60 ? "pc-countdown--urgent" : ""}`}
+        >
           ⏱ {formatCountdown(countdown)}
         </div>
       )}
@@ -173,7 +238,10 @@ export default function PollCard({ poll, currentUser, onVote, onClose, onDelete 
       {/* Options */}
       <div className="pc-options">
         {poll.options.map((opt, idx) => {
-          const pct = totalVotes > 0 ? Math.round(((opt.voteCount || 0) / totalVotes) * 100) : 0;
+          const pct =
+            totalVotes > 0
+              ? Math.round(((opt.voteCount || 0) / totalVotes) * 100)
+              : 0;
           const isSelected = selected.includes(idx);
           const myVote = (poll.myVotes || []).includes(idx);
           const winner = isWinner(opt);
@@ -183,31 +251,35 @@ export default function PollCard({ poll, currentUser, onVote, onClose, onDelete 
               key={opt._id || idx}
               className={[
                 "pc-option",
-                showResults    ? "pc-option--result" : "pc-option--vote",
+                showResults ? "pc-option--result" : "pc-option--vote",
                 isSelected && !showResults ? "pc-option--selected" : "",
-                myVote && showResults      ? "pc-option--my-vote"  : "",
-                winner                     ? "pc-option--winner"   : "",
-                isInactive                 ? "pc-option--disabled" : "",
-              ].filter(Boolean).join(" ")}
+                myVote && showResults ? "pc-option--my-vote" : "",
+                winner ? "pc-option--winner" : "",
+                isInactive ? "pc-option--disabled" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
               onClick={() => !showResults && toggleOption(idx)}
             >
               {/* Option label row */}
               <div className="pc-option-row">
                 {/* Checkbox / radio indicator */}
                 {!showResults && (
-                  <div className={`pc-selector ${isSelected ? "pc-selector--on" : ""} ${poll.multipleSelection ? "pc-selector--check" : "pc-selector--radio"}`}>
+                  <div
+                    className={`pc-selector ${isSelected ? "pc-selector--on" : ""} ${poll.multipleSelection ? "pc-selector--check" : "pc-selector--radio"}`}
+                  >
                     {isSelected && <CheckIcon />}
                   </div>
                 )}
 
                 <span className="pc-option-label">{opt.label}</span>
 
-                {showResults && (
-                  <span className="pc-option-pct">{pct}%</span>
-                )}
+                {showResults && <span className="pc-option-pct">{pct}%</span>}
 
                 {myVote && showResults && (
-                  <span className="pc-my-vote-tag"><CheckIcon /> Your vote</span>
+                  <span className="pc-my-vote-tag">
+                    <CheckIcon /> Your vote
+                  </span>
                 )}
               </div>
 
@@ -224,7 +296,8 @@ export default function PollCard({ poll, currentUser, onVote, onClose, onDelete 
               {/* Vote count */}
               {showResults && (
                 <div className="pc-vote-count">
-                  {opt.voteCount || 0} vote{(opt.voteCount || 0) !== 1 ? "s" : ""}
+                  {opt.voteCount || 0} vote
+                  {(opt.voteCount || 0) !== 1 ? "s" : ""}
                 </div>
               )}
             </div>
@@ -234,7 +307,9 @@ export default function PollCard({ poll, currentUser, onVote, onClose, onDelete 
 
       {/* Footer */}
       <div className="pc-footer">
-        <span className="pc-total">{totalVotes} vote{totalVotes !== 1 ? "s" : ""} total</span>
+        <span className="pc-total">
+          {totalVotes} vote{totalVotes !== 1 ? "s" : ""} total
+        </span>
 
         {!showResults && !isInactive && (
           <button
@@ -247,7 +322,9 @@ export default function PollCard({ poll, currentUser, onVote, onClose, onDelete 
         )}
 
         {hasVoted && !isInactive && (
-          <span className="pc-change-hint">Tap an option to change your vote</span>
+          <span className="pc-change-hint">
+            Tap an option to change your vote
+          </span>
         )}
       </div>
     </div>

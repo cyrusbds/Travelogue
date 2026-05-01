@@ -8,21 +8,21 @@ const authHeader = () => ({
 // ── Trips ────────────────────────────────────────────────────────────────────
 
 export async function apiGetTrips() {
-  const res  = await fetch(BASE, { headers: authHeader() });
+  const res = await fetch(BASE, { headers: authHeader() });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message);
   return data;
 }
 
 export async function apiGetTrip(id) {
-  const res  = await fetch(`${BASE}/${id}`, { headers: authHeader() });
+  const res = await fetch(`${BASE}/${id}`, { headers: authHeader() });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message);
   return data;
 }
 
 export async function apiCreateTrip(trip) {
-  const res  = await fetch(BASE, {
+  const res = await fetch(BASE, {
     method: "POST",
     headers: authHeader(),
     body: JSON.stringify(trip),
@@ -33,7 +33,7 @@ export async function apiCreateTrip(trip) {
 }
 
 export async function apiDeleteTrip(id) {
-  const res  = await fetch(`${BASE}/${id}`, {
+  const res = await fetch(`${BASE}/${id}`, {
     method: "DELETE",
     headers: authHeader(),
   });
@@ -45,7 +45,7 @@ export async function apiDeleteTrip(id) {
 // ── Activities ───────────────────────────────────────────────────────────────
 
 export async function apiAddActivity(tripId, activity) {
-  const res  = await fetch(`${BASE}/${tripId}/activities`, {
+  const res = await fetch(`${BASE}/${tripId}/activities`, {
     method: "POST",
     headers: authHeader(),
     body: JSON.stringify(activity),
@@ -56,7 +56,7 @@ export async function apiAddActivity(tripId, activity) {
 }
 
 export async function apiDeleteActivity(tripId, actId) {
-  const res  = await fetch(`${BASE}/${tripId}/activities/${actId}`, {
+  const res = await fetch(`${BASE}/${tripId}/activities/${actId}`, {
     method: "DELETE",
     headers: authHeader(),
   });
@@ -68,7 +68,7 @@ export async function apiDeleteActivity(tripId, actId) {
 // ── Map Pins ─────────────────────────────────────────────────────────────────
 
 export async function apiAddPin(tripId, pin) {
-  const res  = await fetch(`${BASE}/${tripId}/pins`, {
+  const res = await fetch(`${BASE}/${tripId}/pins`, {
     method: "POST",
     headers: authHeader(),
     body: JSON.stringify(pin),
@@ -79,7 +79,7 @@ export async function apiAddPin(tripId, pin) {
 }
 
 export async function apiDeletePin(tripId, pinId) {
-  const res  = await fetch(`${BASE}/${tripId}/pins/${pinId}`, {
+  const res = await fetch(`${BASE}/${tripId}/pins/${pinId}`, {
     method: "DELETE",
     headers: authHeader(),
   });
@@ -91,7 +91,7 @@ export async function apiDeletePin(tripId, pinId) {
 // ── Budget & Expenses ────────────────────────────────────────────────────────
 
 export async function apiSetBudget(tripId, budget) {
-  const res  = await fetch(`${BASE}/${tripId}/budget`, {
+  const res = await fetch(`${BASE}/${tripId}/budget`, {
     method: "PATCH",
     headers: authHeader(),
     body: JSON.stringify({ budget }),
@@ -102,7 +102,7 @@ export async function apiSetBudget(tripId, budget) {
 }
 
 export async function apiAddExpense(tripId, expense) {
-  const res  = await fetch(`${BASE}/${tripId}/expenses`, {
+  const res = await fetch(`${BASE}/${tripId}/expenses`, {
     method: "POST",
     headers: authHeader(),
     body: JSON.stringify(expense),
@@ -113,7 +113,7 @@ export async function apiAddExpense(tripId, expense) {
 }
 
 export async function apiDeleteExpense(tripId, expId) {
-  const res  = await fetch(`${BASE}/${tripId}/expenses/${expId}`, {
+  const res = await fetch(`${BASE}/${tripId}/expenses/${expId}`, {
     method: "DELETE",
     headers: authHeader(),
   });
@@ -125,7 +125,7 @@ export async function apiDeleteExpense(tripId, expId) {
 // ── Votes ────────────────────────────────────────────────────────────────────
 
 export async function apiAddVote(tripId, voteData) {
-  const res  = await fetch(`${BASE}/${tripId}/votes`, {
+  const res = await fetch(`${BASE}/${tripId}/votes`, {
     method: "POST",
     headers: authHeader(),
     body: JSON.stringify(voteData),
@@ -136,7 +136,7 @@ export async function apiAddVote(tripId, voteData) {
 }
 
 export async function apiCastVote(tripId, voteId, optionIndex) {
-  const res  = await fetch(`${BASE}/${tripId}/votes/${voteId}/cast`, {
+  const res = await fetch(`${BASE}/${tripId}/votes/${voteId}/cast`, {
     method: "POST",
     headers: authHeader(),
     body: JSON.stringify({ optionIndex }),
@@ -149,14 +149,16 @@ export async function apiCastVote(tripId, voteId, optionIndex) {
 // ── Messages ─────────────────────────────────────────────────────────────────
 
 export async function apiGetMessages(tripId) {
-  const res  = await fetch(`${BASE}/${tripId}/messages`, { headers: authHeader() });
+  const res = await fetch(`${BASE}/${tripId}/messages`, {
+    headers: authHeader(),
+  });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message);
   return data;
 }
 
 export async function apiSendMessage(tripId, msg) {
-  const res  = await fetch(`${BASE}/${tripId}/messages`, {
+  const res = await fetch(`${BASE}/${tripId}/messages`, {
     method: "POST",
     headers: authHeader(),
     body: JSON.stringify(msg),
@@ -169,7 +171,7 @@ export async function apiSendMessage(tripId, msg) {
 // ── Packing ──────────────────────────────────────────────────────────────────
 
 export async function apiAddPackItem(tripId, item) {
-  const res  = await fetch(`${BASE}/${tripId}/pack`, {
+  const res = await fetch(`${BASE}/${tripId}/pack`, {
     method: "POST",
     headers: authHeader(),
     body: JSON.stringify(item),
@@ -180,7 +182,7 @@ export async function apiAddPackItem(tripId, item) {
 }
 
 export async function apiTogglePackItem(tripId, itemId) {
-  const res  = await fetch(`${BASE}/${tripId}/pack/${itemId}/toggle`, {
+  const res = await fetch(`${BASE}/${tripId}/pack/${itemId}/toggle`, {
     method: "PATCH",
     headers: authHeader(),
   });
@@ -190,7 +192,7 @@ export async function apiTogglePackItem(tripId, itemId) {
 }
 
 export async function apiDeletePackItem(tripId, itemId) {
-  const res  = await fetch(`${BASE}/${tripId}/pack/${itemId}`, {
+  const res = await fetch(`${BASE}/${tripId}/pack/${itemId}`, {
     method: "DELETE",
     headers: authHeader(),
   });

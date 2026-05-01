@@ -5,7 +5,7 @@ const Trip = require("../models/Trip");
 exports.getTrips = async (req, res) => {
   try {
     const trips = await Trip.find({
-      $or: [{ owner: req.user.id }, { members: req.user.id }]
+      $or: [{ owner: req.user.id }, { members: req.user.id }],
     }).sort({ createdAt: -1 });
     res.json({ trips });
   } catch (err) {
@@ -16,9 +16,15 @@ exports.getTrips = async (req, res) => {
 exports.createTrip = async (req, res) => {
   try {
     const { name, vibe, emoji, dest, startDate, endDate } = req.body;
-    if (!name) return res.status(400).json({ message: "Trip name is required" });
+    if (!name)
+      return res.status(400).json({ message: "Trip name is required" });
     const trip = await Trip.create({
-      name, vibe, emoji, dest, startDate, endDate,
+      name,
+      vibe,
+      emoji,
+      dest,
+      startDate,
+      endDate,
       owner: req.user.id,
       members: [req.user.id],
     });
@@ -51,13 +57,14 @@ exports.getTrip = async (req, res) => {
     const userId = req.user.id;
     const isMember =
       trip.owner._id.toString() === userId ||
-      trip.members.map(m => m._id.toString()).includes(userId);
+      trip.members.map((m) => m._id.toString()).includes(userId);
     if (!isMember) return res.status(403).json({ message: "Not authorized" });
     res.json({ trip });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
 // ── Activities ───────────────────────────────────────────────────────────────
 
 exports.addActivity = async (req, res) => {
@@ -65,11 +72,22 @@ exports.addActivity = async (req, res) => {
     const trip = await Trip.findById(req.params.id);
     if (!trip) return res.status(404).json({ message: "Trip not found" });
     const { name, day, time, type, location, notes } = req.body;
-    if (!name || !day) return res.status(400).json({ message: "Name and day required" });
-    const activity = { name, day, time, type, location, notes, addedBy: req.user.id };
+    if (!name || !day)
+      return res.status(400).json({ message: "Name and day required" });
+    const activity = {
+      name,
+      day,
+      time,
+      type,
+      location,
+      notes,
+      addedBy: req.user.id,
+    };
     trip.activities.push(activity);
     await trip.save();
-    res.status(201).json({ activity: trip.activities[trip.activities.length - 1] });
+    res
+      .status(201)
+      .json({ activity: trip.activities[trip.activities.length - 1] });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
@@ -79,7 +97,9 @@ exports.deleteActivity = async (req, res) => {
   try {
     const trip = await Trip.findById(req.params.id);
     if (!trip) return res.status(404).json({ message: "Trip not found" });
-    trip.activities = trip.activities.filter(a => a._id.toString() !== req.params.actId);
+    trip.activities = trip.activities.filter(
+      (a) => a._id.toString() !== req.params.actId,
+    );
     await trip.save();
     res.json({ message: "Activity removed" });
   } catch (err) {
@@ -99,41 +119,42 @@ exports.addPin = async (req, res) => {
       _id: req.params.id,
       $or: [{ owner: req.user.id }, { members: req.user.id }],
     });
- 
+
     if (!trip) return res.status(404).json({ message: "Trip not found" });
- 
+
     const { name, desc, day, category, lat, lng } = req.body;
- 
+
     if (!name || !name.trim()) {
       return res.status(400).json({ message: "Pin name is required" });
     }
- 
-    // Build the pin subdocument (matches pinSchema in Trip.js)
+
     const newPin = {
-      name:     name.trim(),
-      desc:     desc?.trim() || "",
-      day:      day || "Day 1",
+      name: name.trim(),
+      desc: desc?.trim() || "",
+      day: day || "Day 1",
       category: category || "explore",
-      // Only store coordinates if they are valid numbers
-      lat:  lat != null && !isNaN(lat) ? parseFloat(lat) : undefined,
-      lng:  lng != null && !isNaN(lng) ? parseFloat(lng) : undefined,
+      lat: lat != null && !isNaN(lat) ? parseFloat(lat) : undefined,
+      lng: lng != null && !isNaN(lng) ? parseFloat(lng) : undefined,
       addedBy: req.user._id,
     };
- 
+
     trip.pins.push(newPin);
     await trip.save();
- 
-    // Return the updated trip so the frontend can replace its local pins array
-    // Populate addedBy so the frontend has user names if needed
-    const populated = await Trip.findById(trip._id).populate("pins.addedBy", "name");
+
+    const populated = await Trip.findById(trip._id).populate(
+      "pins.addedBy",
+      "name",
+    );
+
+    req.io.to(`map:${trip._id}`).emit("pin-added", populated.pins);
+
     res.status(201).json(populated);
- 
   } catch (err) {
     console.error("addPin error:", err);
     res.status(500).json({ message: "Server error adding pin" });
   }
 };
- 
+
 // ── DELETE PIN ────────────────────────────────────────────────────────────────
 // DELETE /api/trips/:id/pins/:pinId
 // Auth: JWT (protect middleware)
@@ -150,16 +171,19 @@ exports.deletePin = async (req, res) => {
     if (!pin) return res.status(404).json({ message: "Pin not found" });
 
     const isAuthor = pin.addedBy?.toString() === req.user.id.toString();
-    const isOwner  = trip.owner.toString() === req.user.id.toString();
+    const isOwner = trip.owner.toString() === req.user.id.toString();
     if (!isAuthor && !isOwner) {
-      return res.status(403).json({ message: "Not authorised to delete this pin" });
+      return res
+        .status(403)
+        .json({ message: "Not authorised to delete this pin" });
     }
 
-    trip.pins.pull({ _id: req.params.pinId }); // ✅ correct way
+    trip.pins.pull({ _id: req.params.pinId });
     await trip.save();
 
-    res.json({ message: "Pin removed", pins: trip.pins });
+    req.io.to(`map:${trip._id}`).emit("pin-deleted", trip.pins);
 
+    res.json({ message: "Pin removed", pins: trip.pins });
   } catch (err) {
     console.error("deletePin error:", err);
     res.status(500).json({ message: "Server error deleting pin" });
@@ -185,8 +209,15 @@ exports.addExpense = async (req, res) => {
     const trip = await Trip.findById(req.params.id);
     if (!trip) return res.status(404).json({ message: "Trip not found" });
     const { desc, amount, paidBy, category } = req.body;
-    if (!desc || !amount || !paidBy) return res.status(400).json({ message: "desc, amount, paidBy required" });
-    trip.expenses.push({ desc, amount, paidBy, category, addedBy: req.user.id });
+    if (!desc || !amount || !paidBy)
+      return res.status(400).json({ message: "desc, amount, paidBy required" });
+    trip.expenses.push({
+      desc,
+      amount,
+      paidBy,
+      category,
+      addedBy: req.user.id,
+    });
     await trip.save();
     res.status(201).json({ expense: trip.expenses[trip.expenses.length - 1] });
   } catch (err) {
@@ -198,7 +229,9 @@ exports.deleteExpense = async (req, res) => {
   try {
     const trip = await Trip.findById(req.params.id);
     if (!trip) return res.status(404).json({ message: "Trip not found" });
-    trip.expenses = trip.expenses.filter(e => e._id.toString() !== req.params.expId);
+    trip.expenses = trip.expenses.filter(
+      (e) => e._id.toString() !== req.params.expId,
+    );
     await trip.save();
     res.json({ message: "Expense removed" });
   } catch (err) {
@@ -213,10 +246,11 @@ exports.addVote = async (req, res) => {
     const trip = await Trip.findById(req.params.id);
     if (!trip) return res.status(404).json({ message: "Trip not found" });
     const { question, options } = req.body;
-    if (!question || !options?.length) return res.status(400).json({ message: "question and options required" });
+    if (!question || !options?.length)
+      return res.status(400).json({ message: "question and options required" });
     trip.votes.push({
       question,
-      options: options.map(label => ({ label, count: 0 })),
+      options: options.map((label) => ({ label, count: 0 })),
       createdBy: req.user.id,
     });
     await trip.save();
@@ -232,8 +266,7 @@ exports.castVote = async (req, res) => {
     if (!trip) return res.status(404).json({ message: "Trip not found" });
     const vote = trip.votes.id(req.params.voteId);
     if (!vote) return res.status(404).json({ message: "Vote not found" });
-    // Prevent double voting
-    if (vote.voters.map(v => v.toString()).includes(req.user.id))
+    if (vote.voters.map((v) => v.toString()).includes(req.user.id))
       return res.status(400).json({ message: "Already voted" });
     const optionIndex = req.body.optionIndex;
     if (optionIndex === undefined || !vote.options[optionIndex])
@@ -265,7 +298,12 @@ exports.addMessage = async (req, res) => {
     if (!trip) return res.status(404).json({ message: "Trip not found" });
     const { author, authorColor, text } = req.body;
     if (!text) return res.status(400).json({ message: "Text required" });
-    trip.messages.push({ author: author || req.user.name, authorColor, text, senderId: req.user.id });
+    trip.messages.push({
+      author: author || req.user.name,
+      authorColor,
+      text,
+      senderId: req.user.id,
+    });
     await trip.save();
     res.status(201).json({ message: trip.messages[trip.messages.length - 1] });
   } catch (err) {
@@ -307,7 +345,9 @@ exports.deletePackItem = async (req, res) => {
   try {
     const trip = await Trip.findById(req.params.id);
     if (!trip) return res.status(404).json({ message: "Trip not found" });
-    trip.packItems = trip.packItems.filter(i => i._id.toString() !== req.params.itemId);
+    trip.packItems = trip.packItems.filter(
+      (i) => i._id.toString() !== req.params.itemId,
+    );
     await trip.save();
     res.json({ message: "Item removed" });
   } catch (err) {

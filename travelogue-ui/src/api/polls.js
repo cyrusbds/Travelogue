@@ -1,5 +1,4 @@
 // api/polls.js
-// Follows the exact same pattern as trips.js — fetch + authHeader.
 
 const BASE = import.meta.env.VITE_API_URL + "/trips";
 
@@ -10,7 +9,7 @@ const authHeader = () => ({
 
 // ── Get all polls for a trip ──────────────────────────────────────────────────
 export async function apiGetPolls(tripId) {
-  const res  = await fetch(`${BASE}/${tripId}/polls`, { headers: authHeader() });
+  const res = await fetch(`${BASE}/${tripId}/polls`, { headers: authHeader() });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message);
   return data; // { polls: [...] }
@@ -19,7 +18,7 @@ export async function apiGetPolls(tripId) {
 // ── Create a poll ─────────────────────────────────────────────────────────────
 // payload: { question, description, options[], expiresAt, anonymous, multipleSelection }
 export async function apiCreatePoll(tripId, payload) {
-  const res  = await fetch(`${BASE}/${tripId}/polls`, {
+  const res = await fetch(`${BASE}/${tripId}/polls`, {
     method: "POST",
     headers: authHeader(),
     body: JSON.stringify(payload),
@@ -32,7 +31,7 @@ export async function apiCreatePoll(tripId, payload) {
 // ── Cast / change a vote ──────────────────────────────────────────────────────
 // optionIndexes: number[]  e.g. [0] or [0, 2] for multi-select
 export async function apiVotePoll(tripId, pollId, optionIndexes) {
-  const res  = await fetch(`${BASE}/${tripId}/polls/${pollId}/vote`, {
+  const res = await fetch(`${BASE}/${tripId}/polls/${pollId}/vote`, {
     method: "POST",
     headers: authHeader(),
     body: JSON.stringify({ optionIndexes }),
@@ -44,7 +43,7 @@ export async function apiVotePoll(tripId, pollId, optionIndexes) {
 
 // ── Update a poll (only before any votes) ────────────────────────────────────
 export async function apiUpdatePoll(tripId, pollId, payload) {
-  const res  = await fetch(`${BASE}/${tripId}/polls/${pollId}`, {
+  const res = await fetch(`${BASE}/${tripId}/polls/${pollId}`, {
     method: "PATCH",
     headers: authHeader(),
     body: JSON.stringify(payload),
@@ -56,7 +55,7 @@ export async function apiUpdatePoll(tripId, pollId, payload) {
 
 // ── Close a poll ──────────────────────────────────────────────────────────────
 export async function apiClosePoll(tripId, pollId) {
-  const res  = await fetch(`${BASE}/${tripId}/polls/${pollId}/close`, {
+  const res = await fetch(`${BASE}/${tripId}/polls/${pollId}/close`, {
     method: "POST",
     headers: authHeader(),
   });
@@ -67,7 +66,7 @@ export async function apiClosePoll(tripId, pollId) {
 
 // ── Delete a poll ─────────────────────────────────────────────────────────────
 export async function apiDeletePoll(tripId, pollId) {
-  const res  = await fetch(`${BASE}/${tripId}/polls/${pollId}`, {
+  const res = await fetch(`${BASE}/${tripId}/polls/${pollId}`, {
     method: "DELETE",
     headers: authHeader(),
   });

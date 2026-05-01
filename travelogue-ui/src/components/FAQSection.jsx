@@ -86,15 +86,14 @@ export default function FAQSection() {
         <div className="faq-header">
           <div className="section-label">FAQ</div>
           <h2 className="section-title">Questions? We've got answers.</h2>
-          <p className="section-sub">Everything you need to know before your first trip.</p>
+          <p className="section-sub">
+            Everything you need to know before your first trip.
+          </p>
         </div>
 
         <div className="faq-grid reveal">
           {FAQS.map((item, i) => (
-            <div
-              key={i}
-              className={`faq-item${open === i ? " open" : ""}`}
-            >
+            <div key={i} className={`faq-item${open === i ? " open" : ""}`}>
               <div className="faq-question" onClick={() => toggle(i)}>
                 <h4>{item.q}</h4>
                 <div className="faq-toggle">+</div>

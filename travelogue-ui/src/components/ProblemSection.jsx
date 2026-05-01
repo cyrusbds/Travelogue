@@ -2,48 +2,88 @@ const PAINS = [
   {
     icon: (
       // Apps / grid icon
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-        <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="3" y="3" width="7" height="7" />
+        <rect x="14" y="3" width="7" height="7" />
+        <rect x="14" y="14" width="7" height="7" />
+        <rect x="3" y="14" width="7" height="7" />
       </svg>
     ),
     title: "Planning spread across too many apps",
-    desc:  "Google Docs, WhatsApp, Notes, Sheets — your trip lives nowhere.",
+    desc: "Google Docs, WhatsApp, Notes, Sheets — your trip lives nowhere.",
   },
   {
     icon: (
       // Single person / burnout icon
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="8" r="4"/>
-        <path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
-        <line x1="12" y1="12" x2="12" y2="16"/>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="12" cy="8" r="4" />
+        <path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
+        <line x1="12" y1="12" x2="12" y2="16" />
       </svg>
     ),
     title: "One person does everything",
-    desc:  'The "designated planner" burns out and the group stays clueless.',
+    desc: 'The "designated planner" burns out and the group stays clueless.',
   },
   {
     icon: (
       // Chat bubble chaos icon
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        <line x1="9" y1="10" x2="9" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="15" y1="10" x2="15" y2="10"/>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        <line x1="9" y1="10" x2="9" y2="10" />
+        <line x1="12" y1="10" x2="12" y2="10" />
+        <line x1="15" y1="10" x2="15" y2="10" />
       </svg>
     ),
     title: "Group chat chaos",
-    desc:  "500 messages and still no one agrees on the hotel. Decisions get lost.",
+    desc: "500 messages and still no one agrees on the hotel. Decisions get lost.",
   },
   {
     icon: (
       // Wallet / budget confusion icon
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-        <line x1="1" y1="10" x2="23" y2="10"/>
-        <circle cx="17" cy="15" r="1" fill="currentColor"/>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+        <line x1="1" y1="10" x2="23" y2="10" />
+        <circle cx="17" cy="15" r="1" fill="currentColor" />
       </svg>
     ),
     title: "Budget confusion every time",
-    desc:  "Nobody knows who paid what, how much they owe, or when to settle up.",
+    desc: "Nobody knows who paid what, how much they owe, or when to settle up.",
   },
 ];
 
@@ -116,7 +156,7 @@ export default function ProblemSection() {
               Sound familiar? The chaos is real — but it doesn't have to be.
             </p>
             <div className="pain-list reveal">
-              {PAINS.map(p => (
+              {PAINS.map((p) => (
                 <div className="pain-item" key={p.title}>
                   <div className="pain-icon">{p.icon}</div>
                   <div className="pain-text">
@@ -133,11 +173,12 @@ export default function ProblemSection() {
             <div className="solution-card">
               <h3>Enter Travelogue — one place for everything.</h3>
               <p>
-                We built the tool we always wished existed: a single shared space where the whole group
-                plans, decides, and travels together — with zero friction.
+                We built the tool we always wished existed: a single shared
+                space where the whole group plans, decides, and travels together
+                — with zero friction.
               </p>
               <div className="solution-points">
-                {SOLUTIONS.map(s => (
+                {SOLUTIONS.map((s) => (
                   <div className="sol-point" key={s}>
                     <div className="sol-check">✓</div>
                     {s}

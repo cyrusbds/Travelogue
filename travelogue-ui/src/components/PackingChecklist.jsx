@@ -1,16 +1,16 @@
 // src/components/PackingChecklist.jsx
 // Shared packing checklist with live sync via Socket.IO
-import React, { useState, useRef } from 'react';
-import useChecklist from '../hooks/useChecklist';
-import './PackingChecklist.css';
+import React, { useState, useRef } from "react";
+import useChecklist from "../hooks/useChecklist";
+import "./PackingChecklist.css";
 
 const CATEGORIES = [
-  { value: 'clothing', label: '👕 Clothing' },
-  { value: 'toiletries', label: '🧴 Toiletries' },
-  { value: 'documents', label: '📄 Documents' },
-  { value: 'electronics', label: '🔌 Electronics' },
-  { value: 'medical', label: '💊 Medical' },
-  { value: 'other', label: '📦 Other' },
+  { value: "clothing", label: "👕 Clothing" },
+  { value: "toiletries", label: "🧴 Toiletries" },
+  { value: "documents", label: "📄 Documents" },
+  { value: "electronics", label: "🔌 Electronics" },
+  { value: "medical", label: "💊 Medical" },
+  { value: "other", label: "📦 Other" },
 ];
 
 // ─── Single checklist item row ────────────────────────────────────────────────
@@ -25,22 +25,30 @@ const ChecklistItemRow = ({ item, onToggle, onDelete, onEdit }) => {
   };
 
   const handleEditSubmit = () => {
-    if (editVal.trim() && editVal !== item.text) onEdit(item._id, editVal.trim());
+    if (editVal.trim() && editVal !== item.text)
+      onEdit(item._id, editVal.trim());
     setIsEditing(false);
   };
 
-  const catLabel = CATEGORIES.find((c) => c.value === item.category)?.label || '📦 Other';
+  const catLabel =
+    CATEGORIES.find((c) => c.value === item.category)?.label || "📦 Other";
 
   return (
-    <div className={`checklist-item ${item.completed ? 'completed' : ''}`}>
+    <div className={`checklist-item ${item.completed ? "completed" : ""}`}>
       <button
-        className={`checklist-checkbox ${item.completed ? 'checked' : ''}`}
+        className={`checklist-checkbox ${item.completed ? "checked" : ""}`}
         onClick={() => onToggle(item._id, !item.completed)}
-        aria-label={item.completed ? 'Mark incomplete' : 'Mark complete'}
+        aria-label={item.completed ? "Mark incomplete" : "Mark complete"}
       >
         {item.completed && (
           <svg viewBox="0 0 12 12" width="10" height="10" fill="currentColor">
-            <path d="M1 6l3.5 3.5L11 2" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
+            <path
+              d="M1 6l3.5 3.5L11 2"
+              stroke="currentColor"
+              strokeWidth="2"
+              fill="none"
+              strokeLinecap="round"
+            />
           </svg>
         )}
       </button>
@@ -54,8 +62,8 @@ const ChecklistItemRow = ({ item, onToggle, onDelete, onEdit }) => {
             onChange={(e) => setEditVal(e.target.value)}
             onBlur={handleEditSubmit}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') handleEditSubmit();
-              if (e.key === 'Escape') setIsEditing(false);
+              if (e.key === "Enter") handleEditSubmit();
+              if (e.key === "Escape") setIsEditing(false);
             }}
           />
         ) : (
@@ -76,10 +84,18 @@ const ChecklistItemRow = ({ item, onToggle, onDelete, onEdit }) => {
       </div>
 
       <div className="checklist-actions">
-        <button className="checklist-edit-btn" onClick={handleEdit} title="Edit">
+        <button
+          className="checklist-edit-btn"
+          onClick={handleEdit}
+          title="Edit"
+        >
           ✏️
         </button>
-        <button className="checklist-delete-btn" onClick={() => onDelete(item._id)} title="Delete">
+        <button
+          className="checklist-delete-btn"
+          onClick={() => onDelete(item._id)}
+          title="Delete"
+        >
           🗑️
         </button>
       </div>
@@ -89,34 +105,44 @@ const ChecklistItemRow = ({ item, onToggle, onDelete, onEdit }) => {
 
 // ─── Main PackingChecklist component ─────────────────────────────────────────
 const PackingChecklist = ({ socket, tripId, currentUser }) => {
-  const [newText, setNewText] = useState('');
-  const [newCategory, setNewCategory] = useState('other');
-  const [filter, setFilter] = useState('all'); // all | pending | done
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [newText, setNewText] = useState("");
+  const [newCategory, setNewCategory] = useState("other");
+  const [filter, setFilter] = useState("all"); // all | pending | done
+  const [activeCategory, setActiveCategory] = useState("all");
   const inputRef = useRef(null);
 
-  const { items, isLoading, error, clearError, addItem, toggleItem, editItem, deleteItem } =
-    useChecklist(socket, tripId, currentUser);
+  const {
+    items,
+    isLoading,
+    error,
+    clearError,
+    addItem,
+    toggleItem,
+    editItem,
+    deleteItem,
+  } = useChecklist(socket, tripId, currentUser);
 
   const handleAdd = (e) => {
     e.preventDefault();
     if (!newText.trim()) return;
     addItem(newText, newCategory);
-    setNewText('');
+    setNewText("");
     inputRef.current?.focus();
   };
 
   // Filter & group items
   const filtered = items
     .filter((i) => {
-      if (filter === 'pending') return !i.completed;
-      if (filter === 'done') return i.completed;
+      if (filter === "pending") return !i.completed;
+      if (filter === "done") return i.completed;
       return true;
     })
-    .filter((i) => activeCategory === 'all' || i.category === activeCategory);
+    .filter((i) => activeCategory === "all" || i.category === activeCategory);
 
   const completedCount = items.filter((i) => i.completed).length;
-  const progress = items.length ? Math.round((completedCount / items.length) * 100) : 0;
+  const progress = items.length
+    ? Math.round((completedCount / items.length) * 100)
+    : 0;
 
   return (
     <div className="packing-checklist">
@@ -163,20 +189,26 @@ const PackingChecklist = ({ socket, tripId, currentUser }) => {
           onChange={(e) => setNewCategory(e.target.value)}
         >
           {CATEGORIES.map((c) => (
-            <option key={c.value} value={c.value}>{c.label}</option>
+            <option key={c.value} value={c.value}>
+              {c.label}
+            </option>
           ))}
         </select>
-        <button className="checklist-add-btn" type="submit" disabled={!newText.trim()}>
+        <button
+          className="checklist-add-btn"
+          type="submit"
+          disabled={!newText.trim()}
+        >
           Add
         </button>
       </form>
 
       {/* Filter tabs */}
       <div className="checklist-filters">
-        {['all', 'pending', 'done'].map((f) => (
+        {["all", "pending", "done"].map((f) => (
           <button
             key={f}
-            className={`checklist-filter-btn ${filter === f ? 'active' : ''}`}
+            className={`checklist-filter-btn ${filter === f ? "active" : ""}`}
             onClick={() => setFilter(f)}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -190,7 +222,9 @@ const PackingChecklist = ({ socket, tripId, currentUser }) => {
         >
           <option value="all">All categories</option>
           {CATEGORIES.map((c) => (
-            <option key={c.value} value={c.value}>{c.label}</option>
+            <option key={c.value} value={c.value}>
+              {c.label}
+            </option>
           ))}
         </select>
       </div>
@@ -204,7 +238,9 @@ const PackingChecklist = ({ socket, tripId, currentUser }) => {
           </div>
         ) : filtered.length === 0 ? (
           <div className="checklist-empty">
-            {items.length === 0 ? '✈️ Add your first item above!' : '🎉 No items match this filter.'}
+            {items.length === 0
+              ? "✈️ Add your first item above!"
+              : "🎉 No items match this filter."}
           </div>
         ) : (
           filtered.map((item) => (

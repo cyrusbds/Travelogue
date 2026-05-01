@@ -7,19 +7,19 @@ const generateToken = (user) =>
   jwt.sign(
     { id: user._id, email: user.email, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: "7d" }
+    { expiresIn: "7d" },
   );
 
 // Helper: safe user payload (no password)
 const userPayload = (user) => ({
-  id:             user._id,
-  name:           user.name,
-  email:          user.email,
-  role:           user.role,
-  plan:           user.plan,
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  role: user.role,
+  plan: user.plan,
   trialStartedAt: user.trialStartedAt,
-  trialEndsAt:    user.trialEndsAt,
-  billingCycle:   user.billingCycle,
+  trialEndsAt: user.trialEndsAt,
+  billingCycle: user.billingCycle,
 });
 
 // POST /api/auth/signup
@@ -57,8 +57,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Email and password required" });
 
     const user = await User.findOne({ email });
-    if (!user)
-      return res.status(401).json({ message: "Invalid credentials" });
+    if (!user) return res.status(401).json({ message: "Invalid credentials" });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
@@ -85,16 +84,18 @@ exports.startTrial = async (req, res) => {
 
     // Don't allow starting a second trial
     if (user.plan === "trial" || user.plan === "premium")
-      return res.status(400).json({ message: "Trial already used or already on premium" });
+      return res
+        .status(400)
+        .json({ message: "Trial already used or already on premium" });
 
     const now = new Date();
     const trialEndsAt = new Date(now);
     trialEndsAt.setDate(trialEndsAt.getDate() + 14);
 
-    user.plan           = "trial";
+    user.plan = "trial";
     user.trialStartedAt = now;
-    user.trialEndsAt    = trialEndsAt;
-    user.billingCycle   = req.body.annual ? "annual" : "monthly";
+    user.trialEndsAt = trialEndsAt;
+    user.billingCycle = req.body.annual ? "annual" : "monthly";
     await user.save();
 
     res.json({
@@ -126,7 +127,7 @@ exports.updateUserRole = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       req.params.id,
       { role },
-      { new: true }
+      { new: true },
     ).select("-password");
 
     if (!user) return res.status(404).json({ message: "User not found" });

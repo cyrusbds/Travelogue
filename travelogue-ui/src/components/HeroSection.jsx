@@ -4,46 +4,97 @@ import { useAuth } from "../context/AuthContext";
 // ─── SVG Icons ────────────────────────────────────────────────────────
 const Icons = {
   sparkle: (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />
     </svg>
   ),
   plane: (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M22 2L11 13"/>
-      <path d="M22 2L15 22l-4-9-9-4 22-7z"/>
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M22 2L11 13" />
+      <path d="M22 2L15 22l-4-9-9-4 22-7z" />
     </svg>
   ),
   key: (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="7.5" cy="15.5" r="5.5"/>
-      <path d="M21 2l-9.6 9.6"/>
-      <path d="M15.5 7.5l3 3L22 7l-3-3"/>
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="7.5" cy="15.5" r="5.5" />
+      <path d="M21 2l-9.6 9.6" />
+      <path d="M15.5 7.5l3 3L22 7l-3-3" />
     </svg>
   ),
   sunrise: (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17 18a5 5 0 0 0-10 0"/>
-      <line x1="12" y1="2" x2="12" y2="9"/>
-      <line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/>
-      <line x1="1" y1="18" x2="3" y2="18"/>
-      <line x1="21" y1="18" x2="23" y2="18"/>
-      <line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/>
-      <line x1="23" y1="22" x2="1" y2="22"/>
-      <polyline points="8 6 12 2 16 6"/>
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M17 18a5 5 0 0 0-10 0" />
+      <line x1="12" y1="2" x2="12" y2="9" />
+      <line x1="4.22" y1="10.22" x2="5.64" y2="11.64" />
+      <line x1="1" y1="18" x2="3" y2="18" />
+      <line x1="21" y1="18" x2="23" y2="18" />
+      <line x1="18.36" y1="11.64" x2="19.78" y2="10.22" />
+      <line x1="23" y1="22" x2="1" y2="22" />
+      <polyline points="8 6 12 2 16 6" />
     </svg>
   ),
   pin: (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      stroke="none"
+    >
+      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
     </svg>
   ),
   ballot: (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="18" height="18" rx="3"/>
-      <line x1="9" y1="9" x2="15" y2="9"/>
-      <line x1="9" y1="12" x2="15" y2="12"/>
-      <line x1="9" y1="15" x2="12" y2="15"/>
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="3" />
+      <line x1="9" y1="9" x2="15" y2="9" />
+      <line x1="9" y1="12" x2="15" y2="12" />
+      <line x1="9" y1="15" x2="12" y2="15" />
     </svg>
   ),
 };
@@ -219,22 +270,35 @@ export default function HeroSection({ onOpenModal }) {
               {Icons.sparkle}
               Free to start. No credit card required.
             </div>
-            <h1>Plan <em>Together.</em><br />Travel Better.</h1>
+            <h1>
+              Plan <em>Together.</em>
+              <br />
+              Travel Better.
+            </h1>
             <p className="hero-sub">
-              Travelogue is your group's shared digital travel notebook. One link, everyone in.
-              Real-time planning, zero coordination chaos.
+              Travelogue is your group's shared digital travel notebook. One
+              link, everyone in. Real-time planning, zero coordination chaos.
             </p>
             <div className="hero-buttons">
-             <button
+              <button
                 className="btn-primary"
-                onClick={() => user ? navigate("/dashboard?new=1") : onOpenModal?.("signup")}
+                onClick={() =>
+                  user ? navigate("/dashboard?new=1") : onOpenModal?.("signup")
+                }
                 style={{ display: "inline-flex", alignItems: "center", gap: 7 }}
               >
                 {Icons.plane} Create Your First Trip
               </button>
               {!user && (
-                <button className="btn-secondary" onClick={() => onOpenModal?.("login")}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
+                <button
+                  className="btn-secondary"
+                  onClick={() => onOpenModal?.("login")}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 7,
+                  }}
+                >
                   {Icons.key} Log In to Your Account
                 </button>
               )}
@@ -244,22 +308,41 @@ export default function HeroSection({ onOpenModal }) {
           {/* ── Card stack ── */}
           <div className="hero-visual">
             <div className="hero-card-stack">
-
               {/* Main itinerary card */}
               <div className="trip-card main-card float1">
                 <div className="card-header">
                   <div className="card-flag">{Icons.sunrise}</div>
                   <div>
                     <div className="card-title">Morocco Road Trip</div>
-                    <div className="card-sub">Mar 12 – Mar 22 · 5 members planning</div>
+                    <div className="card-sub">
+                      Mar 12 – Mar 22 · 5 members planning
+                    </div>
                   </div>
                 </div>
                 <div>
                   {[
-                    { day:"Day 1", name:"Arrive Marrakech",   loc:"Jemaa el-Fnaa",    tag:"tag-explore", label:"Explore" },
-                    { day:"Day 2", name:"Dinner at Nomad",    loc:"Medina Quarter",    tag:"tag-food",    label:"Food"    },
-                    { day:"Day 3", name:"Riad La Sultana",    loc:"Ouarzazate",        tag:"tag-stay",    label:"Stay"    },
-                  ].map(item => (
+                    {
+                      day: "Day 1",
+                      name: "Arrive Marrakech",
+                      loc: "Jemaa el-Fnaa",
+                      tag: "tag-explore",
+                      label: "Explore",
+                    },
+                    {
+                      day: "Day 2",
+                      name: "Dinner at Nomad",
+                      loc: "Medina Quarter",
+                      tag: "tag-food",
+                      label: "Food",
+                    },
+                    {
+                      day: "Day 3",
+                      name: "Riad La Sultana",
+                      loc: "Ouarzazate",
+                      tag: "tag-stay",
+                      label: "Stay",
+                    },
+                  ].map((item) => (
                     <div className="itin-item" key={item.day}>
                       <div className="itin-day">{item.day}</div>
                       <div style={{ flex: 1 }}>
@@ -269,7 +352,9 @@ export default function HeroSection({ onOpenModal }) {
                           {item.loc}
                         </div>
                       </div>
-                      <span className={`itin-tag ${item.tag}`}>{item.label}</span>
+                      <span className={`itin-tag ${item.tag}`}>
+                        {item.label}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -296,10 +381,20 @@ export default function HeroSection({ onOpenModal }) {
               {/* Map card */}
               <div className="trip-card map-card float3">
                 <div className="map-preview">
-                  <svg style={{ position:"absolute", inset:0, width:"100%", height:"100%" }}>
+                  <svg
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  >
                     <polyline
                       points="38,56 90,85 150,30"
-                      stroke="rgba(200,98,58,0.5)" strokeWidth="2" fill="none" strokeDasharray="4"
+                      stroke="rgba(200,98,58,0.5)"
+                      strokeWidth="2"
+                      fill="none"
+                      strokeDasharray="4"
                     />
                   </svg>
                   <div className="map-dot map-dot1" />
@@ -317,22 +412,27 @@ export default function HeroSection({ onOpenModal }) {
                   Where to eat Day 2?
                 </div>
                 {[
-                  { label:"Nomad",     cls:"vb1", pct:"65%" },
-                  { label:"Le Jardin", cls:"vb2", pct:"35%" },
-                ].map(opt => (
+                  { label: "Nomad", cls: "vb1", pct: "65%" },
+                  { label: "Le Jardin", cls: "vb2", pct: "35%" },
+                ].map((opt) => (
                   <div className="vote-option" key={opt.label}>
-                    <span style={{ fontSize:"0.72rem" }}>{opt.label}</span>
+                    <span style={{ fontSize: "0.72rem" }}>{opt.label}</span>
                     <div className="vote-bar-wrap">
                       <div className={`vote-bar ${opt.cls}`} />
                     </div>
                     <span className="vote-pct">{opt.pct}</span>
                   </div>
                 ))}
-                <div style={{ fontSize:"0.68rem", color:"var(--text-light)", marginTop:6 }}>
+                <div
+                  style={{
+                    fontSize: "0.68rem",
+                    color: "var(--text-light)",
+                    marginTop: 6,
+                  }}
+                >
                   4 votes · closes in 2h
                 </div>
               </div>
-
             </div>
           </div>
         </div>

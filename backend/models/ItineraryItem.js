@@ -71,7 +71,7 @@ const itineraryItemSchema = new mongoose.Schema(
       default: "",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Compound index for efficient per-trip, per-date queries

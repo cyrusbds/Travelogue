@@ -37,7 +37,7 @@
 }
 
 .chat-panel-tab.active::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -2px;
   left: 0;

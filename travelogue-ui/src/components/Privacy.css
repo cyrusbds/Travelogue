@@ -1,4 +1,6 @@
-.security { background: var(--sand-light); }
+.security {
+  background: var(--sand-light);
+}
 
 .security-inner {
   display: grid;

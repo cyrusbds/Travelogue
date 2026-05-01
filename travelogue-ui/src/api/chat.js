@@ -1,14 +1,16 @@
 // src/api/chat.js - Axios helpers for chat & checklist REST endpoints
-import axios from 'axios';
+import axios from "axios";
 
-const API = axios.create({ baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api' });
+const API = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+});
 
 // Attach JWT or guest token to every request
 API.interceptors.request.use((config) => {
-  const token = localStorage.getItem('travelogue_token');
-  const guestToken = localStorage.getItem('guestToken');
+  const token = localStorage.getItem("travelogue_token");
+  const guestToken = localStorage.getItem("guestToken");
   if (token) config.headers.Authorization = `Bearer ${token}`;
-  if (guestToken) config.headers['x-guest-token'] = guestToken;
+  if (guestToken) config.headers["x-guest-token"] = guestToken;
   return config;
 });
 
