@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { io } from "socket.io-client";
-import socket from "../socket";
+import socket from "../api/socket";
 import { fetchMessages, deleteMessage as apiDeleteMessage } from "../api/chat";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
