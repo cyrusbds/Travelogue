@@ -884,12 +884,12 @@ function CalendarPanel({ toast, trip }) {
                   style={isSel ? { outline: "2px solid var(--terracotta)", outlineOffset: 2 } : {}}
                   title={hasConflict ? "⚠ Time conflict on this day" : ""}
                 >
-                  {n}
+                  <span>{n}</span>
                   {hasAct && (
                     <span style={{
                       display: "block", width: 4, height: 4, borderRadius: "50%",
                       background: hasConflict ? "#FF5F57" : "var(--terracotta)",
-                      margin: "1px auto 0",
+                      margin: "0",
                     }} />
                   )}
                 </button>
