@@ -9,7 +9,7 @@
  * - Socket.io live sync: pins update in real time for all collaborators
  */
 
-import socket from "../socket";
+import socket from "../api/socket";
 import { useState, useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
