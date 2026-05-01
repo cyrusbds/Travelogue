@@ -444,7 +444,7 @@ export default function AuthModal({ mode, onClose }) {
         <div className="auth-panel-left">
           <div className="auth-brand">
             <div className="auth-logo">
-              <img src="/src/assets/logo (1).png" alt="" style={{ height: 36, width: 36, borderRadius: 9, objectFit: "cover" }} />
+              <img src="/travellogo.png" alt="" style={{ height: 36, width: 36, borderRadius: 9, objectFit: "cover" }} />
               <span className="auth-logo-text">Travel<span>ogue</span></span>
             </div>
             <p className="auth-tagline">Plan together.<br />Travel better.</p>
