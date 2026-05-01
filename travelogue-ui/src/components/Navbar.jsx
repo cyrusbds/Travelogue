@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import logo from ".assets/logo.png";
 
 const NAV_LINKS = [
   { label: "About",        href: "#about" },
@@ -134,7 +135,7 @@ export default function Navbar({ onOpenModal }) {
 
       <nav className={`tl-nav${scrolled ? " scrolled" : ""}`}>
         <a href="/" className="tl-logo">
-          <img src="/src/assets/logo (1).png" alt="" style={{ height: 42, width: 42, borderRadius: 10, objectFit: "cover" }} />
+          <img src={logo} alt="" style={{ height: 42, width: 42, borderRadius: 10, objectFit: "cover" }} />
           <span className="tl-logo-text">Travel<span>ogue</span></span>
         </a>
 
