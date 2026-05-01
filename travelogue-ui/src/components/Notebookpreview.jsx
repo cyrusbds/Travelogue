@@ -8,7 +8,6 @@ const Icon = {
   calendar:  (s=14) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
   map:       (s=14) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>,
   vote:      (s=14) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>,
-  wallet:    (s=14) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 3H8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z"/><circle cx="17" cy="13" r="1.5" fill="currentColor"/></svg>,
   check:     (s=14) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>,
   notes:     (s=14) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,
   hotel:     (s=14) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
@@ -40,10 +39,8 @@ const panels = {
   calendar:  { iconKey:"calendar",  label:"Calendar",  title:"Trip Calendar",            meta:"Mar 12 – Mar 22 · 10 days mapped" },
   map:       { iconKey:"map",       label:"Map",        title:"Interactive Map",          meta:"7 locations pinned by group" },
   voting:    { iconKey:"vote",      label:"Voting",     title:"Group Voting",             meta:"Anonymous · Results lock into itinerary" },
-  budget:    { iconKey:"wallet",    label:"Budget",     title:"Budget Splitter",          meta:"Live tracking · Auto settlement" },
   packing:   { iconKey:"check",     label:"Packing",    title:"Shared Packing List",      meta:"14/22 items checked · updated by group" },
   notes:     { iconKey:"notes",     label:"Chat",       title:"Group Chat",               meta:"Morocco Squad · 5 members · 5 online" },
-  bookings:  { iconKey:"hotel",     label:"Bookings",   title:"Bookings & Accommodation", meta:"4 confirmed · 1 pending" },
   share:     { iconKey:"link",      label:"Share",      title:"Share & Invite",           meta:"Invite members — they sign up & join instantly" },
 };
 
@@ -234,42 +231,6 @@ const VotingPanel = () => {
   );
 };
 
-const BudgetPanel = () => {
-  const stats = [{ num:"2,545", label:"Total Spent" },{ num:"509", label:"Per Person" },{ num:"1,455", label:"Remaining" }];
-  const expenses = [
-    { icon:Icon.plane(14),  bg:"rgba(200,98,58,0.15)",  name:"Emirates EK152 — Dubai to Marrakech", who:"Sara paid",     amount:"1,250 AED" },
-    { icon:Icon.hotel(14),  bg:"rgba(58,124,165,0.15)", name:"Riad Yasmine – 3 nights",             who:"Mohammed paid", amount:"680 AED" },
-    { icon:Icon.car(14),    bg:"rgba(92,122,94,0.15)",  name:"Europcar SUV rental",                 who:"Layla paid",    amount:"420 AED" },
-    { icon:Icon.food(14),   bg:"rgba(200,160,58,0.15)", name:"Nomad Restaurant dinner",             who:"Split equally", amount:"195 AED" },
-  ];
-  return (
-    <>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:10, marginBottom:18 }}>
-        {stats.map((s,i)=>(
-          <div key={i} style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:12, padding:"12px 10px", textAlign:"center" }}>
-            <div style={{ fontSize:17, fontWeight:700, color:"white", lineHeight:1 }}>{s.num}</div>
-            <div style={{ fontSize:9, color:"rgba(255,255,255,0.35)", marginTop:3 }}>{s.label} (AED)</div>
-          </div>
-        ))}
-      </div>
-      {expenses.map((e,i)=>(
-        <div key={i} style={{ display:"flex", alignItems:"center", gap:10, padding:"9px 12px", background:"rgba(255,255,255,0.03)", borderRadius:11, border:"1px solid rgba(255,255,255,0.05)", marginBottom:7 }}>
-          <div style={{ width:32, height:32, borderRadius:9, background:e.bg, display:"flex", alignItems:"center", justifyContent:"center", color:"rgba(255,255,255,0.7)", flexShrink:0 }}>{e.icon}</div>
-          <div style={{ flex:1, minWidth:0 }}>
-            <div style={{ fontSize:12, color:"rgba(255,255,255,0.8)", fontWeight:600, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{e.name}</div>
-            <div style={{ fontSize:10, color:"rgba(255,255,255,0.35)" }}>{e.who}</div>
-          </div>
-          <div style={{ fontSize:13, fontWeight:700, color:"white", flexShrink:0 }}>{e.amount}</div>
-        </div>
-      ))}
-      <div style={{ background:"rgba(92,122,94,0.15)", border:"1px solid rgba(92,122,94,0.3)", borderRadius:12, padding:"12px 14px", display:"flex", alignItems:"center", gap:10, marginTop:4 }}>
-        <span style={{ color:"#7A9E7C", display:"flex" }}>{Icon.settlement(14)}</span>
-        <span style={{ fontSize:12, color:"rgba(255,255,255,0.7)" }}>Settlement ready — <strong style={{ color:"#7A9E7C" }}>Reem owes Sara 124 AED</strong></span>
-      </div>
-    </>
-  );
-};
-
 const PackingPanel = () => {
   const [checked, setChecked] = useState(new Set([0,1,3,5]));
   const toggle = i => setChecked(prev => { const n=new Set(prev); n.has(i)?n.delete(i):n.add(i); return n; });
@@ -347,30 +308,6 @@ const NotesPanel = () => {
   );
 };
 
-const BookingsPanel = () => {
-  const bookings = [
-    { icon:Icon.plane(15),  bg:"rgba(200,98,58,0.15)",  name:"Emirates EK152 — Dubai to Marrakech", ref:"REF: EK7K2M9",      info:"Mar 12 · 14:00 · 5 passengers",          status:"CONFIRMED", sc:"#28C840", sb:"rgba(40,200,64,0.12)" },
-    { icon:Icon.hotel(15),  bg:"rgba(58,124,165,0.15)", name:"Riad Yasmine, Marrakech",             ref:"REF: RY-2026-0312", info:"Mar 12–14 · 3 nights · breakfast incl.",  status:"CONFIRMED", sc:"#28C840", sb:"rgba(40,200,64,0.12)" },
-    { icon:Icon.car(15),    bg:"rgba(92,122,94,0.15)",  name:"Europcar 7-seat SUV",                 ref:"REF: ECR-88712",    info:"Mar 12–22 · 10 days · full coverage",    status:"CONFIRMED", sc:"#28C840", sb:"rgba(40,200,64,0.12)" },
-    { icon:Icon.camel(15),  bg:"rgba(200,160,58,0.15)", name:"Sahara Desert Camp — Merzouga",       ref:"REF: PENDING",      info:"Mar 17 · 1 night · camel trek + dinner", status:"PENDING",   sc:"#C8A03A", sb:"rgba(200,160,58,0.12)" },
-  ];
-  return (
-    <>
-      {bookings.map((b,i)=>(
-        <div key={i} style={{ display:"flex", gap:12, alignItems:"flex-start", padding:"12px 14px", background:"rgba(255,255,255,0.03)", borderRadius:13, border:"1px solid rgba(255,255,255,0.05)", marginBottom:9, cursor:"pointer" }}>
-          <div style={{ width:36, height:36, borderRadius:11, background:b.bg, display:"flex", alignItems:"center", justifyContent:"center", color:"rgba(255,255,255,0.7)", flexShrink:0 }}>{b.icon}</div>
-          <div style={{ flex:1, minWidth:0 }}>
-            <div style={{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,0.85)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{b.name}</div>
-            <div style={{ fontSize:10, color:"rgba(255,255,255,0.3)", fontFamily:"monospace", letterSpacing:0.5, marginTop:2 }}>{b.ref}</div>
-            <div style={{ fontSize:11, color:"rgba(255,255,255,0.45)", marginTop:2 }}>{b.info}</div>
-          </div>
-          <div style={{ fontSize:10, fontWeight:700, padding:"3px 10px", borderRadius:50, background:b.sb, color:b.sc, border:`1px solid ${b.sc}40`, flexShrink:0 }}>{b.status}</div>
-        </div>
-      ))}
-    </>
-  );
-};
-
 const SharePanel = () => {
   const [copied, setCopied] = useState(false);
   const options = [
@@ -420,10 +357,8 @@ const panelComponents = {
   calendar:  CalendarPanel,
   map:       MapPanel,
   voting:    VotingPanel,
-  budget:    BudgetPanel,
   packing:   PackingPanel,
   notes:     NotesPanel,
-  bookings:  BookingsPanel,
   share:     SharePanel,
 };
 
