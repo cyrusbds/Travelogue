@@ -2,6 +2,7 @@
 // Manages Socket.IO subscriptions for real-time poll updates.
 
 import { useEffect } from "react";
+import socket from "./api/socket";
 
 /**
  * @param {object|null} socket  - Socket.IO client instance
@@ -44,7 +45,7 @@ export function usePollSocket(
     };
 
     // Join the poll room for this trip
-    socket.emit("join:polls", { tripId });
+    socket.emit("join:poll", { tripId });
 
     const handleVote = ({ poll }) => onVoteCast?.(poll);
     const handleCreated = ({ poll }) => onCreated?.(poll);
