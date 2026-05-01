@@ -36,6 +36,24 @@ const Icon = {
       <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
     </svg>
   ),
+  notes: (s = 14) => (
+    <svg
+      width={s}
+      height={s}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+      <polyline points="10 9 9 9 8 9" />
+    </svg>
+  ),
   calendar: (s = 14) => (
     <svg
       width={s}
@@ -357,7 +375,7 @@ const Icon = {
 // ─── Nav config ───────────────────────────────────────────────────────
 const navGroups = [
   { label: "Planning", items: ["itinerary", "calendar", "map"] },
-  { label: "Group", items: ["voting", "packing"] },
+  { label: "Group", items: ["voting", "packing", "notes"] },
 ];
 
 const panels = {
@@ -390,6 +408,12 @@ const panels = {
     label: "Packing",
     title: "Shared Packing List",
     meta: "14/22 items checked · updated by group",
+  },
+  notes: {
+    iconKey: "notes",
+    label: "Chat",
+    title: "Group Chat",
+    meta: "Morocco Squad · 5 members · 5 online",
   },
   share: {
     iconKey: "link",
@@ -1427,6 +1451,7 @@ const panelComponents = {
   map: MapPanel,
   voting: VotingPanel,
   packing: PackingPanel,
+  notes: NotesPanel,
   share: SharePanel,
 };
 
