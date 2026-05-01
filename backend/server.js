@@ -1,3 +1,5 @@
+// server.js
+
 require("dotenv").config();
 
 const express = require("express");
@@ -12,11 +14,13 @@ const server = http.createServer(app);
 // ── Socket.IO setup ──────────────────────────────────────────────────────────
 const io = new Server(server, {
   cors: {
-    origin: ["https://travelogue-official.vercel.app"],
+    origin: ["https://travelogue-official.vercel.app", "http://localhost:5173"],
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
+
+app.set("io", io);
 
 const { registerChatEvents } = require("./socketHandlers/chatSocket");
 const { registerPollEvents } = require("./socketHandlers/pollSocket");
@@ -29,7 +33,6 @@ io.on("connection", (socket) => {
   registerMapEvents(io, socket);
 });
 
-// ── Attach io to every request so controllers can emit events ────────────────
 app.use((req, _res, next) => {
   req.io = io;
   next();
@@ -43,7 +46,7 @@ const itineraryRoutes = require("./routes/itineraryRoutes");
 
 app.use(
   cors({
-    origin: ["https://travelogue-official.vercel.app"],
+    origin: ["https://travelogue-official.vercel.app", "http://localhost:5173"],
     credentials: true,
   }),
 );

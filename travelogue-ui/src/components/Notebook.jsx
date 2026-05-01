@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { io } from "socket.io-client";
+import socket from "../socket";
 import { fetchMessages, deleteMessage as apiDeleteMessage } from "../api/chat";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "./Notebook.css";
 import TripMap from "./TripMap";
 import { usePollSocket } from "../hooks/usePollSocket";
-import socket from "../api/socket";
 
 /* ─── SVG ICONS ───────────────────────────────────────────── */
 const Icon = {
@@ -766,7 +766,7 @@ function ItineraryPanel({ toast, trip }) {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
-  const [editItem, setEditItem] = useState(null); // null = create, obj = edit
+  const [editItem, setEditItem] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
 
   const EMPTY_FORM = {
@@ -782,13 +782,11 @@ function ItineraryPanel({ toast, trip }) {
   };
   const [form, setForm] = useState(EMPTY_FORM);
 
-  // Drag state (lightweight, no library dependency)
   const dragItem = useRef(null);
   const dragOver = useRef(null);
 
   const tripId = trip?._id;
 
-  /* ── Load items ─────────────────────────────────────────── */
   useEffect(() => {
     if (!tripId) {
       setIsLoading(false);
@@ -802,17 +800,10 @@ function ItineraryPanel({ toast, trip }) {
     });
   }, [tripId]);
 
-  /* ── Socket.IO real-time sync ───────────────────────────── */
   useEffect(() => {
     if (!tripId) return;
 
-    const socket = io(
-      import.meta.env.VITE_API_URL?.replace("/api", "") ||
-        "http://localhost:5000",
-      { auth: { token: localStorage.getItem("travelogue_token") || "" } },
-    );
-
-    socket.emit("chat:join", { tripId });
+    socket.emit("join-trip", tripId);
 
     socket.on("itineraryCreated", ({ item }) => {
       setItems((p) => {
@@ -833,10 +824,14 @@ function ItineraryPanel({ toast, trip }) {
       setItems(updated);
     });
 
-    return () => socket.disconnect();
+    return () => {
+      socket.off("itineraryCreated");
+      socket.off("itineraryUpdated");
+      socket.off("itineraryDeleted");
+      socket.off("itineraryReordered");
+    };
   }, [tripId]);
 
-  /* ── Group items by date ────────────────────────────────── */
   const grouped = useMemo(() => {
     const map = {};
     [...items]
@@ -854,7 +849,6 @@ function ItineraryPanel({ toast, trip }) {
 
   const sortedDays = Object.keys(grouped).sort();
 
-  /* ── Trip date range for date picker min/max ────────────── */
   const minDate = trip?.startDate
     ? new Date(trip.startDate).toISOString().slice(0, 10)
     : "";
@@ -862,14 +856,12 @@ function ItineraryPanel({ toast, trip }) {
     ? new Date(trip.endDate).toISOString().slice(0, 10)
     : "";
 
-  /* ── Open modal for create ──────────────────────────────── */
   function openCreate() {
     setEditItem(null);
     setForm({ ...EMPTY_FORM, date: minDate || "" });
     setModalOpen(true);
   }
 
-  /* ── Open modal for edit ────────────────────────────────── */
   function openEdit(item, e) {
     e.stopPropagation();
     setEditItem(item);
@@ -887,7 +879,6 @@ function ItineraryPanel({ toast, trip }) {
     setModalOpen(true);
   }
 
-  /* ── Save (create or update) ────────────────────────────── */
   async function handleSave() {
     if (!form.title.trim()) {
       toast("Please enter a title");
@@ -916,7 +907,6 @@ function ItineraryPanel({ toast, trip }) {
     }
   }
 
-  /* ── Delete ─────────────────────────────────────────────── */
   async function handleDelete(item, e) {
     e.stopPropagation();
     if (!window.confirm(`Delete "${item.title}"?`)) return;
@@ -930,7 +920,6 @@ function ItineraryPanel({ toast, trip }) {
     }
   }
 
-  /* ── Drag-and-drop (same day reorder) ───────────────────── */
   function onDragStart(e, item) {
     dragItem.current = item;
     e.dataTransfer.effectAllowed = "move";
@@ -948,10 +937,8 @@ function ItineraryPanel({ toast, trip }) {
     dragItem.current = null;
     dragOver.current = null;
 
-    // Optimistically reorder local state
     setItems((prev) => {
       const rest = prev.filter((i) => i._id !== src._id);
-      // Move to new date if dropped on a different day header
       const movedItem = { ...src, date: targetDateKey || src.date };
 
       if (!tgt || tgt._id === src._id) return [...rest, movedItem];
@@ -962,19 +949,16 @@ function ItineraryPanel({ toast, trip }) {
       return updated.map((item, idx) => ({ ...item, orderIndex: idx }));
     });
 
-    // Persist reorder
     try {
       const { apiReorderItems } = await import("../api/itinerary");
       const dayKey =
         targetDateKey || new Date(src.date).toISOString().slice(0, 10);
       const dayItems = grouped[dayKey] || [];
 
-      // Build updates array with new orderIndex
       const updates = dayItems
         .filter((i) => i._id !== src._id)
         .map((i, idx) => ({ id: i._id, date: dayKey, orderIndex: idx + 1 }));
 
-      // Insert dragged item at position of drag target
       const tgtIdx = tgt
         ? dayItems.findIndex((i) => i._id === tgt._id)
         : dayItems.length;
@@ -985,12 +969,9 @@ function ItineraryPanel({ toast, trip }) {
       });
 
       await apiReorderItems(tripId, updates);
-    } catch {
-      // Silently fail — UI already shows optimistic order
-    }
+    } catch {}
   }
 
-  /* ── Category config ────────────────────────────────────── */
   const catColor = {
     explore: "var(--ocean)",
     food: "#C8A03A",
@@ -1013,7 +994,6 @@ function ItineraryPanel({ toast, trip }) {
     other: Icon.itinerary,
   };
 
-  /* ── Day header label ───────────────────────────────────── */
   function dayLabel(dateKey, idx) {
     const d = new Date(dateKey + "T12:00:00");
     const formatted = d.toLocaleDateString("en-GB", {
@@ -1099,7 +1079,6 @@ function ItineraryPanel({ toast, trip }) {
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={(e) => onDrop(e, dayKey)}
               >
-                {/* Day header */}
                 <div className="nb-day-header">
                   <div className="nb-day-label">{num}</div>
                   <div className="nb-day-line" />
@@ -1116,7 +1095,6 @@ function ItineraryPanel({ toast, trip }) {
                   </div>
                 </div>
 
-                {/* Activity rows */}
                 {grouped[dayKey].map((item) => {
                   const cat = item.category || "explore";
                   const isOpen = expandedId === item._id;
@@ -1136,12 +1114,10 @@ function ItineraryPanel({ toast, trip }) {
                       onClick={() => setExpandedId(isOpen ? null : item._id)}
                       style={{ cursor: "grab", userSelect: "none" }}
                     >
-                      {/* Time */}
                       <div className="nb-itin-time" style={{ minWidth: 72 }}>
                         {timeLabel}
                       </div>
 
-                      {/* Color node */}
                       <div
                         className="nb-itin-node"
                         style={{
@@ -1150,7 +1126,6 @@ function ItineraryPanel({ toast, trip }) {
                         }}
                       />
 
-                      {/* Details */}
                       <div className="nb-itin-details" style={{ flex: 1 }}>
                         <div
                           className="nb-itin-name"
@@ -1175,7 +1150,6 @@ function ItineraryPanel({ toast, trip }) {
                           </div>
                         )}
 
-                        {/* Expanded detail */}
                         {isOpen && (
                           <div
                             style={{
@@ -1216,7 +1190,6 @@ function ItineraryPanel({ toast, trip }) {
                         )}
                       </div>
 
-                      {/* Tag + actions */}
                       <div
                         style={{
                           display: "flex",
@@ -1229,7 +1202,6 @@ function ItineraryPanel({ toast, trip }) {
                           {cat.charAt(0).toUpperCase() + cat.slice(1)}
                         </span>
 
-                        {/* Edit */}
                         <button
                           className="nb-action-btn nb-action-ghost"
                           style={{ padding: "4px 8px", fontSize: "0.7rem" }}
@@ -1239,7 +1211,6 @@ function ItineraryPanel({ toast, trip }) {
                           {Icon.settings}
                         </button>
 
-                        {/* Delete */}
                         <button
                           className="nb-action-btn nb-action-ghost"
                           style={{
@@ -1270,7 +1241,6 @@ function ItineraryPanel({ toast, trip }) {
         </div>
       )}
 
-      {/* ── Create / Edit Modal ── */}
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
@@ -1297,7 +1267,6 @@ function ItineraryPanel({ toast, trip }) {
           </>
         }
       >
-        {/* Title */}
         <div className="nb-form-group">
           <label className="nb-form-label">Activity Title *</label>
           <input
@@ -1310,7 +1279,6 @@ function ItineraryPanel({ toast, trip }) {
           />
         </div>
 
-        {/* Date + Category */}
         <div className="nb-form-row-2">
           <div className="nb-form-group">
             <label className="nb-form-label">Date *</label>
@@ -1341,7 +1309,6 @@ function ItineraryPanel({ toast, trip }) {
           </div>
         </div>
 
-        {/* Start / End time */}
         <div className="nb-form-row-2">
           <div className="nb-form-group">
             <label className="nb-form-label">Start Time</label>
@@ -1367,7 +1334,6 @@ function ItineraryPanel({ toast, trip }) {
           </div>
         </div>
 
-        {/* Location */}
         <div className="nb-form-group">
           <label className="nb-form-label">Location</label>
           <input
@@ -1380,7 +1346,6 @@ function ItineraryPanel({ toast, trip }) {
           />
         </div>
 
-        {/* Description */}
         <div className="nb-form-group">
           <label className="nb-form-label">Description</label>
           <textarea
@@ -1394,7 +1359,6 @@ function ItineraryPanel({ toast, trip }) {
           />
         </div>
 
-        {/* Notes */}
         <div className="nb-form-group">
           <label className="nb-form-label">Notes (optional)</label>
           <textarea
@@ -1411,10 +1375,9 @@ function ItineraryPanel({ toast, trip }) {
 }
 
 /* ─── CALENDAR PANEL ──────────────────────────────────────── */
-/* ─── CALENDAR PANEL ──────────────────────────────────────── */
 function CalendarPanel({ toast, trip }) {
   const [items, setItems] = useState([]);
-  const [viewMode, setViewMode] = useState("month"); // "month" | "day" | "timeline"
+  const [viewMode, setViewMode] = useState("month");
   const [viewDate, setViewDate] = useState(() => {
     const d = trip?.startDate ? new Date(trip.startDate) : new Date();
     return { year: d.getFullYear(), month: d.getMonth() };
@@ -1444,7 +1407,6 @@ function CalendarPanel({ toast, trip }) {
     : "";
   const today = new Date().toISOString().slice(0, 10);
 
-  /* ── Load items ─────────────────────────────────────────── */
   useEffect(() => {
     if (!tripId) return;
     import("../api/itinerary").then(({ apiGetItinerary }) => {
@@ -1454,7 +1416,6 @@ function CalendarPanel({ toast, trip }) {
     });
   }, [tripId]);
 
-  /* ── Derived data ───────────────────────────────────────── */
   const activeDays = useMemo(() => {
     const s = new Set();
     items.forEach((it) => s.add(new Date(it.date).toISOString().slice(0, 10)));
@@ -1468,7 +1429,6 @@ function CalendarPanel({ toast, trip }) {
       if (!map[key]) map[key] = [];
       map[key].push(it);
     });
-    // Sort each day's items by startTime
     Object.keys(map).forEach((k) => {
       map[k].sort((a, b) =>
         (a.startTime || "").localeCompare(b.startTime || ""),
@@ -1482,7 +1442,6 @@ function CalendarPanel({ toast, trip }) {
     [itemsByDay, selectedDay],
   );
 
-  /* ── Conflict detection ─────────────────────────────────── */
   function detectConflicts(dayItems) {
     const conflicts = new Set();
     for (let i = 0; i < dayItems.length; i++) {
@@ -1503,7 +1462,6 @@ function CalendarPanel({ toast, trip }) {
     return conflicts;
   }
 
-  /* ── Save activity ──────────────────────────────────────── */
   async function handleSave() {
     if (!form.title.trim()) {
       toast("Please enter a title");
@@ -1565,7 +1523,6 @@ function CalendarPanel({ toast, trip }) {
     setModalOpen(true);
   }
 
-  /* ── Calendar grid helpers ──────────────────────────────── */
   const { year, month } = viewDate;
   const monthName = new Date(year, month, 1).toLocaleDateString("en-GB", {
     month: "long",
@@ -1592,7 +1549,6 @@ function CalendarPanel({ toast, trip }) {
     );
   }
 
-  /* ── Category colors ────────────────────────────────────── */
   const catColor = {
     explore: "var(--ocean)",
     food: "#C8A03A",
@@ -1601,7 +1557,6 @@ function CalendarPanel({ toast, trip }) {
     other: "rgba(255,255,255,0.4)",
   };
 
-  /* ── Timeline hours ─────────────────────────────────────── */
   const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
   function timeToMinutes(t) {
@@ -1620,7 +1575,6 @@ function CalendarPanel({ toast, trip }) {
       });
   }
 
-  /* ── Upcoming activities (next 3) ───────────────────────── */
   const upcomingItems = useMemo(() => {
     return [...items]
       .filter((it) => new Date(it.date).toISOString().slice(0, 10) >= today)
@@ -1632,7 +1586,6 @@ function CalendarPanel({ toast, trip }) {
       .slice(0, 3);
   }, [items, today]);
 
-  /* ── Render: Activity card (shared) ─────────────────────── */
   function ActivityCard({ item, conflicts, compact }) {
     const cat = item.category || "explore";
     const isConflict = conflicts?.has(item._id);
@@ -1750,11 +1703,9 @@ function CalendarPanel({ toast, trip }) {
     );
   }
 
-  /* ── View: Month ────────────────────────────────────────── */
   function MonthView() {
     return (
       <div className="nb-calendar-layout">
-        {/* Grid */}
         <div>
           <div className="nb-cal-top">
             <button className="nb-cal-nav" onClick={prevMonth}>
@@ -1820,7 +1771,6 @@ function CalendarPanel({ toast, trip }) {
           </div>
         </div>
 
-        {/* Day detail / overview */}
         <div>
           {selectedDay ? (
             <div>
@@ -1936,7 +1886,6 @@ function CalendarPanel({ toast, trip }) {
                 ))}
               </div>
 
-              {/* Upcoming */}
               {upcomingItems.length > 0 && (
                 <div style={{ marginTop: 16 }}>
                   <div
@@ -1974,7 +1923,6 @@ function CalendarPanel({ toast, trip }) {
     );
   }
 
-  /* ── View: Day ──────────────────────────────────────────── */
   function DayView() {
     const displayDay = selectedDay || today;
     const dayItems = itemsByDay[displayDay] || [];
@@ -1993,7 +1941,6 @@ function CalendarPanel({ toast, trip }) {
 
     return (
       <div>
-        {/* Day nav */}
         <div
           style={{
             display: "flex",
@@ -2042,7 +1989,6 @@ function CalendarPanel({ toast, trip }) {
           </button>
         </div>
 
-        {/* Jump to day */}
         <div
           style={{
             marginBottom: 16,
@@ -2108,18 +2054,16 @@ function CalendarPanel({ toast, trip }) {
     );
   }
 
-  /* ── View: Timeline ─────────────────────────────────────── */
   function TimelineView() {
     const displayDay = selectedDay || today;
     const dayItems = itemsByDay[displayDay] || [];
     const tlItems = getTimelineItems(dayItems);
     const conflicts = detectConflicts(dayItems);
     const allDays = [...activeDays].sort();
-    const HOUR_HEIGHT = 60; // px per hour
+    const HOUR_HEIGHT = 60;
 
     return (
       <div>
-        {/* Day selector */}
         <div
           style={{
             display: "flex",
@@ -2173,7 +2117,6 @@ function CalendarPanel({ toast, trip }) {
           )}
         </div>
 
-        {/* Timeline grid */}
         <div
           style={{ position: "relative", overflowY: "auto", maxHeight: 600 }}
         >
@@ -2201,7 +2144,6 @@ function CalendarPanel({ toast, trip }) {
                 {String(h).padStart(2, "0")}:00
               </div>
               <div style={{ flex: 1, position: "relative", height: "100%" }}>
-                {/* Current time indicator */}
                 {displayDay === today &&
                   (() => {
                     const now = new Date();
@@ -2238,7 +2180,6 @@ function CalendarPanel({ toast, trip }) {
             </div>
           ))}
 
-          {/* Activity blocks */}
           <div
             style={{
               position: "absolute",
@@ -2298,7 +2239,6 @@ function CalendarPanel({ toast, trip }) {
               );
             })}
 
-            {/* Items without time */}
             {dayItems
               .filter((it) => !it.startTime)
               .map((it, i) => (
@@ -2338,7 +2278,6 @@ function CalendarPanel({ toast, trip }) {
     );
   }
 
-  /* ── Render ─────────────────────────────────────────────── */
   return (
     <PanelShell
       title={
@@ -2384,7 +2323,6 @@ function CalendarPanel({ toast, trip }) {
       {viewMode === "day" && <DayView />}
       {viewMode === "timeline" && <TimelineView />}
 
-      {/* ── Create / Edit Modal ── */}
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
@@ -2524,7 +2462,7 @@ function VotingPanel({ toast, trip }) {
 
   const tripId = trip?._id;
 
-  // Load polls from backend
+  // ── Initial load ────────────────────────────────────────────
   useEffect(() => {
     if (!tripId) {
       setIsLoading(false);
@@ -2538,7 +2476,8 @@ function VotingPanel({ toast, trip }) {
     });
   }, [tripId]);
 
-  usePollSocket(tripId, {
+  // ── ✅ Live Socket.IO updates ───────────────────────────────
+  usePollSocket(socket, tripId, {
     onVoteCast: (updatedPoll) => {
       setPolls((prev) =>
         prev.map((p) => (p._id === updatedPoll._id ? updatedPoll : p)),
@@ -2565,7 +2504,6 @@ function VotingPanel({ toast, trip }) {
       setPolls((prev) =>
         prev.map((p) => (p._id === pollId ? { ...p, status: "closed" } : p)),
       );
-      // Close the vote modal if it was open for this poll
       setVoteModalPoll((prev) => (prev?._id === pollId ? null : prev));
     },
 
@@ -2575,6 +2513,7 @@ function VotingPanel({ toast, trip }) {
     },
   });
 
+  // ── Create poll ─────────────────────────────────────────────
   async function handleCreate() {
     if (!form.q.trim() || !form.o1.trim() || !form.o2.trim()) {
       toast("Fill in question and at least 2 options");
@@ -2587,7 +2526,10 @@ function VotingPanel({ toast, trip }) {
         question: form.q.trim(),
         options,
       });
-      setPolls((p) => [poll, ...p]);
+      setPolls((p) => {
+        if (p.some((v) => v._id === poll._id)) return p;
+        return [poll, ...p];
+      });
       setForm({ q: "", o1: "", o2: "", o3: "" });
       setCreateOpen(false);
       toast("Vote created!");
@@ -2596,6 +2538,7 @@ function VotingPanel({ toast, trip }) {
     }
   }
 
+  // ── Cast vote ───────────────────────────────────────────────
   async function handleVote() {
     if (picked === null) {
       toast("Please pick an option");
@@ -2622,7 +2565,7 @@ function VotingPanel({ toast, trip }) {
           {Icon.vote} Group Voting
         </span>
       }
-      subtitle="Let the group decide together · anonymous voting"
+      subtitle="Let the group decide together · live results"
       actions={
         <button
           className="nb-action-btn nb-action-primary"
@@ -2848,7 +2791,6 @@ function PackingPanel({ toast, trip }) {
 
   const tripId = trip?._id;
 
-  // Load checklist from backend on mount
   useEffect(() => {
     if (!tripId) {
       setIsLoading(false);
@@ -2862,6 +2804,35 @@ function PackingPanel({ toast, trip }) {
     });
   }, [tripId]);
 
+  // ── Live packing list updates ─────────────────────────────
+  useEffect(() => {
+    if (!tripId) return;
+
+    socket.emit("join-trip", tripId);
+
+    socket.on("packing:item-added", ({ item }) => {
+      setItems((p) => (p.some((i) => i._id === item._id) ? p : [...p, item]));
+    });
+    socket.on("packing:item-toggled", ({ item }) => {
+      setItems((p) =>
+        p.map((i) =>
+          i._id === item._id
+            ? { ...i, done: item.done, checked: item.checked }
+            : i,
+        ),
+      );
+    });
+    socket.on("packing:item-deleted", ({ itemId }) => {
+      setItems((p) => p.filter((i) => i._id !== itemId));
+    });
+
+    return () => {
+      socket.off("packing:item-added");
+      socket.off("packing:item-toggled");
+      socket.off("packing:item-deleted");
+    };
+  }, [tripId]);
+
   const done = items.filter((i) => i.done || i.checked).length;
   const total = items.length;
   const pct = total ? Math.round((done / total) * 100) : 0;
@@ -2871,19 +2842,16 @@ function PackingPanel({ toast, trip }) {
     const item = items[idx];
     const newDone = !(item.done || item.checked);
 
-    // Optimistic update
     setItems((p) =>
       p.map((it, i) =>
         i === idx ? { ...it, done: newDone, checked: newDone } : it,
       ),
     );
 
-    // Persist to backend
     if (tripId && item._id) {
       import("../api/chat").then(({ updateChecklistItem }) => {
         updateChecklistItem(tripId, item._id, { checked: newDone }).catch(
           () => {
-            // Revert on failure
             setItems((p) =>
               p.map((it, i) =>
                 i === idx ? { ...it, done: !newDone, checked: !newDone } : it,
@@ -2903,12 +2871,11 @@ function PackingPanel({ toast, trip }) {
     }
 
     const newItem = {
-      text: form.name, // ← backend expects "text"
+      text: form.name,
       assignedTo: form.who ? { name: form.who } : { name: "Everyone" },
-      category: "other", // ← lowercase to match schema enum
+      category: "other",
     };
 
-    // Optimistic add
     const tempId = `temp-${Date.now()}`;
     setItems((p) => [
       ...p,
@@ -2918,12 +2885,10 @@ function PackingPanel({ toast, trip }) {
     setAddOpen(false);
     toast(`${form.name} added to packing list!`);
 
-    // Persist to backend
     if (tripId) {
       import("../api/chat").then(({ addChecklistItem }) => {
         addChecklistItem(tripId, newItem)
           .then(({ data }) => {
-            // Replace temp item with real one from DB
             setItems((p) =>
               p.map((it) => (it._id === tempId ? data.item : it)),
             );
@@ -3023,7 +2988,6 @@ function PackingPanel({ toast, trip }) {
                   const itemCat = it.category || it.cat || "Other";
                   if (itemCat !== cat) return null;
                   const isDone = it.done || it.checked;
-                  // assignedTo comes from DB; fall back to legacy `who` field
                   const assignedLabel =
                     (typeof it.assignedTo === "object"
                       ? it.assignedTo?.name
@@ -3121,13 +3085,12 @@ function ChatPanel({ toast, trip }) {
 
   const tripId = trip?._id;
   const sender = {
-    userId: user?.id || user?._id || null, // ← id first, then _id as fallback
+    userId: user?.id || user?._id || null,
     name: user?.name || "Guest",
     isGuest: !user,
     guestId: null,
   };
 
-  // ── Connect socket once ───────────────────────────────────
   useEffect(() => {
     if (!tripId) return;
 
@@ -3145,12 +3108,10 @@ function ChatPanel({ toast, trip }) {
     socket.on("chat:message", (msg) => {
       setMessages((prev) => {
         if (msg.tempId) {
-          // Replace our optimistic bubble with the confirmed message
           return prev.map((m) =>
             m._id === msg.tempId ? { ...msg, optimistic: false } : m,
           );
         }
-        // Dedup by real _id for messages from other users
         if (prev.some((m) => m._id === msg._id)) return prev;
         return [...prev, msg];
       });
@@ -3162,7 +3123,6 @@ function ChatPanel({ toast, trip }) {
       setMessages((prev) => prev.filter((m) => m._id !== messageId));
     });
 
-    // Load message history
     fetchMessages(tripId)
       .then(({ data }) => setMessages(data.messages))
       .catch(() => toast("Failed to load messages"))
@@ -3171,20 +3131,18 @@ function ChatPanel({ toast, trip }) {
     return () => socket.disconnect();
   }, [tripId]);
 
-  // ── Scroll to bottom on new messages ─────────────────────
   useEffect(() => {
     if (messagesRef.current)
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
   }, [messages, typingUsers]);
 
-  // ── Send message ──────────────────────────────────────────
   function send() {
     if (!input.trim() || !socketRef.current) return;
 
     const tempId = `opt-${Date.now()}`;
 
     const optimistic = {
-      _id: tempId, // use tempId as _id so we can find & replace it
+      _id: tempId,
       sender,
       content: input.trim(),
       createdAt: new Date().toISOString(),
@@ -3196,13 +3154,12 @@ function ChatPanel({ toast, trip }) {
       tripId,
       content: input.trim(),
       sender,
-      tempId, // send to server so it echoes back in the response
+      tempId,
     });
     setInput("");
     stopTyping();
   }
 
-  // ── Typing indicators ─────────────────────────────────────
   function startTyping() {
     if (isTyping.current || !socketRef.current) return;
     isTyping.current = true;
@@ -3243,7 +3200,6 @@ function ChatPanel({ toast, trip }) {
   return (
     <div className="nb-content-area">
       <div className="nb-chat-wrap">
-        {/* Header */}
         <div className="nb-chat-header">
           <div
             style={{
@@ -3269,7 +3225,6 @@ function ChatPanel({ toast, trip }) {
           </div>
         </div>
 
-        {/* Messages */}
         <div className="nb-chat-messages" ref={messagesRef}>
           <div className="nb-date-divider">
             <span>Group Chat</span>
@@ -3333,7 +3288,7 @@ function ChatPanel({ toast, trip }) {
                 className="nb-msg-bubble"
                 style={
                   isMine(msg)
-                    ? {} // keep your existing terracotta CSS for "mine"
+                    ? {}
                     : {
                         background: getBubbleColor(msg.sender?.name) + "33",
                         borderLeft: `3px solid ${getBubbleColor(msg.sender?.name)}`,
@@ -3352,7 +3307,6 @@ function ChatPanel({ toast, trip }) {
             </div>
           ))}
 
-          {/* Typing indicator */}
           {typingUsers.length > 0 && (
             <div className="nb-typing">
               <div className="nb-typing-dots">
@@ -3374,7 +3328,6 @@ function ChatPanel({ toast, trip }) {
           )}
         </div>
 
-        {/* Input */}
         <div className="nb-chat-input-bar">
           <textarea
             className="nb-chat-input"
@@ -3422,7 +3375,7 @@ function SharePanel({ toast, trip, user }) {
     expiresAt: "",
   });
   const [showForm, setShowForm] = useState(false);
-  const [copied, setCopied] = useState(null); // linkId that was copied
+  const [copied, setCopied] = useState(null);
 
   const tripId = trip?._id;
   const myId = user?.id || user?._id;
@@ -3564,7 +3517,6 @@ function SharePanel({ toast, trip, user }) {
         </div>
       )}
 
-      {/* Links list */}
       {links.map((link) => (
         <div
           key={link._id}
@@ -3692,7 +3644,6 @@ function SharePanel({ toast, trip, user }) {
         </div>
       ))}
 
-      {/* Create link modal */}
       <Modal
         open={showForm}
         onClose={() => setShowForm(false)}
@@ -3769,6 +3720,7 @@ function SharePanel({ toast, trip, user }) {
     </PanelShell>
   );
 }
+
 /* ─── NAV CONFIG ──────────────────────────────────────────── */
 const NAV = [
   {
@@ -3782,7 +3734,7 @@ const NAV = [
   {
     section: "Group",
     items: [
-      { id: "voting", label: "Voting", icon: "vote" },
+      { id: "voting", label: "Voting", icon: "vote", live: true }, // ← live dot added
       { id: "packing", label: "Packing", icon: "packing" },
       { id: "chat", label: "Group Chat", icon: "chat", live: true },
     ],
@@ -3804,7 +3756,6 @@ export default function Notebook({ trip }) {
   const datesLabel =
     startDate && endDate ? `${startDate} – ${endDate}` : "Dates TBD";
   const vibeIcon = getVibeIcon(trip?.vibe);
-  const [liveMembers, setLiveMembers] = useState(trip?.members || []);
 
   const renderPanel = () => {
     switch (active) {
@@ -3826,34 +3777,6 @@ export default function Notebook({ trip }) {
         return <ItineraryPanel toast={toast} trip={trip} />;
     }
   };
-
-  useEffect(() => {
-    setLiveMembers(trip?.members || []);
-  }, [trip?.members]);
-
-  useEffect(() => {
-    if (!trip?._id) return;
-
-    const socket = io(
-      import.meta.env.VITE_API_URL?.replace("/api", "") ||
-        "http://localhost:5000",
-      { auth: { token: localStorage.getItem("travelogue_token") || "" } },
-    );
-
-    // Join the chat room — this is the room the invite controller emits to
-    socket.emit("chat:join", { tripId: trip._id });
-
-    socket.on("trip:member_joined", ({ user: newUser }) => {
-      setLiveMembers((prev) => {
-        // Avoid duplicates
-        if (prev.some((m) => (m._id || m) === newUser.id)) return prev;
-        return [...prev, { _id: newUser.id, name: newUser.name }];
-      });
-      toast(`${newUser.name} joined the trip!`);
-    });
-
-    return () => socket.disconnect();
-  }, [trip?._id]);
 
   return (
     <div className="nb-root">

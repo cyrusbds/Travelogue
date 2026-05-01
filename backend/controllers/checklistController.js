@@ -35,6 +35,11 @@ const addItem = async (req, res) => {
       createdBy: { userId: userId || null, name: senderName, isGuest: !userId },
     });
 
+    const io = req.app.get("io");
+    if (io) {
+      io.to(`trip:${tripId}`).emit("packing:item-added", { item });
+    }
+
     res.status(201).json({ item });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
@@ -64,6 +69,12 @@ const updateItem = async (req, res) => {
     }
 
     await item.save();
+
+    const io = req.app.get("io");
+    if (io) {
+      io.to(`trip:${tripId}`).emit("packing:item-toggled", { item });
+    }
+
     res.json({ item });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
@@ -76,6 +87,13 @@ const deleteItem = async (req, res) => {
     const { tripId, itemId } = req.params;
     const item = await ChecklistItem.findOneAndDelete({ _id: itemId, tripId });
     if (!item) return res.status(404).json({ message: "Item not found" });
+
+    // Broadcast deletion to all trip members in real time
+    const io = req.app.get("io");
+    if (io) {
+      io.to(`trip:${tripId}`).emit("packing:item-deleted", { itemId });
+    }
+
     res.json({ message: "Deleted" });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
