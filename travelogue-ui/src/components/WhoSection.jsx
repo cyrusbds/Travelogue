@@ -106,7 +106,7 @@ const USE_CASES = [
     ),
     title: "Student & University Groups",
     description:
-      "Perfect for study trips, graduation travel, and university expeditions. Budget tracking is essential when everyone's watching their spend.",
+      "Perfect for study trips, graduation travel, and university expeditions.",
     tags: ["Study abroad", "Grad trips", "Society travel"],
   },
   {
