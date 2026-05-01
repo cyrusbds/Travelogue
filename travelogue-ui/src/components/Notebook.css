@@ -261,7 +261,7 @@
 .nb-cal-dow { text-align: center; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); padding: 6px 0; }
 .nb-cal-cell {
   aspect-ratio: 1; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
+  display: flex; flex-direction:column; align-items: center; justify-content: center; gap: 2px;
   font-size: 0.82rem; color: rgba(255,255,255,0.35);
   cursor: pointer; transition: all 0.15s;
   font-weight: 500; border: none; background: transparent;
