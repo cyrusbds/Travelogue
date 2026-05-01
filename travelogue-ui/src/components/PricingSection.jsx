@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 const FREE_FEATURES    = ["Up to 6 members","1 active trip","Itinerary, map & calendar","QR code & link sharing"];
-const FREE_MISSING     = ["Budget splitter","Group voting"];
-const PREMIUM_FEATURES = ["Unlimited members","Unlimited active trips","All planning features","Live budget splitter","Anonymous group voting","Priority support"];
+const FREE_MISSING     = ["Group voting"];
+const PREMIUM_FEATURES = ["Unlimited members","Unlimited active trips","All planning features","Anonymous group voting","Priority support"];
 const INST_FEATURES    = ["Everything in Premium","White-labeled platform","Custom domain & branding","Dedicated account manager","API & webhook access","SLA & enterprise support"];
 
 const CheckIcon = () => (
