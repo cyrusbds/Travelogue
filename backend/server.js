@@ -14,6 +14,7 @@ const io = new Server(server, {
   cors: {
     origin: ["https://travelogue-official.vercel.app"],
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
@@ -40,7 +41,12 @@ const authRoutes = require("./routes/authRoutes");
 const inviteRoutes = require("./routes/inviteRoutes");
 const itineraryRoutes = require("./routes/itineraryRoutes");
 
-app.use(cors({ origin: ["https://travelogue-official.vercel.app"] }));
+app.use(
+  cors({
+    origin: ["https://travelogue-official.vercel.app"],
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use("/api/trips", tripRoutes);
 app.use("/api/trips/:tripId/itinerary", itineraryRoutes);
