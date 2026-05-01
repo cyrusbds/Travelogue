@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "./Notebook.css";
 import TripMap from "./TripMap";
 import { usePollSocket } from "../hooks/usePollSocket";
+import socket from "../api/socket";
 
 /* ─── SVG ICONS ───────────────────────────────────────────── */
 const Icon = {
