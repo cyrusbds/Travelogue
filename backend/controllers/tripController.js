@@ -190,55 +190,6 @@ exports.deletePin = async (req, res) => {
   }
 };
 
-// ── Expenses ─────────────────────────────────────────────────────────────────
-
-exports.setBudget = async (req, res) => {
-  try {
-    const trip = await Trip.findById(req.params.id);
-    if (!trip) return res.status(404).json({ message: "Trip not found" });
-    trip.budget = req.body.budget;
-    await trip.save();
-    res.json({ budget: trip.budget });
-  } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
-exports.addExpense = async (req, res) => {
-  try {
-    const trip = await Trip.findById(req.params.id);
-    if (!trip) return res.status(404).json({ message: "Trip not found" });
-    const { desc, amount, paidBy, category } = req.body;
-    if (!desc || !amount || !paidBy)
-      return res.status(400).json({ message: "desc, amount, paidBy required" });
-    trip.expenses.push({
-      desc,
-      amount,
-      paidBy,
-      category,
-      addedBy: req.user.id,
-    });
-    await trip.save();
-    res.status(201).json({ expense: trip.expenses[trip.expenses.length - 1] });
-  } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
-exports.deleteExpense = async (req, res) => {
-  try {
-    const trip = await Trip.findById(req.params.id);
-    if (!trip) return res.status(404).json({ message: "Trip not found" });
-    trip.expenses = trip.expenses.filter(
-      (e) => e._id.toString() !== req.params.expId,
-    );
-    await trip.save();
-    res.json({ message: "Expense removed" });
-  } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
 // ── Votes ────────────────────────────────────────────────────────────────────
 
 exports.addVote = async (req, res) => {

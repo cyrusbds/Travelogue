@@ -3388,7 +3388,6 @@ function SharePanel({ toast, trip, user }) {
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState({
     role: "member",
-    guestAccess: false,
     maxUses: "",
     expiresAt: "",
   });
@@ -3419,7 +3418,6 @@ function SharePanel({ toast, trip, user }) {
       const { apiGenerateInviteLink } = await import("../api/invites");
       const { link } = await apiGenerateInviteLink(tripId, {
         role: form.role,
-        guestAccess: form.guestAccess,
         maxUses: form.maxUses ? parseInt(form.maxUses) : null,
         expiresAt: form.expiresAt || null,
       });
@@ -3693,8 +3691,7 @@ function SharePanel({ toast, trip, user }) {
               value={form.role}
               onChange={(e) => setForm((f) => ({ ...f, role: e.target.value }))}
             >
-              <option value="member">Member (can edit)</option>
-              <option value="viewer">Viewer (read only)</option>
+              <option value="member">Member</option>
             </select>
           </div>
           <div className="nb-form-group">
@@ -3714,7 +3711,7 @@ function SharePanel({ toast, trip, user }) {
           <label className="nb-form-label">Expiry Date</label>
           <input
             className="nb-form-input"
-            type="datetime-local"
+            type="date"
             value={form.expiresAt}
             onChange={(e) =>
               setForm((f) => ({ ...f, expiresAt: e.target.value }))
@@ -3725,13 +3722,11 @@ function SharePanel({ toast, trip, user }) {
           <label className="nb-form-label">Guest Access</label>
           <select
             className="nb-form-select"
-            value={form.guestAccess}
             onChange={(e) =>
               setForm((f) => ({ ...f, guestAccess: e.target.value === "true" }))
             }
           >
-            <option value="false">No — requires account</option>
-            <option value="true">Yes — anyone with link</option>
+            <option value="false">Requires Account</option>
           </select>
         </div>
       </Modal>
@@ -3766,6 +3761,7 @@ export default function Notebook({ trip }) {
   const navigate = useNavigate();
   const { toasts, show: toast } = useToast();
   const { user } = useAuth();
+  const [trip, setTrip] = useState(initialTrip);
 
   const tripName = trip?.name || "My Trip Notebook";
   const tripDest = trip?.dest || "";
@@ -3795,6 +3791,41 @@ export default function Notebook({ trip }) {
         return <ItineraryPanel toast={toast} trip={trip} />;
     }
   };
+
+  useEffect(() => {
+    setTrip(initialTrip);
+  }, [initialTrip]);
+
+  useEffect(() => {
+    if (!trip?._id) return;
+
+    socket.emit("join:trip", trip._id);
+
+    socket.on("trip:member_joined", ({ tripId, user: joiner }) => {
+      if (tripId?.toString() !== trip._id?.toString()) return;
+
+      setTrip((prev) => {
+        const alreadyIn = prev.members?.some(
+          (m) => (m._id || m)?.toString() === joiner.id,
+        );
+        if (alreadyIn) return prev;
+        return {
+          ...prev,
+          members: [
+            ...(prev.members || []),
+            { _id: joiner.id, name: joiner.name },
+          ],
+        };
+      });
+
+      toast(`${joiner.name} joined the trip!`);
+    });
+
+    return () => {
+      socket.off("trip:member_joined");
+      socket.emit("leave:trip", trip._id);
+    };
+  }, [trip?._id]);
 
   return (
     <div className="nb-root">

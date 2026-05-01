@@ -82,7 +82,6 @@ exports.validateInviteLink = async (req, res) => {
       "tripId",
       "name dest startDate endDate vibe emoji",
     );
-
     if (!link || !link.active)
       return res
         .status(404)
@@ -148,7 +147,7 @@ exports.joinTripViaInvite = async (req, res) => {
       // Notify existing members via socket
       if (req.io) {
         const joiner = await User.findById(userId).select("name");
-        req.io.to(`trip:${trip._id}:chat`).emit("trip:member_joined", {
+        req.io.to(`trip:${trip._id}`).emit("trip:member_joined", {
           tripId: trip._id,
           user: { id: userId, name: joiner?.name },
         });

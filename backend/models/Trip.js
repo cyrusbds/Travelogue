@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const activitySchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    day: { type: String, required: true }, // "Day 1 — Mar 12"
+    day: { type: String, required: true },
     time: { type: String, default: "10:00" },
     type: {
       type: String,
@@ -29,9 +29,9 @@ const pinSchema = new mongoose.Schema(
       enum: ["explore", "food", "stay", "transport"],
       default: "explore",
     },
-    lat: { type: Number }, // real coordinates from geocoding
+    lat: { type: Number },
     lng: { type: Number },
-    photos: [{ type: String }], // URLs to uploaded photos
+    photos: [{ type: String }],
     notes: { type: String },
     addedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
@@ -42,7 +42,7 @@ const expenseSchema = new mongoose.Schema(
   {
     desc: { type: String, required: true },
     amount: { type: Number, required: true },
-    paidBy: { type: String, required: true }, // member name (simple string for now)
+    paidBy: { type: String, required: true },
     category: { type: String, default: "Other" },
     addedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
@@ -91,7 +91,7 @@ const packItemSchema = new mongoose.Schema(
 const tripSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    vibe: { type: String, default: "sunrise" }, // matches VIBES in Dashboard
+    vibe: { type: String, default: "sunrise" },
     emoji: { type: String, default: "🌅" },
     dest: { type: String },
     startDate: { type: String },
@@ -102,8 +102,7 @@ const tripSchema = new mongoose.Schema(
       default: "Planning",
     },
     currency: { type: String, default: "AED" },
-    budget: { type: Number, default: null },
-    shareToken: { type: String, unique: true, sparse: true }, // for public share link
+    shareToken: { type: String, unique: true, sparse: true },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
