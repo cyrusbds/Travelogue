@@ -5,7 +5,6 @@
  * - Reverse geocodes the clicked location automatically
  * - Popup form appears to confirm name, day, category
  * - Saves to MongoDB via apiAddPin
- * - "Pin Location" button still works for manual entry
  * - Socket.io live sync: pins update in real time for all collaborators
  */
 

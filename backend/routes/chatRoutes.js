@@ -16,8 +16,6 @@ const {
 } = require("../controllers/checklistController");
 
 // ─── CHAT ─────────────────────────────────────────────────────────────────────
-// GET uses optionalAuth — logged-in users get access check, guests still get
-// a chance to pass via guestId. Using protect here was causing the 401.
 router.get("/chat/messages", optionalAuth, getMessages);
 router.post("/chat/messages", protect, createMessage);
 router.delete("/chat/messages/:messageId", protect, deleteMessage);

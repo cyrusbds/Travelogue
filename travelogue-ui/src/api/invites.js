@@ -9,7 +9,7 @@ export async function apiGetInviteLinks(tripId) {
   const res = await fetch(`${BASE}/${tripId}`, { headers: authHeader() });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message);
-  return data; // { links: [] }
+  return data;
 }
 
 export async function apiGenerateInviteLink(tripId, settings = {}) {
@@ -20,7 +20,7 @@ export async function apiGenerateInviteLink(tripId, settings = {}) {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message);
-  return data; // { link }
+  return data;
 }
 
 export async function apiRevokeInviteLink(tripId, linkId) {
@@ -47,7 +47,7 @@ export async function apiValidateInvite(token) {
   const res = await fetch(`${BASE}/join/${token}`);
   const data = await res.json();
   if (!res.ok) throw new Error(data.message);
-  return data; // { valid, trip, role, guestAccess }
+  return data;
 }
 
 export async function apiJoinTrip(token, nickname = null) {
@@ -65,5 +65,4 @@ export async function apiJoinTrip(token, nickname = null) {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message);
-  return data; // { tripId } or { tripId, guest, nickname }
 }

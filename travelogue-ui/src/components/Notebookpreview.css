@@ -124,7 +124,6 @@
 .nbp-body {
   display: grid;
   grid-template-columns: 210px 1fr;
-  /* height is driven by content on mobile, fixed on desktop */
   min-height: 540px;
 }
 

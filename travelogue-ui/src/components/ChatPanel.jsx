@@ -3,13 +3,13 @@
 import React, { useState } from "react";
 import GroupChat from "./GroupChat";
 import PackingChecklist from "./PackingChecklist";
-import VotingPanel from "./VotingPanel"; // ← NEW
+import VotingPanel from "./VotingPanel";
 import "./ChatPanel.css";
 
 const TABS = [
   { id: "chat", label: "💬 Chat" },
   { id: "checklist", label: "🧳 Packing" },
-  { id: "votes", label: "🗳 Votes" }, // ← NEW
+  { id: "votes", label: "🗳 Votes" },
 ];
 
 /**

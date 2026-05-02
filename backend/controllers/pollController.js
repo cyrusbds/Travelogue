@@ -218,7 +218,7 @@ exports.votePoll = async (req, res) => {
   }
 };
 
-// ── UPDATE POLL (only before any votes) ──────────────────────────────────────
+// ── UPDATE POLL ──────────────────────────────────────
 // PATCH /api/trips/:tripId/polls/:pollId
 exports.updatePoll = async (req, res) => {
   try {

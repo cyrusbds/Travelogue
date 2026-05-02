@@ -1,4 +1,4 @@
-// routes/tripRoutes.js — UPDATED version
+// routes/tripRoutes.js
 
 const express = require("express");
 const router = express.Router();
@@ -32,10 +32,9 @@ router.post("/:id/pack", protect, ctrl.addPackItem);
 router.patch("/:id/pack/:itemId/toggle", protect, ctrl.togglePackItem);
 router.delete("/:id/pack/:itemId", protect, ctrl.deletePackItem);
 
-// ── Polls (new standalone collection) ────────────────────────────────────────
-// IMPORTANT: mount BEFORE the chatRoutes wildcard below!
-const pollRoutes = require("./pollRoutes"); // ← NEW
-router.use("/:tripId/polls", pollRoutes); // ← NEW
+// ── Polls ────────────────────────────────────────
+const pollRoutes = require("./pollRoutes");
+router.use("/:tripId/polls", pollRoutes);
 
 // ── Chat & Checklist ─────────────────────────────────────────────────────────
 const chatRoutes = require("./chatRoutes");

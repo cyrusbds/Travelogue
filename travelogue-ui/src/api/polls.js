@@ -41,7 +41,7 @@ export async function apiVotePoll(tripId, pollId, optionIndexes) {
   return data; // { poll }
 }
 
-// ── Update a poll (only before any votes) ────────────────────────────────────
+// ── Update a poll ────────────────────────────────────
 export async function apiUpdatePoll(tripId, pollId, payload) {
   const res = await fetch(`${BASE}/${tripId}/polls/${pollId}`, {
     method: "PATCH",

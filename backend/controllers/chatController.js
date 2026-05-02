@@ -25,7 +25,6 @@ const getMessages = async (req, res) => {
     const { tripId } = req.params;
     const { before, limit = 50 } = req.query;
 
-    // FIX: JWT payload uses `id` not `_id`
     const userId = req.user?.id;
     const guestId = req.guestSession?.guestId;
 

@@ -59,7 +59,7 @@ const voteSchema = new mongoose.Schema(
     question: { type: String, required: true },
     options: [voteOptionSchema],
     open: { type: Boolean, default: true },
-    voters: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // track who voted
+    voters: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true },
@@ -67,7 +67,7 @@ const voteSchema = new mongoose.Schema(
 
 const messageSchema = new mongoose.Schema(
   {
-    author: { type: String, required: true }, // display name
+    author: { type: String, required: true },
     authorColor: { type: String, default: "#C8623A" },
     text: { type: String, required: true },
     reactions: [{ emoji: String, count: Number }],

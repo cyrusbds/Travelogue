@@ -1,5 +1,4 @@
 // components/VotingPanel.jsx
-// Drop-in panel that integrates into ChatPanel.jsx as a new "🗳 Votes" tab.
 // Manages all poll state, socket subscriptions, and API calls.
 
 import React, { useState, useEffect, useCallback } from "react";

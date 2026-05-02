@@ -15,7 +15,7 @@ router.post("/login", login);
 
 // Protected
 router.get("/me", protect, (req, res) => res.json({ user: req.user }));
-router.post("/trial", protect, startTrial); // ← new
+router.post("/trial", protect, startTrial);
 
 // Admin only
 router.get("/users", protect, adminOnly, getAllUsers);

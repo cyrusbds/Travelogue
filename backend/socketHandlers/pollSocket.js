@@ -15,7 +15,6 @@ const registerPollEvents = (io, socket) => {
   });
 
   // ─── VOTE CAST ────────────────────────────────────────────────────────────
-  // Relay vote update to everyone else in the room so progress bars update live.
   socket.on("poll:vote_cast", ({ tripId, poll }) => {
     socket.to(`trip:${tripId}:polls`).emit("poll:vote_cast", { poll });
   });
