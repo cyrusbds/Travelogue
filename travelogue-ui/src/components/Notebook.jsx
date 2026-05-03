@@ -653,7 +653,6 @@ const Icon = {
       <line x1="12" y1="22" x2="12" y2="18" />
     </svg>
   ),
-  // Add to your Icon object:
   note: (
     <svg
       width="18"
