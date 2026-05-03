@@ -710,6 +710,7 @@ export default function TripMap({ trip, toast }) {
                   padding: "2px 8px",
                   borderRadius: 50,
                   border: "1px solid rgba(255,255,255,0.07)",
+                  display: "none",
                 }}
               >
                 {MI.cursor} click map to pin

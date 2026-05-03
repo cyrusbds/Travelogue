@@ -1866,6 +1866,38 @@
 }
 
 @media (max-width: 900px) {
+  .nb-panel-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+
+  .nb-panel-actions {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .nb-panel-actions .nb-action-btn {
+    flex: 1;
+    justify-content: center;
+    font-size: 0.75rem;
+    padding: 8px 10px;
+    min-width: 0;
+  }
+
+  .nb-panel-title {
+    font-size: 1rem;
+  }
+
+  .nb-panel-subtitle {
+    flex-wrap: wrap;
+    gap: 4px;
+    font-size: 0.68rem;
+  }
+
   .nb-sidebar {
     display: none;
   }
