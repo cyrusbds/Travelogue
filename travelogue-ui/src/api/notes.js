@@ -1,5 +1,3 @@
-// api/notes.js
-
 const BASE = import.meta.env.VITE_API_URL;
 
 const authHeader = () => ({
@@ -9,15 +7,13 @@ const authHeader = () => ({
 
 const base = (tripId) => `${BASE}/trips/${tripId}/notes`;
 
-/** Fetch all notes for a trip */
 export const apiGetNotes = async (tripId) => {
   const res = await fetch(base(tripId), { headers: authHeader() });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message);
-  return data; // { notes: [...] }
+  return data;
 };
 
-/** Create a new note */
 export const apiCreateNote = async (tripId, payload) => {
   const res = await fetch(base(tripId), {
     method: "POST",
@@ -26,10 +22,9 @@ export const apiCreateNote = async (tripId, payload) => {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message);
-  return data; // { note }
+  return data;
 };
 
-/** Update an existing note */
 export const apiUpdateNote = async (tripId, noteId, payload) => {
   const res = await fetch(`${base(tripId)}/${noteId}`, {
     method: "PATCH",
@@ -38,10 +33,9 @@ export const apiUpdateNote = async (tripId, noteId, payload) => {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message);
-  return data; // { note }
+  return data;
 };
 
-/** Delete a note */
 export const apiDeleteNote = async (tripId, noteId) => {
   const res = await fetch(`${base(tripId)}/${noteId}`, {
     method: "DELETE",
@@ -49,5 +43,5 @@ export const apiDeleteNote = async (tripId, noteId) => {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message);
-  return data; // { message }
+  return data;
 };

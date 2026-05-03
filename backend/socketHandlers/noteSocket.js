@@ -2,7 +2,6 @@ const Note = require("../models/Note");
 const Trip = require("../models/Trip");
 
 module.exports = function registerNoteSocket(socket, io) {
-  /* ── helper: is this socket's user a member of the trip? ── */
   async function isMember(tripId) {
     const trip = await Trip.findById(tripId);
     if (!trip) return false;
@@ -13,7 +12,6 @@ module.exports = function registerNoteSocket(socket, io) {
     );
   }
 
-  /* ── note:pin  (quick toggle without full PATCH round-trip) ── */
   socket.on("note:pin", async ({ tripId, noteId, pinned }) => {
     try {
       if (!(await isMember(tripId))) return;
@@ -29,7 +27,6 @@ module.exports = function registerNoteSocket(socket, io) {
     }
   });
 
-  /* ── note:typing  (optional: show "X is editing a note") ── */
   socket.on("note:typing", ({ tripId, name }) => {
     socket.to(tripId).emit("note:typing_update", { name });
   });
