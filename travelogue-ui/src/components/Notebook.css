@@ -1721,6 +1721,10 @@
   min-height: 90px;
   line-height: 1.5;
 }
+.nb-form-select option {
+  background: #1e1410;
+  color: var(--text-bright);
+}
 .nb-form-row-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
