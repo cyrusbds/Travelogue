@@ -3609,12 +3609,10 @@ function NotesPanel({ toast, trip }) {
     try {
       const { apiCreateNote, apiUpdateNote } = await import("../api/notes");
       if (editNote) {
-        const { note } = await apiUpdateNote(tripId, editNote._id, form);
-        setNotes((p) => p.map((n) => (n._id === note._id ? note : n)));
+        await apiUpdateNote(tripId, editNote._id, form);
         toast("Note updated!");
       } else {
-        const { note } = await apiCreateNote(tripId, form);
-        setNotes((p) => [note, ...p]);
+        await apiCreateNote(tripId, form);
         toast("Note saved!");
       }
       setModalOpen(false);
@@ -3630,7 +3628,6 @@ function NotesPanel({ toast, trip }) {
     try {
       const { apiDeleteNote } = await import("../api/notes");
       await apiDeleteNote(tripId, note._id);
-      setNotes((p) => p.filter((n) => n._id !== note._id));
       toast("Note deleted");
     } catch (err) {
       toast(err.message || "Failed to delete");
@@ -3640,13 +3637,10 @@ function NotesPanel({ toast, trip }) {
   /* ── Toggle pin ─────────────────────────────────────────── */
   async function handlePin(note, e) {
     e.stopPropagation();
-    const next = { ...note, pinned: !note.pinned };
-    setNotes((p) => p.map((n) => (n._id === note._id ? next : n)));
     try {
       const { apiUpdateNote } = await import("../api/notes");
       await apiUpdateNote(tripId, note._id, { pinned: !note.pinned });
     } catch {
-      setNotes((p) => p.map((n) => (n._id === note._id ? note : n)));
       toast("Failed to update pin");
     }
   }
