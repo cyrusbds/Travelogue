@@ -4511,9 +4511,7 @@ function SharePanel({ toast, trip, user }) {
               className="nb-form-select"
               value={form.role}
               onChange={(e) => setForm((f) => ({ ...f, role: e.target.value }))}
-            >
-              <option value="member">Member</option>
-            </select>
+            ></select>
           </div>
           <div className="nb-form-group">
             <label className="nb-form-label">Max Uses</label>
