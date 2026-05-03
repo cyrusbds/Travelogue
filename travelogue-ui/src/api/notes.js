@@ -1,47 +1,40 @@
-const BASE = import.meta.env.VITE_API_URL;
+const BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
-const authHeader = () => ({
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${localStorage.getItem("travelogue_token")}`,
-});
+function authHeaders() {
+  const token = localStorage.getItem("travelogue_token");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
 
-const base = (tripId) => `${BASE}/trips/${tripId}/notes`;
-
-export const apiGetNotes = async (tripId) => {
-  const res = await fetch(base(tripId), { headers: authHeader() });
+async function handleRes(res) {
   const data = await res.json();
-  if (!res.ok) throw new Error(data.message);
+  if (!res.ok) throw new Error(data.message || "Request failed");
   return data;
-};
+}
 
-export const apiCreateNote = async (tripId, payload) => {
-  const res = await fetch(base(tripId), {
+export const apiGetNotes = (tripId) =>
+  fetch(`${BASE}/trips/${tripId}/notes`, {
+    headers: authHeaders(),
+  }).then(handleRes);
+
+export const apiCreateNote = (tripId, body) =>
+  fetch(`${BASE}/trips/${tripId}/notes`, {
     method: "POST",
-    headers: authHeader(),
-    body: JSON.stringify(payload),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message);
-  return data;
-};
+    headers: authHeaders(),
+    body: JSON.stringify(body),
+  }).then(handleRes);
 
-export const apiUpdateNote = async (tripId, noteId, payload) => {
-  const res = await fetch(`${base(tripId)}/${noteId}`, {
-    method: "PATCH",
-    headers: authHeader(),
-    body: JSON.stringify(payload),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message);
-  return data;
-};
+export const apiUpdateNote = (tripId, noteId, body) =>
+  fetch(`${BASE}/trips/${tripId}/notes/${noteId}`, {
+    method: "PUT",
+    headers: authHeaders(),
+    body: JSON.stringify(body),
+  }).then(handleRes);
 
-export const apiDeleteNote = async (tripId, noteId) => {
-  const res = await fetch(`${base(tripId)}/${noteId}`, {
+export const apiDeleteNote = (tripId, noteId) =>
+  fetch(`${BASE}/trips/${tripId}/notes/${noteId}`, {
     method: "DELETE",
-    headers: authHeader(),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message);
-  return data;
-};
+    headers: authHeaders(),
+  }).then(handleRes);

@@ -1,33 +1,26 @@
-const Note = require("../models/Note");
-const Trip = require("../models/Trip");
+/**
+ * noteSocket.js
+ * Handles the socket side of notes — joining trip rooms so that
+ * REST controller emits (noteCreated / noteUpdated / noteDeleted)
+ * are delivered to every connected client in that room.
+ *
+ * The frontend NotesPanel already calls:
+ *   socket.emit("chat:join", { tripId })   ← reuses the chat join event
+ * so no extra join logic is needed here unless you want a dedicated event.
+ */
 
 module.exports = function registerNoteSocket(socket, io) {
-  async function isMember(tripId) {
-    const trip = await Trip.findById(tripId);
-    if (!trip) return false;
-    const uid = socket.user?._id?.toString();
-    return (
-      trip.owner.toString() === uid ||
-      trip.members.some((m) => m.toString() === uid)
-    );
-  }
-
-  socket.on("note:pin", async ({ tripId, noteId, pinned }) => {
-    try {
-      if (!(await isMember(tripId))) return;
-      const note = await Note.findOneAndUpdate(
-        { _id: noteId, trip: tripId },
-        { pinned: !!pinned },
-        { new: true },
-      ).populate("createdBy", "name email");
-      if (!note) return;
-      io.to(tripId).emit("noteUpdated", { note });
-    } catch (err) {
-      socket.emit("note:error", { message: err.message });
-    }
+  // Optional: dedicated join event for notes if you ever split rooms
+  socket.on("notes:join", ({ tripId }) => {
+    if (!tripId) return;
+    socket.join(tripId);
+    console.log(`Socket ${socket.id} joined notes room: ${tripId}`);
   });
 
-  socket.on("note:typing", ({ tripId, name }) => {
-    socket.to(tripId).emit("note:typing_update", { name });
+  // Optional: client-side optimistic pin toggle broadcast
+  // (the REST PUT already emits noteUpdated, so this is a fallback)
+  socket.on("notes:pin", ({ tripId, noteId, pinned }) => {
+    if (!tripId || !noteId) return;
+    socket.to(tripId).emit("notes:pinned", { noteId, pinned });
   });
 };

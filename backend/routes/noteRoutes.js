@@ -1,6 +1,6 @@
 const express = require("express");
-const router = express.Router({ mergeParams: true });
-const auth = require("../middleware/authMiddleware");
+const router = express.Router({ mergeParams: true }); // mergeParams to access :tripId
+const auth = require("../middleware/auth");
 const {
   getNotes,
   createNote,
@@ -10,7 +10,7 @@ const {
 
 router.get("/", auth, getNotes);
 router.post("/", auth, createNote);
-router.patch("/:noteId", auth, updateNote);
+router.put("/:noteId", auth, updateNote);
 router.delete("/:noteId", auth, deleteNote);
 
 module.exports = router;
