@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import "./Notebook.css";
 import TripMap from "./TripMap";
 import { usePollSocket } from "../hooks/usePollSocket";
+import { useNoteSocket } from "../hooks/useNoteSocket";
 
 /* ─── SVG ICONS ───────────────────────────────────────────── */
 const Icon = {
@@ -3541,27 +3542,13 @@ function NotesPanel({ toast, trip }) {
   }, [tripId]);
 
   /* ── Socket.IO real-time sync ───────────────────────────── */
-  useEffect(() => {
-    if (!tripId) return;
-
-    socket.emit("join-trip", tripId);
-
-    socket.on("noteCreated", ({ note }) => {
-      setNotes((p) => (p.some((n) => n._id === note._id) ? p : [note, ...p]));
-    });
-    socket.on("noteUpdated", ({ note }) => {
-      setNotes((p) => p.map((n) => (n._id === note._id ? note : n)));
-    });
-    socket.on("noteDeleted", ({ noteId }) => {
-      setNotes((p) => p.filter((n) => n._id !== noteId));
-    });
-
-    return () => {
-      socket.off("noteCreated");
-      socket.off("noteUpdated");
-      socket.off("noteDeleted");
-    };
-  }, [tripId]);
+  useNoteSocket(tripId, {
+    onCreated: (note) =>
+      setNotes((p) => (p.some((n) => n._id === note._id) ? p : [note, ...p])),
+    onUpdated: (note) =>
+      setNotes((p) => p.map((n) => (n._id === note._id ? note : n))),
+    onDeleted: (noteId) => setNotes((p) => p.filter((n) => n._id !== noteId)),
+  });
 
   /* ── Derived: filter + search ───────────────────────────── */
   const visible = useMemo(() => {
