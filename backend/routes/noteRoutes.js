@@ -1,6 +1,6 @@
 const express = require("express");
-const router = express.Router({ mergeParams: true }); // mergeParams to access :tripId
-const auth = require("../middleware/authMiddleware");
+const router = express.Router({ mergeParams: true });
+const { protect } = require("../middleware/authMiddleware");
 const {
   getNotes,
   createNote,
