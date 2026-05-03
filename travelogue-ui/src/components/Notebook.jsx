@@ -3614,7 +3614,7 @@ function NotesPanel({ toast, trip }) {
         toast("Note updated!");
       } else {
         const { note } = await apiCreateNote(tripId, form);
-        setNotes((p) => [note, ...p]);
+        setNotes((p) => (p.some((n) => n._id === note._id) ? p : [note, ...p]));
         toast("Note saved!");
       }
       setModalOpen(false);
