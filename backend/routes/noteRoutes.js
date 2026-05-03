@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
-const auth = require("../middleware/auth");
+const auth = require("../middleware/authMiddleware");
 const {
   getNotes,
   createNote,
@@ -8,11 +8,9 @@ const {
   deleteNote,
 } = require("../controllers/noteController");
 
-router.use(auth);
-
-router.get("/", getNotes);
-router.post("/", createNote);
-router.patch("/:noteId", updateNote);
-router.delete("/:noteId", deleteNote);
+router.get("/", auth, getNotes);
+router.post("/", auth, createNote);
+router.patch("/:noteId", auth, updateNote);
+router.delete("/:noteId", auth, deleteNote);
 
 module.exports = router;
