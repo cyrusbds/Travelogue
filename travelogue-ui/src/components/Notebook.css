@@ -1881,11 +1881,26 @@
   .nb-vote-grid {
     grid-template-columns: 1fr;
   }
+
   .nb-map-layout {
-    grid-template-columns: 1fr;
     display: flex;
     flex-direction: column;
     height: auto;
+  }
+
+  .nb-map-layout > div:first-child {
+    height: 55vw;
+    min-height: 220px;
+    max-height: 320px;
+    flex-shrink: 0;
+    border-radius: 14px;
+    margin: 12px;
+  }
+
+  .nb-map-layout > div:last-child {
+    max-height: 40vh;
+    overflow-y: auto;
+    flex-shrink: 0;
   }
 
   .nb-map-viewport {

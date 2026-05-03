@@ -764,7 +764,9 @@ export default function TripMap({ trip, toast }) {
         >
           <div className="nb-map-layout" style={{ height: "100%" }}>
             {/* MAP */}
-            <div style={{ position: "relative", overflow: "hidden" }}>
+            <div
+              style={{ position: "relative", overflow: "hidden", minHeight: 0 }}
+            >
               <div
                 ref={mapRef}
                 style={{ height: "100%", width: "100%", cursor: "crosshair" }}
@@ -838,7 +840,13 @@ export default function TripMap({ trip, toast }) {
             </div>
 
             {/* PIN SIDEBAR */}
-            <div style={{ overflowY: "auto", padding: "20px 20px 32px" }}>
+            <div
+              style={{
+                overflowY: "auto",
+                padding: "20px 20px 32px",
+                maxHeight: "100%",
+              }}
+            >
               <div className="nb-map-pins-header">PINNED LOCATIONS</div>
 
               {pins.length === 0 ? (
