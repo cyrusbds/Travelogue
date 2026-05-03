@@ -788,13 +788,7 @@ function ItineraryPanel({ toast, trip }) {
   useEffect(() => {
     if (!tripId) return;
 
-    const socket = io(
-      import.meta.env.VITE_API_URL?.replace("/api", "") ||
-        "http://localhost:5000",
-      { auth: { token: localStorage.getItem("travelogue_token") || "" } },
-    );
-
-    socket.emit("chat:join", { tripId });
+    socket.emit("join-trip", tripId);
 
     socket.on("itineraryCreated", ({ item }) => {
       setItems((p) => {
@@ -815,7 +809,12 @@ function ItineraryPanel({ toast, trip }) {
       setItems(updated);
     });
 
-    return () => socket.disconnect();
+    return () => {
+      socket.off("itineraryCreated");
+      socket.off("itineraryUpdated");
+      socket.off("itineraryDeleted");
+      socket.off("itineraryReordered");
+    };
   }, [tripId]);
 
   const grouped = useMemo(() => {
@@ -883,8 +882,9 @@ function ItineraryPanel({ toast, trip }) {
         setItems((p) => p.map((i) => (i._id === item._id ? item : i)));
         toast("Activity updated!");
       } else {
-        await apiCreateItem(tripId, form);
-        toast("Activity added!");
+        const { item } = await apiCreateItem(tripId, form);
+        setItems((p) => [...p, item]);
+        toast(`${item.title} added!`);
       }
       setModalOpen(false);
     } catch (err) {
@@ -925,7 +925,9 @@ function ItineraryPanel({ toast, trip }) {
     setItems((prev) => {
       const rest = prev.filter((i) => i._id !== src._id);
       const movedItem = { ...src, date: targetDateKey || src.date };
+
       if (!tgt || tgt._id === src._id) return [...rest, movedItem];
+
       const tgtIdx = rest.findIndex((i) => i._id === tgt._id);
       const updated = [...rest];
       updated.splice(tgtIdx, 0, movedItem);
@@ -937,9 +939,11 @@ function ItineraryPanel({ toast, trip }) {
       const dayKey =
         targetDateKey || new Date(src.date).toISOString().slice(0, 10);
       const dayItems = grouped[dayKey] || [];
+
       const updates = dayItems
         .filter((i) => i._id !== src._id)
         .map((i, idx) => ({ id: i._id, date: dayKey, orderIndex: idx + 1 }));
+
       const tgtIdx = tgt
         ? dayItems.findIndex((i) => i._id === tgt._id)
         : dayItems.length;
@@ -948,6 +952,7 @@ function ItineraryPanel({ toast, trip }) {
         date: dayKey,
         orderIndex: tgtIdx,
       });
+
       await apiReorderItems(tripId, updates);
     } catch {}
   }
@@ -999,16 +1004,18 @@ function ItineraryPanel({ toast, trip }) {
           : "Start planning your days"
       }
       actions={
-        <button
-          className="nb-action-btn nb-action-primary"
-          onClick={openCreate}
-        >
-          <span
-            style={{ display: "inline-flex", alignItems: "center", gap: 5 }}
+        <>
+          <button
+            className="nb-action-btn nb-action-primary"
+            onClick={openCreate}
           >
-            {Icon.plus} Add Activity
-          </span>
-        </button>
+            <span
+              style={{ display: "inline-flex", alignItems: "center", gap: 5 }}
+            >
+              {Icon.plus} Add Activity
+            </span>
+          </button>
+        </>
       }
     >
       {isLoading && (
@@ -1179,6 +1186,7 @@ function ItineraryPanel({ toast, trip }) {
                         <span className={`nb-tag tag-${cat}`}>
                           {cat.charAt(0).toUpperCase() + cat.slice(1)}
                         </span>
+
                         <button
                           className="nb-action-btn nb-action-ghost"
                           style={{ padding: "4px 8px", fontSize: "0.7rem" }}
@@ -1187,6 +1195,7 @@ function ItineraryPanel({ toast, trip }) {
                         >
                           {Icon.settings}
                         </button>
+
                         <button
                           className="nb-action-btn nb-action-ghost"
                           style={{
