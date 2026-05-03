@@ -1,7 +1,6 @@
 const Note = require("../models/Note");
 const Trip = require("../models/Trip");
 
-/* ── helper: verify user is a trip member ── */
 async function assertMember(tripId, userId) {
   const trip = await Trip.findById(tripId);
   if (!trip) throw Object.assign(new Error("Trip not found"), { status: 404 });
@@ -13,7 +12,6 @@ async function assertMember(tripId, userId) {
   return trip;
 }
 
-/* GET /api/trips/:tripId/notes */
 exports.getNotes = async (req, res) => {
   try {
     await assertMember(req.params.tripId, req.user._id);
@@ -26,7 +24,6 @@ exports.getNotes = async (req, res) => {
   }
 };
 
-/* POST /api/trips/:tripId/notes */
 exports.createNote = async (req, res) => {
   try {
     await assertMember(req.params.tripId, req.user._id);
@@ -43,17 +40,13 @@ exports.createNote = async (req, res) => {
       createdBy: req.user._id,
     });
     const populated = await note.populate("createdBy", "name email");
-
-    /* emit real-time event */
     req.io?.to(req.params.tripId).emit("noteCreated", { note: populated });
-
     res.status(201).json({ note: populated });
   } catch (err) {
     res.status(err.status || 500).json({ message: err.message });
   }
 };
 
-/* PATCH /api/trips/:tripId/notes/:noteId */
 exports.updateNote = async (req, res) => {
   try {
     await assertMember(req.params.tripId, req.user._id);
@@ -68,18 +61,14 @@ exports.updateNote = async (req, res) => {
       },
       { new: true, runValidators: true },
     ).populate("createdBy", "name email");
-
     if (!note) return res.status(404).json({ message: "Note not found" });
-
     req.io?.to(req.params.tripId).emit("noteUpdated", { note });
-
     res.json({ note });
   } catch (err) {
     res.status(err.status || 500).json({ message: err.message });
   }
 };
 
-/* DELETE /api/trips/:tripId/notes/:noteId */
 exports.deleteNote = async (req, res) => {
   try {
     await assertMember(req.params.tripId, req.user._id);
@@ -88,11 +77,9 @@ exports.deleteNote = async (req, res) => {
       trip: req.params.tripId,
     });
     if (!note) return res.status(404).json({ message: "Note not found" });
-
     req.io
       ?.to(req.params.tripId)
       .emit("noteDeleted", { noteId: req.params.noteId });
-
     res.json({ message: "Note deleted" });
   } catch (err) {
     res.status(err.status || 500).json({ message: err.message });
