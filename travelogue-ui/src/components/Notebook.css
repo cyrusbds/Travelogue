@@ -1889,16 +1889,15 @@
   }
 
   .nb-map-layout > div:first-child {
-    height: 55vw;
+    height: 260px;
     min-height: 220px;
-    max-height: 320px;
     flex-shrink: 0;
     border-radius: 14px;
-    margin: 12px;
+    overflow: hidden;
   }
 
   .nb-map-layout > div:last-child {
-    max-height: 40vh;
+    height: 50vh;
     overflow-y: auto;
     flex-shrink: 0;
   }

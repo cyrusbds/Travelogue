@@ -844,7 +844,7 @@ export default function TripMap({ trip, toast }) {
               style={{
                 overflowY: "auto",
                 padding: "20px 20px 32px",
-                maxHeight: "100%",
+                maxHeight: "50vh",
               }}
             >
               <div className="nb-map-pins-header">PINNED LOCATIONS</div>
