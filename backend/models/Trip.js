@@ -134,4 +134,13 @@ tripSchema.pre("save", function (next) {
   next();
 });
 
+tripSchema.methods.isMember = function (userId) {
+  const uid = userId.toString();
+  if (!uid) return false;
+  return (
+    this.owner.toString() === uid ||
+    this.members.some((m) => m.toString() === uid)
+  );
+};
+
 module.exports = mongoose.model("Trip", tripSchema);

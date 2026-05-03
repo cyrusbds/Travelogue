@@ -3543,12 +3543,7 @@ function NotesPanel({ toast, trip }) {
   /* ── Socket.IO real-time sync ───────────────────────────── */
   useEffect(() => {
     if (!tripId) return;
-    const socket = io(
-      import.meta.env.VITE_API_URL?.replace("/api", "") ||
-        "http://localhost:5000",
-      { auth: { token: localStorage.getItem("travelogue_token") || "" } },
-    );
-    socket.emit("chat:join", { tripId });
+    socket.emit("notes:join", { tripId });
     socket.on("noteCreated", ({ note }) => {
       setNotes((p) => (p.some((n) => n._id === note._id) ? p : [note, ...p]));
     });
