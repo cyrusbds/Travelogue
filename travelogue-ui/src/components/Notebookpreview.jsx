@@ -370,6 +370,24 @@ const Icon = {
       <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
     </svg>
   ),
+  note: (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+      <polyline points="10 9 9 9 8 9" />
+    </svg>
+  ),
 };
 
 // ─── Nav config ───────────────────────────────────────────────────────
@@ -422,7 +440,7 @@ const panels = {
     meta: "Morocco Squad · 5 members · 5 online",
   },
   share: {
-    iconKey: "link",
+    iconKey: "share",
     label: "Share",
     title: "Share & Invite",
     meta: "Invite members — they sign up & join instantly",
