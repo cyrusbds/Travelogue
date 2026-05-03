@@ -1,3 +1,4 @@
+// controllers/noteController.js
 const Note = require("../models/Note");
 const Trip = require("../models/Trip");
 
@@ -54,6 +55,7 @@ exports.createNote = async (req, res) => {
 
     await note.populate("createdBy", "name");
 
+    // Emit to all OTHER clients in the room (not the sender)
     req.io.to(req.params.tripId).emit("noteCreated", { note });
 
     res.status(201).json({ note });

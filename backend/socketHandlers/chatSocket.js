@@ -1,3 +1,4 @@
+// socketHandlers/chatSocket.js
 const Message = require("../models/Message");
 const ChecklistItem = require("../models/ChecklistItem");
 
@@ -6,7 +7,7 @@ const typingUsers = {};
 const registerChatEvents = (io, socket) => {
   // ── Shared trip room (itinerary, notes, packing, polls, voting) ──────────
   socket.on("join-trip", (tripId) => {
-    socket.join(tripId);
+    if (tripId) socket.join(tripId);
   });
 
   // ─── CHAT EVENTS ──────────────────────────────────────────────────────────

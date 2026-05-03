@@ -1,3 +1,4 @@
+// hooks/useNoteSocket.js
 import { useEffect } from "react";
 import socket from "../api/socket";
 
