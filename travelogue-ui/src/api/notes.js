@@ -1,13 +1,53 @@
-import api from "./axios";
+// api/notes.js
 
-export const apiGetNotes = (tripId) =>
-  api.get(`/trips/${tripId}/notes`).then((r) => r.data);
+const BASE = import.meta.env.VITE_API_URL;
 
-export const apiCreateNote = (tripId, data) =>
-  api.post(`/trips/${tripId}/notes`, data).then((r) => r.data);
+const authHeader = () => ({
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${localStorage.getItem("travelogue_token")}`,
+});
 
-export const apiUpdateNote = (tripId, noteId, data) =>
-  api.patch(`/trips/${tripId}/notes/${noteId}`, data).then((r) => r.data);
+const base = (tripId) => `${BASE}/trips/${tripId}/notes`;
 
-export const apiDeleteNote = (tripId, noteId) =>
-  api.delete(`/trips/${tripId}/notes/${noteId}`).then((r) => r.data);
+/** Fetch all notes for a trip */
+export const apiGetNotes = async (tripId) => {
+  const res = await fetch(base(tripId), { headers: authHeader() });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+  return data; // { notes: [...] }
+};
+
+/** Create a new note */
+export const apiCreateNote = async (tripId, payload) => {
+  const res = await fetch(base(tripId), {
+    method: "POST",
+    headers: authHeader(),
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+  return data; // { note }
+};
+
+/** Update an existing note */
+export const apiUpdateNote = async (tripId, noteId, payload) => {
+  const res = await fetch(`${base(tripId)}/${noteId}`, {
+    method: "PUT",
+    headers: authHeader(),
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+  return data; // { note }
+};
+
+/** Delete a note */
+export const apiDeleteNote = async (tripId, noteId) => {
+  const res = await fetch(`${base(tripId)}/${noteId}`, {
+    method: "DELETE",
+    headers: authHeader(),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+  return data; // { message }
+};
