@@ -23,7 +23,7 @@ const FEATURES = [
         whatsapp: "no",
       },
       {
-        label: "QR code sharing",
+        label: "Link sharing",
         travelogue: "yes",
         gdocs: "no",
         whatsapp: "no",

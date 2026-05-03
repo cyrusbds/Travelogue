@@ -44,8 +44,8 @@ const FEATURES = [
       </svg>
     ),
     color: "ocean",
-    title: "QR Code & Link Sharing",
-    desc: "Create your trip and share a link or QR code. Members sign up in seconds and jump straight into planning.",
+    title: "Link Sharing",
+    desc: "Create your trip and share a link. Members sign up in seconds and jump straight into planning.",
   },
   {
     icon: (
@@ -131,14 +131,34 @@ const FEATURES = [
     desc: "Can't decide? Put it to a vote. Anonymous, fast, and the result locks directly into the itinerary.",
   },
   {
-    icon: (
+    check: (s = 14) => (
       <svg
-        width="22"
-        height="22"
+        width={s}
+        height={s}
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points="9 11 12 14 22 4" />
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+      </svg>
+    ),
+    color: "terra",
+    title: "Shared Packing List",
+    desc: "A shared checklist your group can tick off together — so nobody forgets sunscreen again.",
+  },
+  {
+    icon: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       >
@@ -151,8 +171,8 @@ const FEATURES = [
       </svg>
     ),
     color: "terra",
-    title: "Shared Packing List",
-    desc: "A shared checklist your group can tick off together — so nobody forgets sunscreen again.",
+    title: "Shared Notes",
+    desc: "A collaborative space where your group can quickly write reminders, plans, and important trip details in one place",
   },
 ];
 

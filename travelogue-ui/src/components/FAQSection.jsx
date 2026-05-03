@@ -29,6 +29,10 @@ const FAQS = [
     q: "Can I run multiple trips at the same time?",
     a: "The free plan allows 1 active trip at a time. Premium users can run unlimited concurrent trips — useful for travel agents managing multiple client itineraries, or frequent travelers planning ahead.",
   },
+  {
+    q: "Does Travelogue support real-time collaboration?",
+    a: "Yes, Travelogue is built for collaborative trip planning. Group members can update itineraries, notes, checklists, and trip details together in real time, so everyone stays aligned throughout the journey.",
+  },
 ];
 
 export default function FAQSection() {
