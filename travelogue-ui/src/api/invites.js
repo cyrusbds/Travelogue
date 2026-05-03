@@ -65,4 +65,5 @@ export async function apiJoinTrip(token, nickname = null) {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message);
+  return data;
 }
