@@ -1,15 +1,19 @@
 const Note = require("../models/Note");
 const Trip = require("../models/Trip");
 
-/* helper – make sure the requesting user is a member of the trip */
+/* ── helper: verify requesting user is a trip member or owner ── */
 async function assertMember(tripId, userId) {
   const trip = await Trip.findById(tripId);
   if (!trip) throw Object.assign(new Error("Trip not found"), { status: 404 });
 
-  const isMember = trip.members.some((m) => m.toString() === userId.toString());
-  const isOwner = trip.owner?.toString() === userId.toString();
+  const members = trip.members.map((m) =>
+    typeof m === "object" && m.user ? m.user.toString() : m.toString(),
+  );
+  const uid = userId.toString();
+  const isOwner = trip.owner?.toString() === uid;
+  const isMember = members.includes(uid);
 
-  if (!isMember && !isOwner)
+  if (!isOwner && !isMember)
     throw Object.assign(new Error("Not a trip member"), { status: 403 });
 
   return trip;
@@ -18,7 +22,8 @@ async function assertMember(tripId, userId) {
 // GET /api/trips/:tripId/notes
 exports.getNotes = async (req, res) => {
   try {
-    await assertMember(req.params.tripId, req.user.id);
+    const userId = req.user._id || req.user.id;
+    await assertMember(req.params.tripId, userId);
 
     const notes = await Note.find({ trip: req.params.tripId })
       .populate("createdBy", "name")
@@ -33,7 +38,8 @@ exports.getNotes = async (req, res) => {
 // POST /api/trips/:tripId/notes
 exports.createNote = async (req, res) => {
   try {
-    await assertMember(req.params.tripId, req.user.id);
+    const userId = req.user._id || req.user.id;
+    await assertMember(req.params.tripId, userId);
 
     const { title, content, tag, pinned } = req.body;
 
@@ -43,12 +49,11 @@ exports.createNote = async (req, res) => {
       content,
       tag,
       pinned,
-      createdBy: req.user.id,
+      createdBy: userId,
     });
 
     await note.populate("createdBy", "name");
 
-    // emit to everyone in the trip room
     req.io.to(req.params.tripId).emit("noteCreated", { note });
 
     res.status(201).json({ note });
@@ -60,7 +65,8 @@ exports.createNote = async (req, res) => {
 // PUT /api/trips/:tripId/notes/:noteId
 exports.updateNote = async (req, res) => {
   try {
-    await assertMember(req.params.tripId, req.user.id);
+    const userId = req.user._id || req.user.id;
+    await assertMember(req.params.tripId, userId);
 
     const { title, content, tag, pinned } = req.body;
 
@@ -83,7 +89,8 @@ exports.updateNote = async (req, res) => {
 // DELETE /api/trips/:tripId/notes/:noteId
 exports.deleteNote = async (req, res) => {
   try {
-    await assertMember(req.params.tripId, req.user.id);
+    const userId = req.user._id || req.user.id;
+    await assertMember(req.params.tripId, userId);
 
     const note = await Note.findOneAndDelete({
       _id: req.params.noteId,
