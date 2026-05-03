@@ -883,8 +883,7 @@ function ItineraryPanel({ toast, trip }) {
         toast("Activity updated!");
       } else {
         const { item } = await apiCreateItem(tripId, form);
-        setItems((p) => [...p, item]);
-        toast(`${item.title} added!`);
+        toast(`Activity added!`);
       }
       setModalOpen(false);
     } catch (err) {
@@ -1464,8 +1463,7 @@ function CalendarPanel({ toast, trip }) {
         toast("Activity updated!");
       } else {
         const { item } = await apiCreateItem(tripId, form);
-        setItems((p) => [...p, item]);
-        toast(`${item.title} added!`);
+        toast(`Activity added!`);
       }
       setModalOpen(false);
     } catch (err) {
