@@ -1810,21 +1810,23 @@ export default function Dashboard() {
     <div className="db-root">
       {/* ── Nav ── */}
       <nav className="db-nav">
-        <div className="db-logo">
-          <img
-            src="/travellogo.png"
-            alt=""
-            style={{
-              height: 38,
-              width: 38,
-              borderRadius: 9,
-              objectFit: "cover",
-            }}
-          />
-          <span className="db-logo-text">
-            Travel<span>ogue</span>
-          </span>
-        </div>
+        <a href="/">
+          <div className="db-logo">
+            <img
+              src="/travellogo.png"
+              alt=""
+              style={{
+                height: 38,
+                width: 38,
+                borderRadius: 9,
+                objectFit: "cover",
+              }}
+            />
+            <span className="db-logo-text">
+              Travel<span>ogue</span>
+            </span>
+          </div>
+        </a>
 
         <div className="db-nav-right">
           <button className="db-nav-ghost" onClick={() => navigate("/")}>
