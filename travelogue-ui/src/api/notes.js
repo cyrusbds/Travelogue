@@ -32,7 +32,7 @@ export const apiCreateNote = async (tripId, payload) => {
 /** Update an existing note */
 export const apiUpdateNote = async (tripId, noteId, payload) => {
   const res = await fetch(`${base(tripId)}/${noteId}`, {
-    method: "PUT",
+    method: "PATCH",
     headers: authHeader(),
     body: JSON.stringify(payload),
   });
