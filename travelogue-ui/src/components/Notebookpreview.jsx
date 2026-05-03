@@ -36,6 +36,24 @@ const Icon = {
       <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
     </svg>
   ),
+  notes: (s = 14) => (
+    <svg
+      width={s}
+      height={s}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+      <polyline points="10 9 9 9 8 9" />
+    </svg>
+  ),
   calendar: (s = 14) => (
     <svg
       width={s}
@@ -114,24 +132,6 @@ const Icon = {
     >
       <polyline points="9 11 12 14 22 4" />
       <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-    </svg>
-  ),
-  notes: (s = 14) => (
-    <svg
-      width={s}
-      height={s}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-      <polyline points="10 9 9 9 8 9" />
     </svg>
   ),
   hotel: (s = 14) => (
@@ -370,30 +370,12 @@ const Icon = {
       <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
     </svg>
   ),
-  note: (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-      <polyline points="10 9 9 9 8 9" />
-    </svg>
-  ),
 };
 
 // ─── Nav config ───────────────────────────────────────────────────────
 const navGroups = [
   { label: "Planning", items: ["itinerary", "calendar", "map"] },
-  { label: "Group", items: ["voting", "packing", "notes", "note"] },
+  { label: "Group", items: ["voting", "packing", "notes"] },
 ];
 
 const panels = {
@@ -433,14 +415,8 @@ const panels = {
     title: "Group Chat",
     meta: "Morocco Squad · 5 members · 5 online",
   },
-  note: {
-    iconKey: "note",
-    label: "Note",
-    title: "Trip Note",
-    meta: "Morocco Squad · 5 members · 5 online",
-  },
   share: {
-    iconKey: "share",
+    iconKey: "link",
     label: "Share",
     title: "Share & Invite",
     meta: "Invite members — they sign up & join instantly",
@@ -1327,450 +1303,6 @@ const NotesPanel = () => {
   );
 };
 
-const NotePanel = () => {
-  const [activeTag, setActiveTag] = useState("all");
-
-  const TAGS = ["idea", "reminder", "important", "general"];
-
-  const TAG_COLOR = {
-    idea: "rgba(58,124,165,0.18)",
-    reminder: "rgba(200,160,58,0.18)",
-    important: "rgba(200,98,58,0.18)",
-    general: "rgba(255,255,255,0.06)",
-  };
-  const TAG_TEXT = {
-    idea: "#3A7CA5",
-    reminder: "#C8A03A",
-    important: "#C8623A",
-    general: "rgba(255,255,255,0.4)",
-  };
-  const TAG_BORDER = {
-    idea: "rgba(58,124,165,0.45)",
-    reminder: "rgba(200,160,58,0.45)",
-    important: "rgba(200,98,58,0.45)",
-    general: "rgba(255,255,255,0.1)",
-  };
-  const TAG_ICON = {
-    idea: (
-      <svg
-        width="11"
-        height="11"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <line x1="12" y1="2" x2="12" y2="6" />
-        <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z" />
-        <line x1="12" y1="22" x2="12" y2="18" />
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-        <line x1="2" y1="12" x2="6" y2="12" />
-        <line x1="18" y1="12" x2="22" y2="12" />
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-      </svg>
-    ),
-    reminder: (
-      <svg
-        width="11"
-        height="11"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <polyline points="12 6 12 12 16 14" />
-      </svg>
-    ),
-    important: (
-      <svg
-        width="11"
-        height="11"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      </svg>
-    ),
-    general: (
-      <svg
-        width="11"
-        height="11"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <line x1="8" y1="6" x2="21" y2="6" />
-        <line x1="8" y1="12" x2="21" y2="12" />
-        <line x1="8" y1="18" x2="21" y2="18" />
-        <line x1="3" y1="6" x2="3.01" y2="6" />
-        <line x1="3" y1="12" x2="3.01" y2="12" />
-        <line x1="3" y1="18" x2="3.01" y2="18" />
-      </svg>
-    ),
-  };
-
-  const PinIcon = () => (
-    <svg
-      width="11"
-      height="11"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-      <circle cx="12" cy="10" r="3" fill="white" stroke="none" />
-    </svg>
-  );
-
-  const SearchIcon = () => (
-    <svg
-      width="11"
-      height="11"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-  );
-
-  const UsersIcon = () => (
-    <svg
-      width="10"
-      height="10"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  );
-
-  const notes = [
-    {
-      _id: "1",
-      tag: "important",
-      title: "Riad Yasmine — Booking Confirmed",
-      content:
-        "3 nights, breakfast included. Early check-in at 11am if room is free. Ref: RY-2026-882.",
-      author: "Sara",
-      time: "2h ago",
-      pinned: true,
-    },
-    {
-      _id: "2",
-      tag: "idea",
-      title: "Desert Guide — Ahmed",
-      content:
-        "Highly rated local guide for Erg Chebbi dunes. Contact via WhatsApp before Day 6.",
-      author: "Layla",
-      time: "5h ago",
-      pinned: true,
-    },
-    {
-      _id: "3",
-      tag: "reminder",
-      title: "Exchange Dirhams at Airport",
-      content:
-        "Better rates at airport arrivals than in the Medina. Bring €200 each.",
-      author: "Mohammed",
-      time: "1d ago",
-      pinned: false,
-    },
-    {
-      _id: "4",
-      tag: "general",
-      title: "Dress Code for Medina",
-      content: "Cover shoulders and knees near mosques. Bring a light scarf.",
-      author: "Reem",
-      time: "1d ago",
-      pinned: false,
-    },
-  ];
-
-  const visible = notes.filter(
-    (n) => activeTag === "all" || n.tag === activeTag,
-  );
-  const pinned = visible.filter((n) => n.pinned);
-  const unpinned = visible.filter((n) => !n.pinned);
-
-  function NoteCard({ note }) {
-    const tag = note.tag;
-    return (
-      <div
-        style={{
-          background: "rgba(255,255,255,0.03)",
-          border: `1px solid ${note.pinned ? "rgba(200,98,58,0.22)" : "rgba(255,255,255,0.07)"}`,
-          borderTop: `3px solid ${TAG_BORDER[tag]}`,
-          borderRadius: 12,
-          padding: "12px 14px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 7,
-        }}
-      >
-        {/* Tag badge + pin indicator */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-              fontSize: 10,
-              fontWeight: 700,
-              padding: "2px 8px",
-              borderRadius: 50,
-              background: TAG_COLOR[tag],
-              color: TAG_TEXT[tag],
-            }}
-          >
-            <span style={{ display: "flex", color: TAG_TEXT[tag] }}>
-              {TAG_ICON[tag]}
-            </span>
-            {tag.charAt(0).toUpperCase() + tag.slice(1)}
-          </span>
-          {note.pinned && (
-            <span style={{ color: "#C8623A", display: "flex" }}>
-              <PinIcon />
-            </span>
-          )}
-        </div>
-
-        {/* Title */}
-        <div
-          style={{
-            fontSize: 12,
-            fontWeight: 700,
-            color: "rgba(255,255,255,0.85)",
-            lineHeight: 1.3,
-          }}
-        >
-          {note.title}
-        </div>
-
-        {/* Content */}
-        <div
-          style={{
-            fontSize: 11,
-            color: "rgba(255,255,255,0.45)",
-            lineHeight: 1.55,
-          }}
-        >
-          {note.content}
-        </div>
-
-        {/* Footer */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            paddingTop: 8,
-            borderTop: "1px solid rgba(255,255,255,0.05)",
-            marginTop: 2,
-          }}
-        >
-          <span
-            style={{
-              fontSize: 10,
-              color: "rgba(255,255,255,0.25)",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-            }}
-          >
-            <UsersIcon /> {note.author}
-          </span>
-          <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>
-            {note.time}
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      {/* Search bar + tag filter pills */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-          marginBottom: 14,
-          flexWrap: "wrap",
-        }}
-      >
-        {/* Fake search bar */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: 9,
-            padding: "6px 10px",
-            flex: 1,
-            minWidth: 100,
-          }}
-        >
-          <span style={{ color: "rgba(255,255,255,0.3)", display: "flex" }}>
-            <SearchIcon />
-          </span>
-          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.2)" }}>
-            Search notes…
-          </span>
-        </div>
-
-        {/* Tag filter pills */}
-        {["all", ...TAGS].map((t) => (
-          <button
-            key={t}
-            onClick={() => setActiveTag(t)}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-              padding: "5px 10px",
-              borderRadius: 20,
-              fontSize: 10,
-              fontWeight: 700,
-              fontFamily: "inherit",
-              cursor: "pointer",
-              border: "1px solid rgba(255,255,255,0.1)",
-              background:
-                activeTag === t ? "#C8623A" : "rgba(255,255,255,0.04)",
-              color: activeTag === t ? "#fff" : "rgba(255,255,255,0.4)",
-              transition: "all 0.15s",
-            }}
-          >
-            {t !== "all" && (
-              <span
-                style={{
-                  display: "flex",
-                  color: activeTag === t ? "#fff" : TAG_TEXT[t],
-                }}
-              >
-                {TAG_ICON[t]}
-              </span>
-            )}
-            {t === "all" ? "All" : t.charAt(0).toUpperCase() + t.slice(1)}
-          </button>
-        ))}
-      </div>
-
-      {/* Pinned section */}
-      {pinned.length > 0 && (
-        <div style={{ marginBottom: 14 }}>
-          <div
-            style={{
-              fontSize: 10,
-              fontWeight: 700,
-              textTransform: "uppercase",
-              letterSpacing: 1,
-              color: "#C8623A",
-              marginBottom: 8,
-              display: "flex",
-              alignItems: "center",
-              gap: 5,
-            }}
-          >
-            <span style={{ display: "flex", color: "#C8623A" }}>
-              <PinIcon />
-            </span>
-            Pinned
-          </div>
-          <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}
-          >
-            {pinned.map((note) => (
-              <NoteCard key={note._id} note={note} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* All notes section */}
-      {unpinned.length > 0 && (
-        <div>
-          {pinned.length > 0 && (
-            <div
-              style={{
-                fontSize: 10,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: 1,
-                color: "rgba(255,255,255,0.3)",
-                marginBottom: 8,
-                display: "flex",
-                alignItems: "center",
-                gap: 5,
-              }}
-            >
-              <span style={{ display: "flex" }}>{TAG_ICON.general}</span>
-              All Notes
-            </div>
-          )}
-          <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}
-          >
-            {unpinned.map((note) => (
-              <NoteCard key={note._id} note={note} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Empty state when tag filter has no results */}
-      {visible.length === 0 && (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "30px 20px",
-            color: "rgba(255,255,255,0.2)",
-            fontSize: 12,
-          }}
-        >
-          No notes match this filter
-        </div>
-      )}
-    </div>
-  );
-};
-
 const SharePanel = () => {
   const [copied, setCopied] = useState(false);
   const options = [
@@ -1921,7 +1453,6 @@ const panelComponents = {
   packing: PackingPanel,
   notes: NotesPanel,
   share: SharePanel,
-  note: NotePanel,
 };
 
 // ─── Main export ──────────────────────────────────────────────────────
