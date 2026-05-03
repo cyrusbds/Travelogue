@@ -3543,7 +3543,9 @@ function NotesPanel({ toast, trip }) {
   /* ── Socket.IO real-time sync ───────────────────────────── */
   useEffect(() => {
     if (!tripId) return;
-    socket.emit("notes:join", { tripId });
+
+    socket.emit("join-trip", tripId);
+
     socket.on("noteCreated", ({ note }) => {
       setNotes((p) => (p.some((n) => n._id === note._id) ? p : [note, ...p]));
     });
@@ -3553,7 +3555,12 @@ function NotesPanel({ toast, trip }) {
     socket.on("noteDeleted", ({ noteId }) => {
       setNotes((p) => p.filter((n) => n._id !== noteId));
     });
-    return () => socket.disconnect();
+
+    return () => {
+      socket.off("noteCreated");
+      socket.off("noteUpdated");
+      socket.off("noteDeleted");
+    };
   }, [tripId]);
 
   /* ── Derived: filter + search ───────────────────────────── */

@@ -54,7 +54,7 @@ exports.createNote = async (req, res) => {
 
     await note.populate("createdBy", "name");
 
-    req.io.to(`trip:${req.params.tripId}:notes`).emit("noteCreated", { note });
+    req.io.to(req.params.tripId).emit("noteCreated", { note });
 
     res.status(201).json({ note });
   } catch (err) {
@@ -78,7 +78,7 @@ exports.updateNote = async (req, res) => {
 
     if (!note) return res.status(404).json({ message: "Note not found" });
 
-    req.io.to(`trip:${req.params.tripId}:notes`).emit("noteUpdated", { note });
+    req.io.to(req.params.tripId).emit("noteUpdated", { note });
 
     res.json({ note });
   } catch (err) {
@@ -99,9 +99,7 @@ exports.deleteNote = async (req, res) => {
 
     if (!note) return res.status(404).json({ message: "Note not found" });
 
-    req.io
-      .to(`trip:${req.params.tripId}:notes`)
-      .emit("noteDeleted", { noteId: note._id });
+    req.io.to(req.params.tripId).emit("noteDeleted", { noteId: note._id });
 
     res.json({ message: "Note deleted" });
   } catch (err) {
