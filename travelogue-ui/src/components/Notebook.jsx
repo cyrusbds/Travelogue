@@ -652,6 +652,125 @@ const Icon = {
       <line x1="12" y1="22" x2="12" y2="18" />
     </svg>
   ),
+  // Add to your Icon object:
+  note: (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+      <polyline points="10 9 9 9 8 9" />
+    </svg>
+  ),
+  pin2: (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  ),
+  idea: (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="12" y1="2" x2="12" y2="6" />
+      <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z" />
+      <line x1="12" y1="22" x2="12" y2="18" />
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+      <line x1="2" y1="12" x2="6" y2="12" />
+      <line x1="18" y1="12" x2="22" y2="12" />
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+    </svg>
+  ),
+  reminder: (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+  ),
+  important: (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  ),
+  general: (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="8" y1="6" x2="21" y2="6" />
+      <line x1="8" y1="12" x2="21" y2="12" />
+      <line x1="8" y1="18" x2="21" y2="18" />
+      <line x1="3" y1="6" x2="3.01" y2="6" />
+      <line x1="3" y1="12" x2="3.01" y2="12" />
+      <line x1="3" y1="18" x2="3.01" y2="18" />
+    </svg>
+  ),
+  pinFilled: (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" fill="white" stroke="none" />
+    </svg>
+  ),
 };
 
 /* ─── HELPERS ─────────────────────────────────────────────── */
@@ -3364,6 +3483,737 @@ function ChatPanel({ toast, trip }) {
   );
 }
 
+/* ─── NOTES PANEL ─────────────────────────────────────────── */
+function NotesPanel({ toast, trip }) {
+  const { user } = useAuth();
+  const [notes, setNotes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editNote, setEditNote] = useState(null);
+  const [activeTag, setActiveTag] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [expandedId, setExpandedId] = useState(null);
+
+  const TAGS = ["idea", "reminder", "important", "general"];
+
+  const TAG_COLOR = {
+    idea: "rgba(58,124,165,0.18)",
+    reminder: "rgba(200,160,58,0.18)",
+    important: "rgba(200,98,58,0.18)",
+    general: "rgba(255,255,255,0.06)",
+  };
+  const TAG_TEXT = {
+    idea: "var(--ocean)",
+    reminder: "#C8A03A",
+    important: "var(--terracotta)",
+    general: "rgba(255,255,255,0.4)",
+  };
+  const TAG_BORDER = {
+    idea: "rgba(58,124,165,0.45)",
+    reminder: "rgba(200,160,58,0.45)",
+    important: "rgba(200,98,58,0.45)",
+    general: "rgba(255,255,255,0.1)",
+  };
+  const TAG_ICON = {
+    idea: Icon.idea,
+    reminder: Icon.reminder,
+    important: Icon.important,
+    general: Icon.general,
+  };
+
+  const EMPTY_FORM = { title: "", content: "", tag: "general", pinned: false };
+  const [form, setForm] = useState(EMPTY_FORM);
+
+  const tripId = trip?._id;
+
+  /* ── Load notes ─────────────────────────────────────────── */
+  useEffect(() => {
+    if (!tripId) {
+      setIsLoading(false);
+      return;
+    }
+    import("../api/notes").then(({ apiGetNotes }) => {
+      apiGetNotes(tripId)
+        .then(({ notes }) => setNotes(notes))
+        .catch(() => toast("Failed to load notes"))
+        .finally(() => setIsLoading(false));
+    });
+  }, [tripId]);
+
+  /* ── Socket.IO real-time sync ───────────────────────────── */
+  useEffect(() => {
+    if (!tripId) return;
+    const socket = io(
+      import.meta.env.VITE_API_URL?.replace("/api", "") ||
+        "http://localhost:5000",
+      { auth: { token: localStorage.getItem("travelogue_token") || "" } },
+    );
+    socket.emit("chat:join", { tripId });
+    socket.on("noteCreated", ({ note }) => {
+      setNotes((p) => (p.some((n) => n._id === note._id) ? p : [note, ...p]));
+    });
+    socket.on("noteUpdated", ({ note }) => {
+      setNotes((p) => p.map((n) => (n._id === note._id ? note : n)));
+    });
+    socket.on("noteDeleted", ({ noteId }) => {
+      setNotes((p) => p.filter((n) => n._id !== noteId));
+    });
+    return () => socket.disconnect();
+  }, [tripId]);
+
+  /* ── Derived: filter + search ───────────────────────────── */
+  const visible = useMemo(() => {
+    let result = [...notes];
+    if (activeTag !== "all") result = result.filter((n) => n.tag === activeTag);
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        (n) =>
+          n.title.toLowerCase().includes(q) ||
+          (n.content || "").toLowerCase().includes(q),
+      );
+    }
+    return result.sort((a, b) => {
+      if (a.pinned !== b.pinned) return b.pinned ? 1 : -1;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  }, [notes, activeTag, searchQuery]);
+
+  /* ── Modal helpers ──────────────────────────────────────── */
+  function openCreate() {
+    setEditNote(null);
+    setForm(EMPTY_FORM);
+    setModalOpen(true);
+  }
+
+  function openEdit(note, e) {
+    e.stopPropagation();
+    setEditNote(note);
+    setForm({
+      title: note.title,
+      content: note.content || "",
+      tag: note.tag || "general",
+      pinned: note.pinned || false,
+    });
+    setModalOpen(true);
+  }
+
+  /* ── Save ───────────────────────────────────────────────── */
+  async function handleSave() {
+    if (!form.title.trim()) {
+      toast("Please enter a title");
+      return;
+    }
+    try {
+      const { apiCreateNote, apiUpdateNote } = await import("../api/notes");
+      if (editNote) {
+        const { note } = await apiUpdateNote(tripId, editNote._id, form);
+        setNotes((p) => p.map((n) => (n._id === note._id ? note : n)));
+        toast("Note updated!");
+      } else {
+        const { note } = await apiCreateNote(tripId, form);
+        setNotes((p) => [note, ...p]);
+        toast("Note saved!");
+      }
+      setModalOpen(false);
+    } catch (err) {
+      toast(err.message || "Failed to save note");
+    }
+  }
+
+  /* ── Delete ─────────────────────────────────────────────── */
+  async function handleDelete(note, e) {
+    e.stopPropagation();
+    if (!window.confirm(`Delete "${note.title}"?`)) return;
+    try {
+      const { apiDeleteNote } = await import("../api/notes");
+      await apiDeleteNote(tripId, note._id);
+      setNotes((p) => p.filter((n) => n._id !== note._id));
+      toast("Note deleted");
+    } catch (err) {
+      toast(err.message || "Failed to delete");
+    }
+  }
+
+  /* ── Toggle pin ─────────────────────────────────────────── */
+  async function handlePin(note, e) {
+    e.stopPropagation();
+    const next = { ...note, pinned: !note.pinned };
+    setNotes((p) => p.map((n) => (n._id === note._id ? next : n)));
+    try {
+      const { apiUpdateNote } = await import("../api/notes");
+      await apiUpdateNote(tripId, note._id, { pinned: !note.pinned });
+    } catch {
+      setNotes((p) => p.map((n) => (n._id === note._id ? note : n)));
+      toast("Failed to update pin");
+    }
+  }
+
+  /* ── Time label ─────────────────────────────────────────── */
+  function timeAgo(dateStr) {
+    if (!dateStr) return "";
+    const diff = (Date.now() - new Date(dateStr)) / 1000;
+    if (diff < 60) return "just now";
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+    return new Date(dateStr).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+    });
+  }
+
+  const pinned = visible.filter((n) => n.pinned);
+  const unpinned = visible.filter((n) => !n.pinned);
+  const hasNotes = notes.length > 0;
+
+  /* ── Note card ──────────────────────────────────────────── */
+  function NoteCard({ note }) {
+    const isExpanded = expandedId === note._id;
+    const tag = note.tag || "general";
+    const preview =
+      (note.content || "").slice(0, 120) +
+      ((note.content || "").length > 120 ? "…" : "");
+
+    return (
+      <div
+        onClick={() => setExpandedId(isExpanded ? null : note._id)}
+        style={{
+          background: "rgba(255,255,255,0.03)",
+          border: `1px solid ${note.pinned ? "rgba(200,98,58,0.22)" : "rgba(255,255,255,0.07)"}`,
+          borderTop: `3px solid ${TAG_BORDER[tag]}`,
+          borderRadius: 14,
+          padding: "14px 16px",
+          cursor: "pointer",
+          transition: "background 0.15s",
+          display: "flex",
+          flexDirection: "column",
+          gap: 8,
+        }}
+      >
+        {/* Top row: tag badge + actions */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 6,
+          }}
+        >
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
+              fontSize: "0.62rem",
+              fontWeight: 700,
+              padding: "2px 8px",
+              borderRadius: 50,
+              background: TAG_COLOR[tag],
+              color: TAG_TEXT[tag],
+            }}
+          >
+            <span style={{ display: "flex", color: TAG_TEXT[tag] }}>
+              {TAG_ICON[tag]}
+            </span>
+            {tag.charAt(0).toUpperCase() + tag.slice(1)}
+          </span>
+
+          <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
+            {/* Pin toggle */}
+            <button
+              className="nb-action-btn nb-action-ghost"
+              style={{
+                padding: "3px 7px",
+                fontSize: "0.7rem",
+                color: note.pinned ? "var(--terracotta)" : "var(--muted)",
+              }}
+              onClick={(e) => handlePin(note, e)}
+              title={note.pinned ? "Unpin" : "Pin note"}
+            >
+              <span style={{ display: "flex" }}>
+                {note.pinned ? Icon.pinFilled : Icon.pin2}
+              </span>
+            </button>
+
+            {/* Edit */}
+            <button
+              className="nb-action-btn nb-action-ghost"
+              style={{ padding: "3px 7px", fontSize: "0.7rem" }}
+              onClick={(e) => openEdit(note, e)}
+              title="Edit"
+            >
+              <span style={{ display: "flex" }}>{Icon.settings}</span>
+            </button>
+
+            {/* Delete */}
+            <button
+              className="nb-action-btn nb-action-ghost"
+              style={{
+                padding: "3px 7px",
+                fontSize: "0.7rem",
+                color: "#FF5F57",
+              }}
+              onClick={(e) => handleDelete(note, e)}
+              title="Delete"
+            >
+              <span style={{ display: "flex" }}>{Icon.close}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Title */}
+        <div
+          style={{
+            fontWeight: 700,
+            fontSize: "0.88rem",
+            color: "var(--text-bright)",
+            lineHeight: 1.3,
+          }}
+        >
+          {note.title}
+        </div>
+
+        {/* Content */}
+        {note.content && (
+          <div
+            style={{
+              fontSize: "0.78rem",
+              color: "var(--text-dim)",
+              lineHeight: 1.6,
+              whiteSpace: "pre-wrap",
+            }}
+          >
+            {isExpanded ? note.content : preview}
+          </div>
+        )}
+
+        {/* Show more / less */}
+        {(note.content || "").length > 120 && (
+          <div
+            style={{
+              fontSize: "0.68rem",
+              color: "var(--terracotta)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            <span style={{ display: "flex" }}>
+              {isExpanded ? Icon.back : Icon.arrowRight}
+            </span>
+            {isExpanded ? "Show less" : "Show more"}
+          </div>
+        )}
+
+        {/* Footer */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginTop: 4,
+            paddingTop: 8,
+            borderTop: "1px solid rgba(255,255,255,0.05)",
+          }}
+        >
+          <span
+            style={{
+              fontSize: "0.66rem",
+              color: "var(--muted)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            <span style={{ display: "flex" }}>{Icon.users}</span>
+            {note.createdBy?.name || "member"}
+          </span>
+          <span style={{ fontSize: "0.66rem", color: "var(--muted)" }}>
+            {timeAgo(note.updatedAt || note.createdAt)}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Render ─────────────────────────────────────────────── */
+  return (
+    <PanelShell
+      title={
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+          {Icon.note} Trip Notes
+        </span>
+      }
+      subtitle={
+        hasNotes
+          ? `${notes.length} note${notes.length !== 1 ? "s" : ""} · shared with all members`
+          : "Capture ideas, reminders & trip info"
+      }
+      actions={
+        <button
+          className="nb-action-btn nb-action-primary"
+          onClick={openCreate}
+        >
+          <span
+            style={{ display: "inline-flex", alignItems: "center", gap: 5 }}
+          >
+            {Icon.plus} New Note
+          </span>
+        </button>
+      }
+    >
+      {/* ── Search + tag filter bar ── */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginBottom: 18,
+          flexWrap: "wrap",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            background: "rgba(255,255,255,0.04)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: 10,
+            padding: "7px 12px",
+            flex: 1,
+            minWidth: 180,
+          }}
+        >
+          <span style={{ color: "var(--muted)", display: "flex" }}>
+            {Icon.zoom}
+          </span>
+          <input
+            style={{
+              background: "none",
+              border: "none",
+              outline: "none",
+              fontFamily: "inherit",
+              fontSize: "0.83rem",
+              color: "var(--text-bright)",
+              width: "100%",
+            }}
+            placeholder="Search notes…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "var(--muted)",
+                display: "flex",
+              }}
+            >
+              {Icon.close}
+            </button>
+          )}
+        </div>
+
+        {/* Tag filter pills */}
+        {["all", ...TAGS].map((t) => (
+          <button
+            key={t}
+            onClick={() => setActiveTag(t)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
+              padding: "6px 12px",
+              borderRadius: 20,
+              fontSize: "0.72rem",
+              fontWeight: 700,
+              fontFamily: "inherit",
+              cursor: "pointer",
+              border: "1px solid rgba(255,255,255,0.1)",
+              background:
+                activeTag === t
+                  ? "var(--terracotta)"
+                  : "rgba(255,255,255,0.04)",
+              color: activeTag === t ? "#fff" : "var(--muted)",
+              transition: "all 0.15s",
+            }}
+          >
+            {t !== "all" && (
+              <span
+                style={{
+                  display: "flex",
+                  color: activeTag === t ? "#fff" : TAG_TEXT[t],
+                }}
+              >
+                {TAG_ICON[t]}
+              </span>
+            )}
+            {t === "all" ? "All" : t.charAt(0).toUpperCase() + t.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Loading ── */}
+      {isLoading && (
+        <div
+          style={{ textAlign: "center", color: "var(--muted)", padding: 40 }}
+        >
+          Loading notes…
+        </div>
+      )}
+
+      {/* ── Empty state ── */}
+      {!isLoading && !hasNotes && (
+        <div className="nb-empty">
+          <div
+            className="nb-empty-icon"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {Icon.note}
+          </div>
+          <div className="nb-empty-title">No notes yet</div>
+          <p className="nb-empty-desc">
+            Capture ideas, reminders, and trip info — notes are shared with your
+            whole group.
+          </p>
+          <button className="nb-empty-cta" onClick={openCreate}>
+            <span
+              style={{ display: "inline-flex", alignItems: "center", gap: 5 }}
+            >
+              {Icon.plus} Add First Note
+            </span>
+          </button>
+        </div>
+      )}
+
+      {/* ── No results ── */}
+      {!isLoading && hasNotes && visible.length === 0 && (
+        <div
+          style={{
+            textAlign: "center",
+            padding: 40,
+            color: "var(--muted)",
+            fontSize: "0.82rem",
+          }}
+        >
+          No notes match your search
+        </div>
+      )}
+
+      {/* ── Pinned section ── */}
+      {pinned.length > 0 && (
+        <div style={{ marginBottom: 20 }}>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              fontSize: "0.62rem",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              color: "var(--muted)",
+              marginBottom: 10,
+            }}
+          >
+            <span style={{ display: "flex", color: "var(--terracotta)" }}>
+              {Icon.pin2}
+            </span>
+            Pinned
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+              gap: 10,
+            }}
+          >
+            {pinned.map((note) => (
+              <NoteCard key={note._id} note={note} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Unpinned notes ── */}
+      {unpinned.length > 0 && (
+        <div>
+          {pinned.length > 0 && (
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                fontSize: "0.62rem",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                color: "var(--muted)",
+                marginBottom: 10,
+              }}
+            >
+              <span style={{ display: "flex" }}>{Icon.note}</span>
+              All Notes
+            </div>
+          )}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+              gap: 10,
+            }}
+          >
+            {unpinned.map((note) => (
+              <NoteCard key={note._id} note={note} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Bottom add button (when notes exist) ── */}
+      {!isLoading && hasNotes && (
+        <button
+          className="nb-add-activity-btn"
+          onClick={openCreate}
+          style={{ marginTop: 8 }}
+        >
+          <span
+            style={{ display: "inline-flex", alignItems: "center", gap: 5 }}
+          >
+            {Icon.plus} Add another note
+          </span>
+        </button>
+      )}
+
+      {/* ── Create / Edit Modal ── */}
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={editNote ? "Edit Note" : "New Note"}
+        subtitle={
+          editNote ? "Update this note." : "Add a note to share with the group."
+        }
+        footer={
+          <>
+            <button
+              className="nb-modal-btn nb-modal-btn-ghost"
+              onClick={() => setModalOpen(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="nb-modal-btn nb-modal-btn-primary"
+              onClick={handleSave}
+            >
+              {editNote ? "Save Changes" : "Save Note"}
+            </button>
+          </>
+        }
+      >
+        {/* Title */}
+        <div className="nb-form-group">
+          <label className="nb-form-label">Title *</label>
+          <input
+            className="nb-form-input"
+            placeholder="e.g. Sahara packing tips"
+            value={form.title}
+            onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+            onKeyDown={(e) => e.key === "Enter" && e.ctrlKey && handleSave()}
+            autoFocus
+          />
+        </div>
+
+        {/* Tag + Pin */}
+        <div className="nb-form-row-2">
+          <div className="nb-form-group">
+            <label className="nb-form-label">Tag</label>
+            <select
+              className="nb-form-select"
+              value={form.tag}
+              onChange={(e) => setForm((f) => ({ ...f, tag: e.target.value }))}
+            >
+              {TAGS.map((t) => (
+                <option key={t} value={t}>
+                  {t.charAt(0).toUpperCase() + t.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div
+            className="nb-form-group"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+            }}
+          >
+            <label className="nb-form-label">Options</label>
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                cursor: "pointer",
+                fontSize: "0.82rem",
+                color: form.pinned ? "var(--terracotta)" : "var(--muted)",
+                padding: "9px 14px",
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                borderRadius: 10,
+                transition: "color 0.15s",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={form.pinned}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, pinned: e.target.checked }))
+                }
+                style={{
+                  accentColor: "var(--terracotta)",
+                  width: 14,
+                  height: 14,
+                }}
+              />
+              <span
+                style={{
+                  display: "flex",
+                  color: form.pinned ? "var(--terracotta)" : "var(--muted)",
+                }}
+              >
+                {Icon.pin2}
+              </span>
+              Pin this note
+            </label>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="nb-form-group">
+          <label className="nb-form-label">Content</label>
+          <textarea
+            className="nb-form-textarea"
+            placeholder="Write anything — tips, booking refs, reminders, links…"
+            value={form.content}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, content: e.target.value }))
+            }
+            rows={5}
+          />
+        </div>
+      </Modal>
+    </PanelShell>
+  );
+}
+
 /* ─── SHARE PANEL ─────────────────────────────────────────── */
 function SharePanel({ toast, trip, user }) {
   const [links, setLinks] = useState([]);
@@ -3733,6 +4583,7 @@ const NAV = [
       { id: "voting", label: "Voting", icon: "vote", live: true },
       { id: "packing", label: "Packing", icon: "packing" },
       { id: "chat", label: "Group Chat", icon: "chat", live: true },
+      { id: "notes", label: "Notes", icon: "itinerary" },
     ],
   },
 ];
@@ -3774,6 +4625,8 @@ export default function Notebook({ trip: initialTrip }) {
         return <ChatPanel toast={toast} trip={trip} />;
       case "share":
         return <SharePanel toast={toast} trip={trip} user={user} />;
+      case "notes":
+        return <NotesPanel toast={toast} trip={trip} />;
       default:
         return <ItineraryPanel toast={toast} trip={trip} />;
     }
