@@ -23,6 +23,10 @@
   z-index: 100;
 }
 
+.db-nav-left {
+  text-decoration: none;
+}
+
 .db-logo {
   font-family: "Playfair Display", serif;
   font-size: 1.4rem;

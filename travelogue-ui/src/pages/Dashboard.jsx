@@ -1810,7 +1810,7 @@ export default function Dashboard() {
     <div className="db-root">
       {/* ── Nav ── */}
       <nav className="db-nav">
-        <a href="/">
+        <a href="/" className="db-nav-left">
           <div className="db-logo">
             <img
               src="/travellogo.png"
