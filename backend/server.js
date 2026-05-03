@@ -1,6 +1,4 @@
-// server.js
 require("dotenv").config();
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -29,6 +27,7 @@ io.on("connection", (socket) => {
   registerNoteSocket(socket, io);
 });
 
+// ── Attach io to every request so controllers can emit events ────────────────
 app.use((req, _res, next) => {
   req.io = io;
   next();
@@ -69,6 +68,6 @@ mongoose
   });
 
 process.on("unhandledRejection", (err) => {
-  console.error("Unhandledrejection:", err);
+  console.error("Unhandled rejection:", err);
   process.exit(1);
 });
