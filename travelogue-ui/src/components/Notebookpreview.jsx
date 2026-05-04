@@ -375,7 +375,7 @@ const Icon = {
 // ─── Nav config ───────────────────────────────────────────────────────
 const navGroups = [
   { label: "Planning", items: ["itinerary", "calendar", "map"] },
-  { label: "Group", items: ["voting", "packing", "notes"] },
+  { label: "Group", items: ["voting", "packing", "notes", "note"] },
 ];
 
 const panels = {
