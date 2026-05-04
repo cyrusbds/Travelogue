@@ -4184,7 +4184,6 @@ function NotesPanel({ toast, trip }) {
           </div>
         </div>
         {/* Content */}
-        // AFTER — replace with:
         <div className="nb-form-group">
           <label className="nb-form-label">Content</label>
           <TiptapEditor
