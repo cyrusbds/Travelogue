@@ -42,7 +42,7 @@ const USE_CASES = [
     ),
     title: "Family Travel",
     description:
-      "Keep everyone — from grandparents to teenagers — looped in on the plan. Share the itinerary via QR code and let the whole family contribute ideas.",
+      "Keep everyone — from grandparents to teenagers — looped in on the plan. Share the itinerary via link and let the whole family contribute ideas.",
     tags: ["Multi-gen trips", "School holidays", "Reunions"],
   },
   {
