@@ -1452,7 +1452,6 @@ const NotePanel = () => {
             minWidth: 120,
           }}
         >
-          {Icon.zoom(11)}
           <input
             style={{
               background: "none",
