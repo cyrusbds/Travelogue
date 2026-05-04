@@ -6,7 +6,6 @@ const FREE_FEATURES = [
   "Itinerary, map & calendar",
   "Link sharing",
 ];
-const FREE_MISSING = ["Group voting"];
 const PREMIUM_FEATURES = [
   "Unlimited members",
   "Unlimited active trips",
