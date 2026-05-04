@@ -415,6 +415,12 @@ const panels = {
     title: "Group Chat",
     meta: "Morocco Squad · 5 members · 5 online",
   },
+  note: {
+    iconKey: "notes",
+    label: "Notes",
+    title: "Trip Notes",
+    meta: "6 notes · shared with all members",
+  },
   share: {
     iconKey: "link",
     label: "Share",
@@ -1107,6 +1113,455 @@ const PackingPanel = () => {
   );
 };
 
+const NotePanel = () => {
+  const [activeTag, setActiveTag] = useState("all");
+  const [searchQ, setSearchQ] = useState("");
+
+  const NOTES = [
+    {
+      id: 1,
+      title: "Book Ahmed the desert guide",
+      tag: "important",
+      content:
+        "Super rated on Sahara trips. Confirm by Mar 8. WhatsApp: +212 6XX XXX XXX",
+      author: "Sara",
+      time: "2h ago",
+      pinned: true,
+    },
+    {
+      id: 2,
+      title: "Riad Yasmine tips",
+      tag: "idea",
+      content:
+        "Request room 7 (rooftop terrace). Ask for hammam slot on arrival — books up fast.",
+      author: "Layla",
+      time: "5h ago",
+      pinned: true,
+    },
+    {
+      id: 3,
+      title: "Currency exchange",
+      tag: "reminder",
+      content:
+        "Withdraw dirhams at airport ATM — better rate than bureau de change.",
+      author: "Mohammed",
+      time: "1d ago",
+      pinned: false,
+    },
+    {
+      id: 4,
+      title: "Dress code reminder",
+      tag: "important",
+      content:
+        "Medina mosques require covered shoulders and knees. Pack a lightweight scarf.",
+      author: "Reem",
+      time: "1d ago",
+      pinned: false,
+    },
+    {
+      id: 5,
+      title: "Photography spots",
+      tag: "idea",
+      content:
+        "Blue door in Chefchaouen, Ait Benhaddou at golden hour, dunes at sunrise.",
+      author: "Sara",
+      time: "2d ago",
+      pinned: false,
+    },
+    {
+      id: 6,
+      title: "Group WhatsApp",
+      tag: "general",
+      content: "Link: wa.me/join/morocco-squad-2026",
+      author: "Mohammed",
+      time: "3d ago",
+      pinned: false,
+    },
+  ];
+
+  const TAG_CFG = {
+    idea: {
+      color: "var(--ocean, #3A7CA5)",
+      bg: "rgba(58,124,165,0.15)",
+      border: "rgba(58,124,165,0.4)",
+      icon: (
+        <svg
+          width="10"
+          height="10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <line x1="12" y1="2" x2="12" y2="6" />
+          <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z" />
+          <line x1="12" y1="22" x2="12" y2="18" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="2" y1="12" x2="6" y2="12" />
+          <line x1="18" y1="12" x2="22" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+      ),
+    },
+    reminder: {
+      color: "#C8A03A",
+      bg: "rgba(200,160,58,0.15)",
+      border: "rgba(200,160,58,0.4)",
+      icon: (
+        <svg
+          width="10"
+          height="10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+      ),
+    },
+    important: {
+      color: "var(--terracotta, #C8623A)",
+      bg: "rgba(200,98,58,0.15)",
+      border: "rgba(200,98,58,0.4)",
+      icon: (
+        <svg
+          width="10"
+          height="10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+      ),
+    },
+    general: {
+      color: "rgba(255,255,255,0.45)",
+      bg: "rgba(255,255,255,0.06)",
+      border: "rgba(255,255,255,0.12)",
+      icon: (
+        <svg
+          width="10"
+          height="10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <line x1="8" y1="6" x2="21" y2="6" />
+          <line x1="8" y1="12" x2="21" y2="12" />
+          <line x1="8" y1="18" x2="21" y2="18" />
+          <line x1="3" y1="6" x2="3.01" y2="6" />
+          <line x1="3" y1="12" x2="3.01" y2="12" />
+          <line x1="3" y1="18" x2="3.01" y2="18" />
+        </svg>
+      ),
+    },
+  };
+
+  const TAGS = ["idea", "reminder", "important", "general"];
+  const TAG_ICONS = {
+    idea: TAG_CFG.idea.icon,
+    reminder: TAG_CFG.reminder.icon,
+    important: TAG_CFG.important.icon,
+    general: TAG_CFG.general.icon,
+  };
+
+  const q = searchQ.toLowerCase();
+  const visible = NOTES.filter((n) => {
+    if (activeTag !== "all" && n.tag !== activeTag) return false;
+    if (
+      q &&
+      !n.title.toLowerCase().includes(q) &&
+      !n.content.toLowerCase().includes(q)
+    )
+      return false;
+    return true;
+  });
+  const pinned = visible.filter((n) => n.pinned);
+  const unpinned = visible.filter((n) => !n.pinned);
+
+  const NoteCard = ({ note }) => {
+    const cfg = TAG_CFG[note.tag];
+    return (
+      <div
+        style={{
+          background: "rgba(255,255,255,0.03)",
+          border: `1px solid ${note.pinned ? "rgba(200,98,58,0.2)" : "rgba(255,255,255,0.07)"}`,
+          borderTop: `3px solid ${cfg.border}`,
+          borderRadius: 10,
+          padding: "11px 13px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 7,
+          cursor: "pointer",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 5,
+          }}
+        >
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              fontSize: "0.62rem",
+              fontWeight: 700,
+              padding: "2px 7px",
+              borderRadius: 50,
+              background: cfg.bg,
+              color: cfg.color,
+            }}
+          >
+            {cfg.icon} {note.tag.charAt(0).toUpperCase() + note.tag.slice(1)}
+          </span>
+          <div style={{ display: "flex", gap: 3 }}>
+            <button
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: note.pinned
+                  ? "var(--terracotta, #C8623A)"
+                  : "rgba(255,255,255,0.25)",
+                display: "flex",
+                padding: 2,
+              }}
+            >
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill={note.pinned ? "currentColor" : "none"}
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle
+                  cx="12"
+                  cy="10"
+                  r="3"
+                  fill={note.pinned ? "white" : "none"}
+                  stroke={note.pinned ? "none" : "currentColor"}
+                />
+              </svg>
+            </button>
+            <button
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "rgba(255,255,255,0.2)",
+                display: "flex",
+                padding: 2,
+              }}
+            >
+              {Icon.settings(11)}
+            </button>
+          </div>
+        </div>
+        <div
+          style={{
+            fontWeight: 700,
+            fontSize: "0.82rem",
+            color: "rgba(255,255,255,0.85)",
+            lineHeight: 1.35,
+          }}
+        >
+          {note.title}
+        </div>
+        <div
+          style={{
+            fontSize: "0.72rem",
+            color: "rgba(255,255,255,0.4)",
+            lineHeight: 1.5,
+          }}
+        >
+          {note.content}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingTop: 6,
+            borderTop: "1px solid rgba(255,255,255,0.05)",
+          }}
+        >
+          <span
+            style={{
+              fontSize: "0.65rem",
+              color: "rgba(255,255,255,0.25)",
+              display: "flex",
+              alignItems: "center",
+              gap: 3,
+            }}
+          >
+            {Icon.users(10)} {note.author}
+          </span>
+          <span style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.2)" }}>
+            {note.time}
+          </span>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <>
+      {/* Search + tag filter bar */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          flexWrap: "wrap",
+          marginBottom: 12,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            background: "rgba(255,255,255,0.04)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: 8,
+            padding: "5px 10px",
+            flex: 1,
+            minWidth: 120,
+          }}
+        >
+          {Icon.zoom(11)}
+          <input
+            style={{
+              background: "none",
+              border: "none",
+              outline: "none",
+              fontFamily: "inherit",
+              fontSize: "0.78rem",
+              color: "rgba(255,255,255,0.75)",
+              width: "100%",
+            }}
+            placeholder="Search notes…"
+            value={searchQ}
+            onChange={(e) => setSearchQ(e.target.value)}
+          />
+        </div>
+        {["all", ...TAGS].map((t) => (
+          <button
+            key={t}
+            onClick={() => setActiveTag(t)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              padding: "4px 9px",
+              borderRadius: 20,
+              fontSize: "0.68rem",
+              fontWeight: 700,
+              fontFamily: "inherit",
+              cursor: "pointer",
+              border: "1px solid rgba(255,255,255,0.1)",
+              background:
+                activeTag === t
+                  ? "var(--terracotta, #C8623A)"
+                  : "rgba(255,255,255,0.04)",
+              color:
+                activeTag === t
+                  ? "#fff"
+                  : t === "all"
+                    ? "rgba(255,255,255,0.4)"
+                    : TAG_CFG[t].color,
+            }}
+          >
+            {t !== "all" && TAG_ICONS[t]}
+            {t === "all" ? "All" : t.charAt(0).toUpperCase() + t.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      {/* Pinned */}
+      {pinned.length > 0 && (
+        <div style={{ marginBottom: 14 }}>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
+              fontSize: "0.6rem",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              color: "rgba(255,255,255,0.25)",
+              marginBottom: 8,
+            }}
+          >
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#C8623A"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            Pinned
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))",
+              gap: 8,
+            }}
+          >
+            {pinned.map((n) => (
+              <NoteCard key={n.id} note={n} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Unpinned */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))",
+          gap: 8,
+        }}
+      >
+        {unpinned.map((n) => (
+          <NoteCard key={n.id} note={n} />
+        ))}
+      </div>
+    </>
+  );
+};
+
 const NotesPanel = () => {
   const [input, setInput] = useState("");
   const messages = [
@@ -1328,32 +1783,6 @@ const SharePanel = () => {
           marginBottom: 16,
         }}
       >
-        {/* QR */}
-        <div
-          style={{
-            background: "white",
-            borderRadius: 14,
-            padding: 16,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 10,
-          }}
-        >
-          <div
-            style={{
-              width: 90,
-              height: 90,
-              background:
-                "repeating-conic-gradient(#1a1a1a 0% 25%,white 0% 50%) 0 0 / 7px 7px",
-              border: "3px solid #1a1a1a",
-              borderRadius: 6,
-            }}
-          />
-          <div style={{ fontSize: 10, color: "#6B4226", fontWeight: 600 }}>
-            Scan to join
-          </div>
-        </div>
         {/* Options */}
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {options.map((o, i) => (
@@ -1451,6 +1880,7 @@ const panelComponents = {
   map: MapPanel,
   voting: VotingPanel,
   packing: PackingPanel,
+  notes: NotesPanel,
   notes: NotesPanel,
   share: SharePanel,
 };

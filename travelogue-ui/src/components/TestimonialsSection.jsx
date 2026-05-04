@@ -1,6 +1,6 @@
 const TESTIMONIALS = [
   {
-    text: "We used Travelogue for a 10-person trip to Portugal. Everyone could see the plan, vote on restaurants, and track spending. No WhatsApp arguments. I'm honestly shocked how smooth it was.",
+    text: "We used Travelogue for a 10-person trip to Portugal. Everyone could see the plan and vote on restaurants. No WhatsApp arguments. I'm honestly shocked how smooth it was.",
     name: "Aisha Al-Farsi",
     role: "Dubai, UAE · Portugal trip",
     av: "A",
@@ -16,7 +16,7 @@ const TESTIMONIALS = [
     featured: true,
   },
   {
-    text: "Our family of 12 used this for a reunion trip to Morocco. My parents scanned the QR code and they were in within 30 seconds. The offline PDF for my dad who doesn't have data abroad was perfect.",
+    text: "Our family of 12 used this for a reunion trip to Morocco. My parents pasted the link and they were in within 30 seconds. The offline PDF for my dad who doesn't have data abroad was perfect.",
     name: "Nour Hamdan",
     role: "Beirut, Lebanon · Morocco trip",
     av: "N",

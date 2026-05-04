@@ -7,7 +7,7 @@ const FAQS = [
   },
   {
     q: "How do friends join my trip notebook?",
-    a: "Share the trip link or QR code. When a friend opens it, they'll be prompted to create a free account (takes 30 seconds), then land directly inside your shared notebook — no extra steps needed.",
+    a: "Share the trip link. When a friend opens it, they'll be prompted to create a free account (takes 30 seconds), then land directly inside your shared notebook — no extra steps needed.",
   },
   {
     q: "Is there a limit on how many people can join a trip?",

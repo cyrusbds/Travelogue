@@ -4,7 +4,7 @@ const FREE_FEATURES = [
   "Up to 6 members",
   "1 active trip",
   "Itinerary, map & calendar",
-  "QR code & link sharing",
+  "Link sharing",
 ];
 const FREE_MISSING = ["Group voting"];
 const PREMIUM_FEATURES = [

@@ -23,10 +23,10 @@ export default function HowItWorks() {
           </div>
           <div className="step">
             <div className="step-number">2</div>
-            <h3>Share via Link or QR Code</h3>
+            <h3>Share via Link</h3>
             <p>
-              Copy the link or display the QR code in your group chat. Your
-              friends join instantly — no friction, no apps to download.
+              Copy the link in your group chat. Your friends join instantly — no
+              friction, no apps to download.
             </p>
           </div>
           <div className="step">
