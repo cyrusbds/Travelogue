@@ -4710,6 +4710,101 @@ export default function Notebook({ trip: initialTrip }) {
             </span>
           </button>
         ))}
+
+        {/* Leave Trip — mobile/tablet, non-owners only */}
+        {!isOwner && (
+          <>
+            {showLeaveConfirm ? (
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  marginLeft: 8,
+                  flexShrink: 0,
+                  background: "rgba(220,53,69,0.12)",
+                  border: "1px solid rgba(220,53,69,0.35)",
+                  borderRadius: 10,
+                  padding: "4px 8px",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: 11,
+                    color: "rgba(255,255,255,0.7)",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Leave trip?
+                </span>
+                <button
+                  onClick={handleLeaveTrip}
+                  disabled={leaveLoading}
+                  style={{
+                    padding: "4px 10px",
+                    background: "#dc3545",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: 6,
+                    fontSize: 11,
+                    fontWeight: 600,
+                    cursor: leaveLoading ? "not-allowed" : "pointer",
+                    whiteSpace: "nowrap",
+                    opacity: leaveLoading ? 0.6 : 1,
+                  }}
+                >
+                  {leaveLoading ? "…" : "Yes"}
+                </button>
+                <button
+                  onClick={() => setShowLeaveConfirm(false)}
+                  disabled={leaveLoading}
+                  style={{
+                    padding: "4px 8px",
+                    background: "rgba(255,255,255,0.08)",
+                    color: "rgba(255,255,255,0.6)",
+                    border: "none",
+                    borderRadius: 6,
+                    fontSize: 11,
+                    cursor: "pointer",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  No
+                </button>
+              </div>
+            ) : (
+              <button
+                className="nb-mobile-tab"
+                onClick={() => setShowLeaveConfirm(true)}
+                style={{ color: "#e07070", flexShrink: 0 }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 5,
+                  }}
+                >
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                  Leave
+                </span>
+              </button>
+            )}
+          </>
+        )}
       </nav>
 
       {/* ── BODY ── */}
