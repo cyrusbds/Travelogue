@@ -104,7 +104,7 @@ export default function PricingSection({ onOpenModal, onOpenDemo }) {
           display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: start;
         }
         .pricing-card {
-          background: white; border-radius: 24px; padding: 36px;
+          background: white; border-radius: 24px; padding: 36px; height: 100%;
           border: 2px solid var(--sand); position: relative; transition: all 0.3s;
         }
         .pricing-card:hover { box-shadow: var(--shadow); transform: translateY(-4px); }
