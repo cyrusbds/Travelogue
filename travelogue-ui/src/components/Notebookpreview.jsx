@@ -1375,9 +1375,7 @@ const NotePanel = () => {
                 display: "flex",
                 padding: 2,
               }}
-            >
-              {Icon.settings(11)}
-            </button>
+            ></button>
           </div>
         </div>
         <div
@@ -1416,9 +1414,7 @@ const NotePanel = () => {
               alignItems: "center",
               gap: 3,
             }}
-          >
-            {Icon.users(10)} {note.author}
-          </span>
+          ></span>
           <span style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.2)" }}>
             {note.time}
           </span>
