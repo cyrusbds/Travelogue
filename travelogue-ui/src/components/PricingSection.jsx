@@ -220,14 +220,6 @@ export default function PricingSection({ onOpenModal, onOpenDemo }) {
                   {f}
                 </li>
               ))}
-              {FREE_MISSING.map((f) => (
-                <li key={f} className="feat-dim">
-                  <div className="check-x">
-                    <XIcon />
-                  </div>
-                  {f}
-                </li>
-              ))}
             </ul>
             <button
               className="pricing-cta"
