@@ -1865,6 +1865,109 @@
   color: var(--terracotta-light);
 }
 
+/* ── Tiptap wrapper ── */
+.tiptap-wrapper {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ── Toolbar ── */
+.tiptap-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  flex-wrap: wrap;
+}
+
+.tiptap-toolbar button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.tiptap-toolbar button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.tiptap-toolbar button.active {
+  background: rgba(200, 98, 58, 0.2);
+  color: var(--terracotta, #c8623a);
+}
+
+.tiptap-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 4px;
+}
+
+/* ── Editor content area ── */
+.tiptap-content {
+  padding: 10px 14px;
+  min-height: 120px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.tiptap-content .tiptap {
+  outline: none;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+}
+
+/* Placeholder */
+.tiptap-content .tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: rgba(255, 255, 255, 0.25);
+  pointer-events: none;
+  height: 0;
+}
+
+/* Typography inside editor */
+.tiptap-content h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 8px 0 4px;
+  color: #fff;
+}
+
+.tiptap-content ul,
+.tiptap-content ol {
+  padding-left: 20px;
+  margin: 4px 0;
+}
+
+.tiptap-content blockquote {
+  border-left: 3px solid var(--terracotta, #c8623a);
+  padding-left: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 6px 0;
+}
+
+.tiptap-content code {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: monospace;
+  font-size: 0.8em;
+}
+
 @media (max-width: 900px) {
   .nb-panel-topbar {
     flex-direction: column;

@@ -9,6 +9,7 @@ import "./Notebook.css";
 import TripMap from "./TripMap";
 import { usePollSocket } from "../hooks/usePollSocket";
 import { useNoteSocket } from "../hooks/useNoteSocket";
+import TiptapEditor from "./TiptapEditor";
 
 /* ─── SVG ICONS ───────────────────────────────────────────── */
 const Icon = {
@@ -4118,7 +4119,6 @@ function NotesPanel({ toast, trip }) {
             autoFocus
           />
         </div>
-
         {/* Tag + Pin */}
         <div className="nb-form-row-2">
           <div className="nb-form-group">
@@ -4183,18 +4183,14 @@ function NotesPanel({ toast, trip }) {
             </label>
           </div>
         </div>
-
         {/* Content */}
+        // AFTER — replace with:
         <div className="nb-form-group">
           <label className="nb-form-label">Content</label>
-          <textarea
-            className="nb-form-textarea"
-            placeholder="Write anything — tips, booking refs, reminders, links…"
+          <TiptapEditor
             value={form.content}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, content: e.target.value }))
-            }
-            rows={5}
+            onChange={(text) => setForm((f) => ({ ...f, content: text }))}
+            placeholder="Write anything — tips, booking refs, reminders, links…"
           />
         </div>
       </Modal>
