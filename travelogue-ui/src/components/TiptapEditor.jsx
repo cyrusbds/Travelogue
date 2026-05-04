@@ -13,12 +13,10 @@ export default function TiptapEditor({ value, onChange, placeholder }) {
     ],
     content: value,
     onUpdate({ editor }) {
-      // Returns plain text; swap for editor.getHTML() if you want rich HTML stored
       onChange(editor.getText());
     },
   });
 
-  // Sync external value changes (e.g. when editing an existing note)
   useEffect(() => {
     if (editor && value !== editor.getText()) {
       editor.commands.setContent(value || "");
