@@ -1004,7 +1004,8 @@ function ItineraryPanel({ toast, trip }) {
         toast("Activity updated!");
       } else {
         const { item } = await apiCreateItem(tripId, form);
-        toast(`Activity added!`);
+        setItems((p) => [...p, item]);
+        toast("Activity added!");
       }
       setModalOpen(false);
     } catch (err) {
