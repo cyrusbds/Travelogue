@@ -1829,13 +1829,15 @@ export default function Dashboard() {
         </a>
 
         <div className="db-nav-right">
-          <button className="db-nav-ghost" onClick={() => navigate("/")}>
-            <span
-              style={{ display: "inline-flex", alignItems: "center", gap: 5 }}
-            >
-              {Icons.back} Back to site
-            </span>
-          </button>
+          <a href="/">
+            <button className="db-nav-ghost">
+              <span
+                style={{ display: "inline-flex", alignItems: "center", gap: 5 }}
+              >
+                {Icons.back} Back to site
+              </span>
+            </button>
+          </a>
 
           <div className="db-user-dd" ref={ddRef}>
             <div
