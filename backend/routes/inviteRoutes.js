@@ -9,6 +9,9 @@ router.post("/:tripId", protect, ctrl.generateInviteLink);
 router.delete("/:tripId/:linkId", protect, ctrl.revokeInviteLink);
 router.delete("/:tripId/members/:memberId", protect, ctrl.removeMember);
 
+// Leave trip (any authenticated member)
+router.delete("/:tripId/leave", protect, ctrl.leaveTrip);
+
 // Public join routes (optionalAuth = works logged-in or as guest)
 router.get("/join/:token", optionalAuth, ctrl.validateInviteLink);
 router.post("/join/:token", optionalAuth, ctrl.joinTripViaInvite);

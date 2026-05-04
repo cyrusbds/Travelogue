@@ -4,6 +4,7 @@ import socket from "../api/socket";
 import { fetchMessages, deleteMessage as apiDeleteMessage } from "../api/chat";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { apiLeaveTrip } from "../api/invites";
 import "./Notebook.css";
 import TripMap from "./TripMap";
 import { usePollSocket } from "../hooks/usePollSocket";
@@ -4583,10 +4584,30 @@ export default function Notebook({ trip: initialTrip }) {
   const navigate = useNavigate();
   const { toasts, show: toast } = useToast();
   const { user } = useAuth();
+  const [leaveLoading, setLeaveLoading] = useState(false);
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
 
   useEffect(() => {
     setTrip(initialTrip);
   }, [initialTrip]);
+
+  const myId = user?.id || user?._id;
+  const ownerId = trip?.owner?._id || trip?.owner;
+  const isOwner = !!myId && !!ownerId && myId.toString() === ownerId.toString();
+
+  async function handleLeaveTrip() {
+    if (!trip?._id) return;
+    setLeaveLoading(true);
+    try {
+      await apiLeaveTrip(trip._id);
+      navigate("/dashboard");
+    } catch (err) {
+      toast("error", err.message || "Could not leave trip");
+    } finally {
+      setLeaveLoading(false);
+      setShowLeaveConfirm(false);
+    }
+  }
 
   const tripName = trip?.name || "My Trip Notebook";
   const tripDest = trip?.dest || "";
@@ -4780,7 +4801,15 @@ export default function Notebook({ trip: initialTrip }) {
             </div>
           ))}
 
-          <div style={{ marginTop: "auto", paddingTop: 16 }}>
+          <div
+            style={{
+              marginTop: "auto",
+              paddingTop: 16,
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+            }}
+          >
             <button
               className="nb-sidebar-item"
               onClick={() => setActive("share")}
@@ -4798,6 +4827,102 @@ export default function Notebook({ trip: initialTrip }) {
               </span>
               Share Trip
             </button>
+
+            {/* Leave Trip — visible to members only */}
+            {!isOwner && (
+              <>
+                {showLeaveConfirm ? (
+                  <div
+                    style={{
+                      background: "rgba(220,53,69,0.12)",
+                      border: "1px solid rgba(220,53,69,0.35)",
+                      borderRadius: 10,
+                      padding: "10px 12px",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 8,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 12,
+                        color: "rgba(255,255,255,0.7)",
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      Are you sure you want to leave this trip?
+                    </span>
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <button
+                        onClick={handleLeaveTrip}
+                        disabled={leaveLoading}
+                        style={{
+                          flex: 1,
+                          padding: "6px 0",
+                          background: "#dc3545",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: 7,
+                          fontSize: 12,
+                          fontWeight: 600,
+                          cursor: leaveLoading ? "not-allowed" : "pointer",
+                          opacity: leaveLoading ? 0.6 : 1,
+                        }}
+                      >
+                        {leaveLoading ? "Leaving…" : "Yes, leave"}
+                      </button>
+                      <button
+                        onClick={() => setShowLeaveConfirm(false)}
+                        disabled={leaveLoading}
+                        style={{
+                          flex: 1,
+                          padding: "6px 0",
+                          background: "rgba(255,255,255,0.08)",
+                          color: "rgba(255,255,255,0.7)",
+                          border: "none",
+                          borderRadius: 7,
+                          fontSize: 12,
+                          cursor: "pointer",
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    className="nb-sidebar-item"
+                    onClick={() => setShowLeaveConfirm(true)}
+                    style={{ width: "100%", color: "#e07070" }}
+                  >
+                    <span
+                      className="nb-s-icon"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                      </svg>
+                    </span>
+                    Leave Trip
+                  </button>
+                )}
+              </>
+            )}
           </div>
         </aside>
 

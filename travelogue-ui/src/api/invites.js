@@ -43,6 +43,17 @@ export async function apiRemoveMember(tripId, memberId) {
   return data;
 }
 
+// ── Leave trip (current user removes themselves) ─────────────────────────────
+export async function apiLeaveTrip(tripId) {
+  const res = await fetch(`${BASE}/${tripId}/leave`, {
+    method: "DELETE",
+    headers: authHeader(),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+  return data;
+}
+
 export async function apiValidateInvite(token) {
   const res = await fetch(`${BASE}/join/${token}`);
   const data = await res.json();

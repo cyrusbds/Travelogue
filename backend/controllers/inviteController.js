@@ -4,11 +4,26 @@ const User = require("../models/User");
 
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 
+// ── Plan limits ──────────────────────────────────────────────────────────────
+const PLAN_MEMBER_LIMITS = {
+  free: 6,
+  trial: Infinity,
+  premium: Infinity,
+};
+
 // ── Helper: is user the trip owner ──────────────────────────────────────────
 function isOwner(trip, userId) {
   return trip.owner._id
     ? trip.owner._id.toString() === userId
     : trip.owner.toString() === userId;
+}
+
+// ── Helper: check if trip is full based on owner's plan ─────────────────────
+async function isTripFull(trip) {
+  const owner = await User.findById(trip.owner);
+  const plan = owner?.plan || "free";
+  const limit = PLAN_MEMBER_LIMITS[plan] ?? 6;
+  return trip.members.length >= limit;
 }
 
 // ── GET all invite links for a trip ─────────────────────────────────────────
@@ -137,6 +152,14 @@ exports.joinTripViaInvite = async (req, res) => {
         trip.owner.toString() === userId;
 
       if (!alreadyMember) {
+        // ✅ Check plan member limit before adding
+        if (await isTripFull(trip)) {
+          return res.status(403).json({
+            message:
+              "This trip has reached its member limit. The trip owner must upgrade to Premium to add more members.",
+          });
+        }
+
         trip.members.push(userId);
         await trip.save();
       }
@@ -168,15 +191,64 @@ exports.joinTripViaInvite = async (req, res) => {
         .status(400)
         .json({ message: "Nickname is required for guest access" });
 
+    // ✅ Also enforce plan limit for guest joins
+    if (await isTripFull(trip)) {
+      return res.status(403).json({
+        message:
+          "This trip has reached its member limit. The trip owner must upgrade to Premium to add more members.",
+      });
+    }
+
     link.currentUses += 1;
     await link.save();
 
-    // Return a guest token (just the trip info — no DB user created)
     return res.json({
       tripId: trip._id,
       guest: true,
       nickname: nickname.trim(),
     });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// ── LEAVE trip ───────────────────────────────────────────────────────────────
+// DELETE /api/invites/:tripId/leave
+// Auth: protect (must be logged in)
+exports.leaveTrip = async (req, res) => {
+  try {
+    const trip = await Trip.findById(req.params.tripId);
+    if (!trip) return res.status(404).json({ message: "Trip not found" });
+
+    const userId = req.user.id;
+
+    // Owner cannot leave — they must delete the trip instead
+    if (isOwner(trip, userId)) {
+      return res.status(403).json({
+        message:
+          "You are the trip owner. Transfer ownership or delete the trip instead.",
+      });
+    }
+
+    const isMember = trip.members.map((m) => m.toString()).includes(userId);
+    if (!isMember) {
+      return res
+        .status(400)
+        .json({ message: "You are not a member of this trip" });
+    }
+
+    trip.members = trip.members.filter((m) => m.toString() !== userId);
+    await trip.save();
+
+    // Notify remaining members via socket
+    if (req.io) {
+      req.io.to(`trip:${trip._id}`).emit("trip:member_left", {
+        tripId: trip._id,
+        userId,
+      });
+    }
+
+    return res.json({ message: "You have left the trip" });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
