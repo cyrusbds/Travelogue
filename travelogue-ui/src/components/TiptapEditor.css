@@ -1,0 +1,203 @@
+/* ── Outer wrapper — matches .nb-form-textarea look ── */
+.tip-wrap {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  overflow: hidden;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+  box-sizing: border-box;
+}
+
+.tip-wrap:focus-within {
+  border-color: var(--terracotta);
+  background: rgba(200, 98, 58, 0.06);
+}
+
+/* ── Toolbar ── */
+.tip-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  flex-wrap: wrap;
+}
+
+.tip-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-family: "DM Sans", sans-serif;
+  line-height: 1;
+  transition:
+    background 0.15s,
+    color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+}
+
+.tip-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.tip-btn--active {
+  background: rgba(200, 98, 58, 0.22);
+  color: var(--terracotta);
+}
+
+.tip-divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 3px;
+  flex-shrink: 0;
+}
+
+/* ── Editor content area ── */
+.tip-editor {
+  padding: 10px 14px;
+  min-height: 100px;
+  max-height: 300px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* The actual ProseMirror div */
+.tip-editor .ProseMirror {
+  outline: none;
+  font-size: 0.85rem;
+  font-family: "DM Sans", sans-serif;
+  color: var(--text-bright);
+  line-height: 1.6;
+  min-height: 80px;
+}
+
+/* Placeholder */
+.tip-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: rgba(255, 255, 255, 0.22);
+  pointer-events: none;
+  height: 0;
+}
+
+/* ── Typography inside editor ── */
+.tip-editor .ProseMirror p {
+  margin: 0 0 4px;
+}
+
+.tip-editor .ProseMirror h2 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 8px 0 4px;
+}
+
+.tip-editor .ProseMirror ul,
+.tip-editor .ProseMirror ol {
+  padding-left: 20px;
+  margin: 4px 0;
+}
+
+.tip-editor .ProseMirror ul {
+  list-style-type: disc;
+}
+
+.tip-editor .ProseMirror ol {
+  list-style-type: decimal;
+}
+
+.tip-editor .ProseMirror li {
+  margin-bottom: 2px;
+}
+
+.tip-editor .ProseMirror li > p {
+  margin: 0;
+}
+
+.tip-editor .ProseMirror blockquote {
+  border-left: 3px solid var(--terracotta);
+  padding-left: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 6px 0;
+}
+
+.tip-editor .ProseMirror code {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: monospace;
+  font-size: 0.82em;
+}
+
+.tip-editor .ProseMirror strong {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* ── Note card rich-text rendering (read-only display) ── */
+.note-card-content ol,
+.note-card-content ul {
+  padding-left: 18px;
+  margin: 4px 0;
+}
+
+.note-card-content ol {
+  list-style-type: decimal;
+}
+
+.note-card-content ul {
+  list-style-type: disc;
+}
+
+.note-card-content li {
+  margin-bottom: 2px;
+}
+
+.note-card-content li > p {
+  margin: 0;
+}
+
+.note-card-content h2 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 4px 0 2px;
+}
+
+.note-card-content strong {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.note-card-content em {
+  font-style: italic;
+}
+
+.note-card-content blockquote {
+  border-left: 3px solid var(--terracotta);
+  padding-left: 10px;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 4px 0;
+}
+
+.note-card-content code {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: monospace;
+  font-size: 0.8em;
+}
+
+.note-card-content p {
+  margin: 0 0 3px;
+}

@@ -3774,7 +3774,10 @@ function NotesPanel({ toast, trip }) {
             dangerouslySetInnerHTML={{
               __html: isExpanded
                 ? note.content
-                : note.content.replace(/<[^>]+>/g, " ").slice(0, 120) +
+                : note.content
+                    .replace(/<[^>]+>/g, " ")
+                    .trim()
+                    .slice(0, 120) +
                   (note.content.replace(/<[^>]+>/g, "").length > 120
                     ? "…"
                     : ""),
@@ -4125,6 +4128,7 @@ function NotesPanel({ toast, trip }) {
             autoFocus
           />
         </div>
+
         {/* Tag + Pin */}
         <div className="nb-form-row-2">
           <div className="nb-form-group">
@@ -4189,12 +4193,13 @@ function NotesPanel({ toast, trip }) {
             </label>
           </div>
         </div>
+
         {/* Content */}
         <div className="nb-form-group">
           <label className="nb-form-label">Content</label>
           <TiptapEditor
             value={form.content}
-            onChange={(text) => setForm((f) => ({ ...f, content: text }))}
+            onChange={(html) => setForm((f) => ({ ...f, content: html }))}
             placeholder="Write anything — tips, booking refs, reminders, links…"
           />
         </div>

@@ -2,6 +2,24 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import { useEffect } from "react";
+import "./TiptapEditor.css";
+
+/* ── Toolbar button ── */
+function ToolBtn({ onClick, active, title, children }) {
+  return (
+    <button
+      type="button"
+      onMouseDown={(e) => {
+        e.preventDefault(); // keep editor focused
+        onClick();
+      }}
+      className={`tip-btn${active ? " tip-btn--active" : ""}`}
+      title={title}
+    >
+      {children}
+    </button>
+  );
+}
 
 export default function TiptapEditor({ value, onChange, placeholder }) {
   const editor = useEditor({
@@ -11,95 +29,116 @@ export default function TiptapEditor({ value, onChange, placeholder }) {
         placeholder: placeholder || "Write anything…",
       }),
     ],
-    content: value,
+    content: value || "",
     onUpdate({ editor }) {
-      onChange(editor.getText());
+      onChange(editor.getHTML());
     },
   });
 
+  /* Sync when editing an existing note (modal opens with pre-filled content) */
   useEffect(() => {
-    if (editor && value !== editor.getText()) {
-      editor.commands.setContent(value || "");
+    if (!editor) return;
+    const current = editor.getHTML();
+    if (value !== current) {
+      editor.commands.setContent(value || "", false);
     }
-  }, [value, editor]);
+  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!editor) return null;
 
   return (
-    <div className="tiptap-wrapper">
-      {/* Toolbar */}
-      <div className="tiptap-toolbar">
-        <button
-          type="button"
+    <div className="tip-wrap">
+      {/* ── Toolbar ── */}
+      <div className="tip-toolbar">
+        <ToolBtn
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={editor.isActive("bold") ? "active" : ""}
+          active={editor.isActive("bold")}
           title="Bold"
         >
-          <b>B</b>
-        </button>
-        <button
-          type="button"
+          <strong>B</strong>
+        </ToolBtn>
+
+        <ToolBtn
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={editor.isActive("italic") ? "active" : ""}
+          active={editor.isActive("italic")}
           title="Italic"
         >
-          <i>I</i>
-        </button>
-        <button
-          type="button"
+          <em>I</em>
+        </ToolBtn>
+
+        <ToolBtn
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={editor.isActive("strike") ? "active" : ""}
+          active={editor.isActive("strike")}
           title="Strikethrough"
         >
           <s>S</s>
-        </button>
-        <div className="tiptap-divider" />
-        <button
-          type="button"
+        </ToolBtn>
+
+        <div className="tip-divider" />
+
+        <ToolBtn
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 2 }).run()
           }
-          className={editor.isActive("heading", { level: 2 }) ? "active" : ""}
+          active={editor.isActive("heading", { level: 2 })}
           title="Heading"
         >
           H2
-        </button>
-        <button
-          type="button"
+        </ToolBtn>
+
+        <ToolBtn
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editor.isActive("bulletList") ? "active" : ""}
+          active={editor.isActive("bulletList")}
           title="Bullet list"
         >
-          ≡
-        </button>
-        <button
-          type="button"
+          •≡
+        </ToolBtn>
+
+        <ToolBtn
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={editor.isActive("orderedList") ? "active" : ""}
-          title="Ordered list"
+          active={editor.isActive("orderedList")}
+          title="Numbered list"
         >
           1.
-        </button>
-        <button
-          type="button"
+        </ToolBtn>
+
+        <ToolBtn
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={editor.isActive("blockquote") ? "active" : ""}
+          active={editor.isActive("blockquote")}
           title="Blockquote"
         >
           "
-        </button>
-        <button
-          type="button"
+        </ToolBtn>
+
+        <ToolBtn
           onClick={() => editor.chain().focus().toggleCode().run()}
-          className={editor.isActive("code") ? "active" : ""}
+          active={editor.isActive("code")}
           title="Inline code"
         >
           {"<>"}
-        </button>
+        </ToolBtn>
+
+        <div className="tip-divider" />
+
+        <ToolBtn
+          onClick={() => editor.chain().focus().undo().run()}
+          active={false}
+          title="Undo"
+        >
+          ↩
+        </ToolBtn>
+
+        <ToolBtn
+          onClick={() => editor.chain().focus().redo().run()}
+          active={false}
+          title="Redo"
+        >
+          ↪
+        </ToolBtn>
       </div>
 
-      {/* Editor area */}
-      <EditorContent editor={editor} className="tiptap-content" />
+      {/* ── Editor ── */}
+      <EditorContent editor={editor} className="tip-editor" />
     </div>
   );
 }
