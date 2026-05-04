@@ -1881,7 +1881,7 @@ const panelComponents = {
   voting: VotingPanel,
   packing: PackingPanel,
   notes: NotesPanel,
-  notes: NotesPanel,
+  note: NotePanel,
   share: SharePanel,
 };
 
