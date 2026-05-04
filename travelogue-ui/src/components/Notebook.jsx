@@ -3765,19 +3765,25 @@ function NotesPanel({ toast, trip }) {
         {/* Content */}
         {note.content && (
           <div
+            className="note-card-content"
             style={{
               fontSize: "0.78rem",
               color: "var(--text-dim)",
               lineHeight: 1.6,
-              whiteSpace: "pre-wrap",
             }}
-          >
-            {isExpanded ? note.content : preview}
-          </div>
+            dangerouslySetInnerHTML={{
+              __html: isExpanded
+                ? note.content
+                : note.content.replace(/<[^>]+>/g, " ").slice(0, 120) +
+                  (note.content.replace(/<[^>]+>/g, "").length > 120
+                    ? "…"
+                    : ""),
+            }}
+          />
         )}
 
         {/* Show more / less */}
-        {(note.content || "").length > 120 && (
+        {(note.content || "").replace(/<[^>]+>/g, "").length > 120 && (
           <div
             style={{
               fontSize: "0.68rem",

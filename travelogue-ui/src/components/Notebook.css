@@ -1968,6 +1968,59 @@
   font-size: 0.8em;
 }
 
+.note-card-content ol,
+.note-card-content ul {
+  padding-left: 18px;
+  margin: 4px 0;
+}
+
+.note-card-content ol {
+  list-style-type: decimal;
+}
+
+.note-card-content ul {
+  list-style-type: disc;
+}
+
+.note-card-content li {
+  margin-bottom: 2px;
+}
+
+.note-card-content h2 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 6px 0 2px;
+}
+
+.note-card-content strong {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 700;
+}
+
+.note-card-content em {
+  font-style: italic;
+}
+
+.note-card-content blockquote {
+  border-left: 3px solid var(--terracotta);
+  padding-left: 10px;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 4px 0;
+}
+
+.note-card-content code {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: monospace;
+  font-size: 0.8em;
+}
+
+.note-card-content p {
+  margin: 0 0 4px;
+}
+
 @media (max-width: 900px) {
   .nb-panel-topbar {
     flex-direction: column;
