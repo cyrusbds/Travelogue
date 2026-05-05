@@ -10,7 +10,6 @@ const PREMIUM_FEATURES = [
   "Unlimited members",
   "Unlimited active trips",
   "All planning features",
-  "Anonymous group voting",
   "Priority support",
 ];
 const INST_FEATURES = [
